@@ -1,0 +1,13 @@
+/* Hover / focus states from the design (style-hover / style-focus). */
+.hv-0:hover{background:#EDE6DA !important}
+.hv-1:hover{background:#FDF4E7 !important}
+.hv-2:hover{background:#C2470A !important;color:#FFFFFF !important}
+.hv-3:hover{background:#16130F !important;color:#F6F2EA !important}
+.hv-4:hover{border-color:#16130F !important}
+.fc-5:focus{border-color:#16130F !important}
+.hv-6:hover{background:#2A251F !important;color:#F6F2EA !important}
+.hv-7:hover{background:#F6F2EA !important;color:#16130F !important}
+.hv-8:hover{background:#000000 !important;color:#F6F2EA !important}
+.fc-9:focus{border-color:#16130F !important;box-shadow:0 0 0 3px #FBE7CC !important}
+.hv-10:hover{background:#16130F !important;color:#F6F2EA !important;border-color:#16130F !important}
+.hv-11:hover{color:#FFFFFF !important}

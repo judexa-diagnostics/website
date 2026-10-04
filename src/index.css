@@ -1,0 +1,25 @@
+html{scroll-behavior:auto}
+body{margin:0;background:#F6F2EA;font-family:'Archivo',sans-serif;color:#16130F;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#C2470A;text-underline-offset:2px}
+a:hover{color:#16130F}
+button,input,select,textarea{font-family:inherit}
+::selection{background:#FBE7CC}
+
+/* Full-page sizing the Claude Design runtime applied to its mount point. */
+html,body{height:100%;margin:0}
+#root,#root>.app-root{height:100%}
+
+/* Print baseline from the Claude Design runtime. */
+@media print {
+  @page { margin: 0.5cm; }
+  figure, table { break-inside: avoid; }
+  #root, #root > .app-root { height: auto; }
+  *, *::before, *::after {
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+    animation-delay: -99s !important; animation-duration: .001s !important;
+    animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+    animation-play-state: running !important; transition-duration: 0s !important;
+  }
+}
