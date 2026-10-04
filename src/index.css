@@ -1,4 +1,8 @@
 html{scroll-behavior:auto}
+/* Everything is sized in rem. Up to 1600px wide the root stays at the browser
+   default (16px), so the layout is unchanged. On bigger screens it grows with
+   the viewport (1vw = 16px at 1600px), capped at 1.5x (24px at 2400px+). */
+html{font-size:clamp(100%, 1vw, 150%)}
 body{margin:0;background:#F6F2EA;font-family:'Archivo',sans-serif;color:#16130F;-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}
 a{color:#C2470A;text-underline-offset:2px}

@@ -3,6 +3,9 @@ import { DCLogic } from './lib/dcLogic.jsx';
 
 const PAGES = ['home','industries','features','pricing','contact','platform','start'];
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
+// Layout is sized in rem; converts a design-pixel value (at a 16px root) to
+// actual screen pixels at the current root font size.
+const sc = px => px * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) / 16;
 
 export default class SiteLogic extends DCLogic {
   state = {
@@ -128,7 +131,7 @@ export default class SiteLogic extends DCLogic {
     const src = st.querySelector('[data-carry-src="' + from + '"]'), dst = st.querySelector('[data-carry-dst="' + to + '"]');
     if (!src || !dst) return false;
     const sr = st.getBoundingClientRect(), a = src.getBoundingClientRect(), b = dst.getBoundingClientRect(), W = window.innerWidth * (to - from);
-    const box = (r, size, shift) => { const cx = r.left + r.width / 2 - sr.left - shift, cy = r.top + r.height / 2 - sr.top, w = size ? size[0] : r.width, hh = size ? size[1] : r.height; return { x: cx - w / 2, y: cy - hh / 2, w, h: hh }; };
+    const box = (r, size, shift) => { const cx = r.left + r.width / 2 - sr.left - shift, cy = r.top + r.height / 2 - sr.top, w = size ? sc(size[0]) : r.width, hh = size ? sc(size[1]) : r.height; return { x: cx - w / 2, y: cy - hh / 2, w, h: hh }; };
     const A = box(a, cfg.start, 0), B = box(b, cfg.end, W);
     const ang = Math.atan2((B.y + B.h / 2) - (A.y + A.h / 2), (B.x + B.w / 2) - (A.x + A.w / 2)) * 180 / Math.PI + 90;
     clearTimeout(this.carryT);
@@ -149,13 +152,13 @@ export default class SiteLogic extends DCLogic {
     if (s.page === 'home') {
       const hb = this.heroBarRef.current, mr = this.moreRef.current;
       if (hb && mr) {
-        const f = hb.getBoundingClientRect().bottom < 64 && mr.getBoundingClientRect().top > vh - 40;
+        const f = hb.getBoundingClientRect().bottom < sc(64) && mr.getBoundingClientRect().top > vh - sc(40);
         if (f !== s.promoFixed) this.setState({ promoFixed:f });
       }
       const w = this.wrapRef.current;
       if (w && s.mode === 'anim') {
-        const r = w.getBoundingClientRect(), total = r.height - (vh - 64);
-        const prog = Math.min(.9999, Math.max(0, (64 - r.top) / total));
+        const r = w.getBoundingClientRect(), total = r.height - (vh - sc(64));
+        const prog = Math.min(.9999, Math.max(0, (sc(64) - r.top) / total));
         const idx = Math.floor(prog * 7);
         if (idx !== s.scene) this.playScene(idx);
       }
@@ -173,8 +176,8 @@ export default class SiteLogic extends DCLogic {
     const s = this.state;
     if (s.mode === 'anim') {
       const w = this.wrapRef.current; if (!w) return;
-      const r = w.getBoundingClientRect(), total = r.height - (window.innerHeight - 64);
-      window.scrollTo({ top: window.scrollY + r.top - 64 + ((i + .5) / 7) * total, behavior:'smooth' });
+      const r = w.getBoundingClientRect(), total = r.height - (window.innerHeight - sc(64));
+      window.scrollTo({ top: window.scrollY + r.top - sc(64) + ((i + .5) / 7) * total, behavior:'smooth' });
     } else {
       const t = this.trackRef.current; if (!t) return;
       const inner = t.firstElementChild, slide = inner && inner.children[i];
@@ -196,7 +199,7 @@ export default class SiteLogic extends DCLogic {
       c48: wide ? 'minmax(0,4fr) minmax(0,8fr)' : 'minmax(0,1fr)',
       c75: wide ? 'minmax(0,7fr) minmax(0,5fr)' : 'minmax(0,1fr)',
       c57: wide ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)',
-      c39: wide ? '260px minmax(0,1fr)' : 'minmax(0,1fr)',
+      c39: wide ? '16.25rem minmax(0,1fr)' : 'minmax(0,1fr)',
       ruleR: wide ? '1px solid #D9D0C2' : '0'
     };
     const is = {}; PAGES.forEach(p => is[p] = s.page === p);
@@ -236,15 +239,15 @@ export default class SiteLogic extends DCLogic {
     const P = i => !anim ? 10 : i === s.scene ? s.phase : i < s.scene ? 10 : 0;
     const p1 = P(0), p2 = P(1), p3 = P(2), p4 = P(3), p5 = P(4), p6 = P(5), p7 = P(6);
     const sb = {
-      wrapH: anim ? '760vh' : 'auto', stagePos: anim ? 'sticky' : 'relative', stageH: anim ? 'calc(100vh - 64px)' : 'auto',
-      gap: anim ? '0px' : '16px', ovx: anim ? 'hidden' : 'auto', snap: anim ? 'none' : 'x mandatory',
-      pad: anim ? '0' : '20px clamp(16px,3vw,40px) 20px',
+      wrapH: anim ? '760vh' : 'auto', stagePos: anim ? 'sticky' : 'relative', stageH: anim ? 'calc(100vh - 4rem)' : 'auto',
+      gap: anim ? '0px' : '1rem', ovx: anim ? 'hidden' : 'auto', snap: anim ? 'none' : 'x mandatory',
+      pad: anim ? '0' : '1.25rem clamp(1rem,3vw,2.5rem) 1.25rem',
       trackT: anim ? `translateX(-${s.scene * 100}vw)` : 'none',
       innerW: anim ? '700vw' : 'max-content',
-      slideFlex: anim ? '0 0 100vw' : '0 0 min(1120px, 88vw)',
-      slidePad: anim ? '24px clamp(16px,3vw,40px)' : 'clamp(16px,2.5vw,32px)',
+      slideFlex: anim ? '0 0 100vw' : '0 0 min(70rem, 88vw)',
+      slidePad: anim ? '1.5rem clamp(1rem,3vw,2.5rem)' : 'clamp(1rem,2.5vw,2rem)',
       slideBorder: anim ? '0' : '1px solid #D9D0C2', slideBg: anim ? 'transparent' : '#FFFFFF',
-      footPad: anim && s.promoFixed && !s.promoX ? '66px' : '10px',
+      footPad: anim && s.promoFixed && !s.promoX ? '4.125rem' : '0.625rem',
       num: '0' + (s.scene + 1), isSlides: !anim,
       foot: anim ? (s.scene < 6 ? 'Keep scrolling for the next step' : 'End of walkthrough · scroll on') : 'Slideshow · swipe or use the arrows',
       hint: anim ? 'Each scroll plays one complete step.' : 'Swipe through the steps at your own pace.',
@@ -256,12 +259,12 @@ export default class SiteLogic extends DCLogic {
     const rail = this.scenes.map((n,i) => ({ n:'0'+(i+1), name:n, bg: i === s.scene ? '#FFFFFF' : 'transparent', bar: i === s.scene ? '#EB5E12' : 'transparent', onClick: () => this.jumpScene(i) }));
     const SEL = 12, bodies = ['#16130F','#3A342D','#6B6257','#B9AE9E','#8E857A','#3A342D'];
     const carry = anim && s.scene >= 1, dropped = p1 >= 5;
-    const s1 = { stripT: `translateX(-${(p1 >= 1 ? SEL : 1) * 82 + 32}px)`, tickO: p1 >= 1 && p1 < 5 ? 1 : 0, capO: p1 >= 6 ? 1 : 0,
+    const s1 = { stripT: `translateX(-${((p1 >= 1 ? SEL : 1) * 82 + 32) / 16}rem)`, tickO: p1 >= 1 && p1 < 5 ? 1 : 0, capO: p1 >= 6 ? 1 : 0,
       phones: Array.from({length:16}, (_, k) => { const sel = k === SEL; return { body: bodies[k % 6], ol: sel && p1 >= 4 && p1 < 6 ? '#EB5E12' : 'transparent', o: sel ? (dropped ? 0 : 1) : (p1 >= 4 ? .4 : 1), t: 'none', z: sel ? 2 : 1 }; }),
       bpO: carry ? 0 : dropped ? 1 : 0,
-      bpT: carry ? 'translate(91vw,70px) rotate(0deg) scale(1.8)' : dropped ? 'translateY(150px) rotate(90deg)' : 'none',
+      bpT: carry ? 'translate(91vw,4.375rem) rotate(0deg) scale(1.8)' : dropped ? 'translateY(9.375rem) rotate(90deg)' : 'none',
       bpTr: carry ? 'transform 700ms cubic-bezier(.6,0,.2,1), opacity 650ms ease-in' : 'transform 650ms cubic-bezier(.3,.1,.2,1), opacity 0ms' };
-    const s2 = { phoneO: anim && s.scene >= 2 ? 0 : 1, cableT: p2 >= 1 ? 'translateY(0)' : 'translateY(220px)', screenBg: p2 >= 2 ? '#F6F2EA' : '#0B0907', logoO: p2 >= 2 ? 1 : 0, logoS: p2 >= 2 ? 1 : .6, r1: p2 >= 3 ? 1 : 0, r2: p2 >= 4 ? 1 : 0,
+    const s2 = { phoneO: anim && s.scene >= 2 ? 0 : 1, cableT: p2 >= 1 ? 'translateY(0)' : 'translateY(13.75rem)', screenBg: p2 >= 2 ? '#F6F2EA' : '#0B0907', logoO: p2 >= 2 ? 1 : 0, logoS: p2 >= 2 ? 1 : .6, r1: p2 >= 3 ? 1 : 0, r2: p2 >= 4 ? 1 : 0,
       status: p2 >= 4 ? 'IDENTIFIED · READY TO TEST' : p2 >= 2 ? 'READING DEVICE…' : 'WAITING FOR CONNECTION', statusFg: p2 >= 4 ? '#1E7A4A' : '#6B6257' };
     let done = 0;
     const s3rows = this.diag.map(([port,device,imei,func,k,erase], i) => {
@@ -272,7 +275,7 @@ export default class SiteLogic extends DCLogic {
     });
     const s3 = { rows: s3rows, done, pct: Math.round(done / 6 * 100) + '%' };
     const s4 = {
-      tiles: Array.from({length:12}, (_, i) => ({ o: p4 >= 1 ? 0 : 1, t: p4 >= 1 ? 'translateX(60px) scale(.4)' : 'none', d: (i * 45) + 'ms' })),
+      tiles: Array.from({length:12}, (_, i) => ({ o: p4 >= 1 ? 0 : 1, t: p4 >= 1 ? 'translateX(3.75rem) scale(.4)' : 'none', d: (i * 45) + 'ms' })),
       count: p4 >= 2 ? 12 : p4 >= 1 ? 7 : 0, boxT: p4 >= 2 ? 'scale(1)' : 'scale(.94)',
       lanes: [['Repair','3','25%','#B3261E','→ Bench R-2 · rear camera, battery'],['Sale / ship','6','50%','#EB5E12','→ SO-10422 · UPS Ground · Fri'],['Storage','3','25%','#1E7A4A','→ WH-A · C-14-03, C-14-04']]
         .map(([name,n,w,c,dest]) => ({ name, n: p4 >= 3 ? n : '0', w: p4 >= 3 ? w : '0%', c, dest, o: p4 >= 4 ? 1 : 0 }))
@@ -281,7 +284,7 @@ export default class SiteLogic extends DCLogic {
       stages: [['Issues found',1],['Repaired',3],['Packed',6],['Shipped',7],['Shelved',9]].map(([t,k]) => { const on = p5 >= k; return { t, bar: on ? '#16130F' : '#D9D0C2', fg: on ? '#16130F' : '#8E857A' }; }),
       listO: p5 >= 1 ? 1 : 0, hd: p5 >= 3 ? 'Fixed · retest 42/42' : '2 issues found', hdFg: p5 >= 3 ? '#1E7A4A' : '#B3261E',
       issues: [['Rear camera · no image','Rear camera · replaced',2],['Battery 71% · degraded','Battery · replaced',3]].map(([a1,a2,k]) => ({ t: p5 >= k ? a2 : a1, fg: p5 >= k ? '#1E7A4A' : '#B3261E' })),
-      phoneL: p5 >= 4 ? '50%' : '18%', phoneT: p5 >= 5 ? 'translateY(24px) scale(.32)' : 'none', phoneO: p5 >= 5 || (anim && p5 < 1) ? 0 : 1,
+      phoneL: p5 >= 4 ? '50%' : '18%', phoneT: p5 >= 5 ? 'translateY(1.5rem) scale(.32)' : 'none', phoneO: p5 >= 5 || (anim && p5 < 1) ? 0 : 1,
       boxO: p5 >= 4 && p5 < 9 ? 1 : 0, boxS: p5 >= 9 ? .4 : 1, boxL: p5 >= 7 ? '82%' : '50%', flapO: p5 >= 4 && p5 < 6 ? 1 : 0, tapeO: p5 >= 6 ? 1 : 0,
       doorBg: p5 >= 9 ? '#1E7A4A' : '#EDE6DA', recvO: p5 >= 9 ? 1 : 0
     };
@@ -292,8 +295,8 @@ export default class SiteLogic extends DCLogic {
       ['Northgate Mall','Kiosk · Dallas, TX','84','71 available','Priya S., Jordan K.','74%','60%','up','left',6]
     ].map(([name,type,stock,avail,staffStr,x,y,v,hz,th], i) => { const full = i === act, seen = p6 >= th; return {
       name, type, stock, avail, staffStr, x, y,
-      pinO: p6 >= 1 ? 1 : 0, pinT: p6 >= 1 ? 'translateY(0)' : 'translateY(-18px)', pinD: (i * 120) + 'ms', pinBg: seen ? '#1E7A4A' : '#16130F',
-      cTop: v === 'down' ? '24px' : 'auto', cBot: v === 'up' ? '24px' : 'auto', cLeft: hz === 'right' ? '-12px' : 'auto', cRight: hz === 'left' ? '-12px' : 'auto',
+      pinO: p6 >= 1 ? 1 : 0, pinT: p6 >= 1 ? 'translateY(0)' : 'translateY(-1.125rem)', pinD: (i * 120) + 'ms', pinBg: seen ? '#1E7A4A' : '#16130F',
+      cTop: v === 'down' ? '1.5rem' : 'auto', cBot: v === 'up' ? '1.5rem' : 'auto', cLeft: hz === 'right' ? '-0.75rem' : 'auto', cRight: hz === 'left' ? '-0.75rem' : 'auto',
       origin: (v === 'down' ? 'top ' : 'bottom ') + (hz === 'right' ? 'left' : 'right'),
       cardS: full ? 1 : .6, cardO: full ? 1 : 0, tagO: seen && !full ? 1 : 0, z: full ? 3 : 1, src: i === 2 ? '5' : '', dst: i === 0 ? '5' : '' }; }) };
     const px = v => ((v - 300) / 80 * 100) + '%';
@@ -319,12 +322,12 @@ export default class SiteLogic extends DCLogic {
       tr: c.go ? `left 800ms ${ease}, top 800ms ${ease}, width 800ms ${ease}, height 800ms ${ease}, opacity 300ms ease 560ms` : 'none',
       isPhone: c.kind === 'phone', isBox: c.kind === 'box', isPlane: c.kind === 'plane',
       rad: Math.max(3, Math.round(CR.w * .17)) + 'px', pad: Math.max(2, Math.round(CR.w * .05)) + 'px', rad2: Math.max(2, Math.round(CR.w * .12)) + 'px', rot: 'rotate(' + c.ang + 'deg)' } : { on:false };
-    const xf = this.xfRows.map(([b,a], i) => ({ b, a, bFg: s.xfOn ? '#8E857A' : '#3A342D', strike: s.xfOn ? '#B3261E' : 'transparent', o: s.xfOn ? 1 : 0, t: s.xfOn ? 'none' : 'translateX(-8px)', d: (i * 180) + 'ms', d2: (i * 180 + 250) + 'ms' }));
-    const scrollTesti = dir => { const el = this.testiRef.current; if (!el) return; const f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + 28 : 400; el.scrollBy({ left: dir * w, behavior:'smooth' }); };
+    const xf = this.xfRows.map(([b,a], i) => ({ b, a, bFg: s.xfOn ? '#8E857A' : '#3A342D', strike: s.xfOn ? '#B3261E' : 'transparent', o: s.xfOn ? 1 : 0, t: s.xfOn ? 'none' : 'translateX(-0.5rem)', d: (i * 180) + 'ms', d2: (i * 180 + 250) + 'ms' }));
+    const scrollTesti = dir => { const el = this.testiRef.current; if (!el) return; const f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + sc(28) : sc(400); el.scrollBy({ left: dir * w, behavior:'smooth' }); };
     const testi = {
       items: this.testimonials.map(([q,n,r]) => ({q,n,r})), pos: `${String(s.tIdx + 1).padStart(2,'0')} / ${String(this.testimonials.length).padStart(2,'0')}`,
       prev: () => scrollTesti(-1), next: () => scrollTesti(1),
-      onScroll: e => { const el = e.currentTarget, f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + 28 : 400; const i = Math.min(this.testimonials.length - 1, Math.round(el.scrollLeft / w)); if (i !== this.state.tIdx) this.setState({ tIdx:i }); }
+      onScroll: e => { const el = e.currentTarget, f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + sc(28) : sc(400); const i = Math.min(this.testimonials.length - 1, Math.round(el.scrollLeft / w)); if (i !== this.state.tIdx) this.setState({ tIdx:i }); }
     };
 
     return {
@@ -422,7 +425,7 @@ export default class SiteLogic extends DCLogic {
   pageVals(s) {
     const ind = {
       nav: this.industries.map((r,i) => ({ k:'0'+(i+1), name:r[0], href:'#/industries', fg: i === s.ind ? '#16130F' : '#6B6257', num: i === s.ind ? '#EB5E12' : '#B9AE9E', fw: i === s.ind ? '600' : '500',
-        go: e => { e.preventDefault(); const el = document.querySelectorAll('[data-ind]')[i]; if (el) window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - 72, behavior:'smooth' }); } })),
+        go: e => { e.preventDefault(); const el = document.querySelectorAll('[data-ind]')[i]; if (el) window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - sc(72), behavior:'smooth' }); } })),
       panels: this.industries.map(([name,h,b,flow,mods,plan],i) => ({ k:'0'+(i+1), name, h, b, plan, flow: flow.map((t,j) => ({ t, n:'0'+(j+1) })), mods: mods.map(t => ({t})) })),
       ladder: this.ladder.map(([t,d,p],i) => ({ k:'0'+(i+1), t, d, p }))
     };

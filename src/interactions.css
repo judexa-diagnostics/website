@@ -8,6 +8,6 @@
 .hv-6:hover{background:#2A251F !important;color:#F6F2EA !important}
 .hv-7:hover{background:#F6F2EA !important;color:#16130F !important}
 .hv-8:hover{background:#000000 !important;color:#F6F2EA !important}
-.fc-9:focus{border-color:#16130F !important;box-shadow:0 0 0 3px #FBE7CC !important}
+.fc-9:focus{border-color:#16130F !important;box-shadow:0 0 0 0.1875rem #FBE7CC !important}
 .hv-10:hover{background:#16130F !important;color:#F6F2EA !important;border-color:#16130F !important}
 .hv-11:hover{color:#FFFFFF !important}
