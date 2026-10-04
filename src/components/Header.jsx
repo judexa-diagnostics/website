@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 export default function Header({ v }) {
-  const { goSignin, goTrial, langCode, langOpen, langs, menuBtnBg, menuBtnFg, menuLabel, nav, toggleLang, toggleMenu, ui } = v;
+  const { goTrial, langCode, langOpen, langs, loginUrl, menuBtnBg, menuBtnFg, menuLabel, nav, toggleLang, toggleMenu, ui } = v;
   return (
     <header style={{ position: "sticky", top: "0", zIndex: "60", height: "4rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", padding: "0 clamp(1rem,3vw,2.5rem)", background: "#F6F2EA", borderBottom: "1px solid #D9D0C2" }}>
       <a href="#/home" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "#16130F", flex: "none" }}>
@@ -30,7 +30,7 @@ export default function Header({ v }) {
           ) : null}
         </div>
         <a className="hv-0" href="#/pricing" style={{ height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "#16130F", textDecoration: "none", borderBottom: `2px solid ${nav.pricing}` }}>Pricing</a>
-        <a className="hv-0" href="#/start" onClick={goSignin} style={{ height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "#16130F", textDecoration: "none", marginRight: "0.375rem" }}>Sign in</a>
+        <a className="hv-0" href={loginUrl} style={{ height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "#16130F", textDecoration: "none", marginRight: "0.375rem" }}>Sign in</a>
         <button className="hv-2" onClick={goTrial} style={{ height: "2.25rem", padding: "0 0.875rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", whiteSpace: "nowrap" }}>Join now</button>
         <button className="hv-3" onClick={toggleMenu} aria-label="Menu" style={{ height: "2.25rem", padding: "0 0.75rem", marginLeft: "0.375rem", background: menuBtnBg, color: menuBtnFg, border: "1px solid #16130F", borderRadius: "2px", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem" }}>
           <span style={{ display: "flex", flexDirection: "column", gap: "0.1875rem" }}>

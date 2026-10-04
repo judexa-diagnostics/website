@@ -9,7 +9,7 @@ export default function Industries({ v }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "1.125rem" }}>
           <h1 style={{ margin: "0", fontSize: "clamp(2rem,3.4vw,3.125rem)", lineHeight: "1.04", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance", maxWidth: "56.25rem" }}>Built for every business that buys, fixes or resells devices.</h1>
           <p style={{ margin: "0", fontSize: "1.0625rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "40rem" }}>
-            The same system runs a single repair counter or a 40-store network. You add modules and locations as you grow, and prices are published and charged per month.
+            The same system runs a single repair counter or a 40-store network. You move up a plan as your volume grows, and every price is published.
           </p>
         </div>
       </section>

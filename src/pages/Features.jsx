@@ -6,20 +6,12 @@ export default function Features({ v }) {
     <>
       <section style={{ padding: "clamp(3rem,6vw,4.5rem) clamp(1rem,3vw,2.5rem) 1.5rem", display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", alignItems: "end" }}>
         <h1 style={{ margin: "0", fontSize: "clamp(2rem,3.4vw,3.125rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em" }}>Features</h1>
-        <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "38.75rem" }}>Every feature, listed plainly. Filter by module or by plan to see exactly what you'd get.</p>
+        <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "38.75rem" }}>Every feature, listed plainly. Every plan includes all of them; plans differ in included checks, stations, staff users and support.</p>
       </section>
       <section style={{ padding: "0 clamp(1rem,3vw,2.5rem) clamp(3.5rem,7vw,5.5rem)" }}>
         <div style={{ position: "sticky", top: "4rem", zIndex: "5", background: "#F6F2EA", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <input className="fc-9" value={feat.q} onChange={feat.setQ} placeholder="Search features, e.g. erasure, labels, IMEI" style={{ flex: "1 1 17.5rem", height: "2.5rem", padding: "0 0.75rem", border: "1px solid #D9D0C2", borderRadius: "2px", background: "#FFFFFF", fontSize: "0.875rem", color: "#16130F", outline: "none" }} />
-            <select value={feat.plan} onChange={feat.setPlan} style={{ height: "2.5rem", padding: "0 0.625rem", border: "1px solid #D9D0C2", borderRadius: "2px", background: "#FFFFFF", fontSize: "0.875rem", color: "#16130F" }}>
-              {" "}
-              <option>Any plan</option>
-              <option>Included in Bench</option>
-              <option>Included in Shop</option>
-              <option>Included in Network</option>
-              {" "}
-            </select>
           </div>
           <div style={{ display: "flex", gap: "0.375rem", overflowX: "auto", paddingBottom: "2px", scrollbarWidth: "none" }}>
             {feat.mods.map((m, j) => (
@@ -31,26 +23,20 @@ export default function Features({ v }) {
           </div>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <div style={{ minWidth: "47.5rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "8.125rem 1.2fr 2fr 5.25rem 5.25rem 5.25rem", gap: "0.75rem", height: "2.5rem", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", borderBottom: "1px solid #16130F" }}>
+          <div style={{ minWidth: "37.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "8.125rem 1.2fr 2fr", gap: "0.75rem", height: "2.5rem", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", borderBottom: "1px solid #16130F" }}>
               <span>Module</span>
               <span>Feature</span>
               <span>What it does</span>
-              <span>Bench</span>
-              <span>Shop</span>
-              <span>Network</span>
             </div>
             {" "}
             {feat.rows.map((r, j) => (
               <Fragment key={j}>
                 {" "}
-                <div className="hv-1" style={{ display: "grid", gridTemplateColumns: "8.125rem 1.2fr 2fr 5.25rem 5.25rem 5.25rem", gap: "0.75rem", padding: "0.75rem 0", alignItems: "baseline", borderBottom: "1px solid #EDE7DC", fontSize: "0.875rem" }}>
+                <div className="hv-1" style={{ display: "grid", gridTemplateColumns: "8.125rem 1.2fr 2fr", gap: "0.75rem", padding: "0.75rem 0", alignItems: "baseline", borderBottom: "1px solid #EDE7DC", fontSize: "0.875rem" }}>
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.71875rem", color: "#6B6257" }}><span>{r.m}</span></span>
                   <span style={{ fontWeight: "600" }}><span>{r.f}</span></span>
                   <span style={{ color: "#3A342D", lineHeight: "1.45" }}><span>{r.d}</span></span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem", color: r.c0 }}><span>{r.v0}</span></span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem", color: r.c1 }}><span>{r.v1}</span></span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem", color: r.c2 }}><span>{r.v2}</span></span>
                 </div>
                 {" "}
               </Fragment>
