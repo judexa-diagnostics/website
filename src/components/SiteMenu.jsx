@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 export default function SiteMenu({ v }) {
-  const { goSignin, goTrial, menuItems, toggleMenu } = v;
+  const { goTrial, loginUrl, menuItems, toggleMenu } = v;
   return (
     <>
       <div onClick={toggleMenu} style={{ position: "fixed", inset: "4rem 0 0 0", background: "rgba(22,19,15,.18)", zIndex: "55" }} />
@@ -20,7 +20,7 @@ export default function SiteMenu({ v }) {
         {" "}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", padding: "1rem 1.25rem", background: "#F6F2EA" }}>
           <button onClick={goTrial} style={{ height: "2.75rem", background: "#EB5E12", border: "0", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", color: "#16130F" }}>Join now</button>
-          <button onClick={goSignin} style={{ height: "2.75rem", background: "transparent", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", color: "#16130F" }}>Sign in</button>
+          <a href={loginUrl} style={{ height: "2.75rem", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", color: "#16130F", textDecoration: "none" }}>Sign in</a>
         </div>
       </div>
     </>

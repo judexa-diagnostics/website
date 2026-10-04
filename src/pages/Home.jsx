@@ -772,8 +772,8 @@ export default function Home({ v }) {
           <li style={{ display: "grid", gridTemplateColumns: "3.5rem 1fr auto", gap: "0.75rem", padding: "1.125rem 0", borderBottom: "1px solid #D9D0C2", alignItems: "baseline" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.8125rem", color: "#6B6257" }}>02</span>
             <span>
-              <span style={{ display: "block", fontSize: "1.0625rem", fontWeight: "600", fontStretch: "100%" }}>Pick a plan or individual services</span>
-              <span style={{ fontSize: "0.875rem", color: "#3A342D" }}>Pick a bundle, or pay only for the services you use. You can change it any time.</span>
+              <span style={{ display: "block", fontSize: "1.0625rem", fontWeight: "600", fontStretch: "100%" }}>Pick a plan</span>
+              <span style={{ fontSize: "0.875rem", color: "#3A342D" }}>Starter, Growth or Enterprise. Move up a plan when you need more checks.</span>
             </span>
             <a href="#/pricing" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#C2470A" }}>Pricing →</a>
           </li>

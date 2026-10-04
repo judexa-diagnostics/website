@@ -1,3 +1,5 @@
+import PlanButton from '../components/PlanButton.jsx';
+
 export default function Start({ v }) {
   const { st, ui } = v;
   return (
@@ -20,30 +22,9 @@ export default function Start({ v }) {
       </div>
       <div style={{ padding: "clamp(2rem,5vw,4rem) clamp(1rem,4vw,4rem)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "40rem", width: "100%" }}>
         <div style={{ display: "flex", borderBottom: "1px solid #D9D0C2" }}>
-          <button onClick={st.toSignin} style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", background: "transparent", border: "0", borderBottom: `2px solid ${st.tabA}`, fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer", color: "#16130F", marginBottom: "-1px" }}>Sign in</button>
-          <button onClick={st.toCreate} style={{ height: "2.75rem", padding: "0 0.25rem", background: "transparent", border: "0", borderBottom: `2px solid ${st.tabB}`, fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer", color: "#16130F", marginBottom: "-1px" }}>Create account</button>
+          <a href={st.loginUrl} style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid transparent", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none", marginBottom: "-1px" }}>Sign in</a>
+          <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #EB5E12", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Create account</span>
         </div>
-        {st.showSignin ? (
-          <form onSubmit={st.signin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" }}>
-              {"Work email "}
-              <input className="fc-9" type="email" value={st.si.email} onChange={st.setSi.email} autoComplete="email" style={{ height: "2.75rem", padding: "0 0.75rem", border: "1px solid #D9D0C2", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" }}>
-              <span style={{ display: "flex", justifyContent: "space-between" }}>
-                Password
-                <button type="button" onClick={st.forgot} style={{ background: "none", border: "0", padding: "0", fontSize: "0.8125rem", fontWeight: "500", color: "#C2470A", cursor: "pointer" }}>Forgot password?</button>
-              </span>
-              <input className="fc-9" type="password" value={st.si.pw} onChange={st.setSi.pw} autoComplete="current-password" style={{ height: "2.75rem", padding: "0 0.75rem", border: "1px solid #D9D0C2", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
-            </label>
-            <span style={{ fontSize: "0.8125rem", color: st.siFg, minHeight: "1.125rem" }}><span>{st.siMsg}</span></span>
-            <button className="hv-2" type="submit" style={{ height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Sign in</button>
-            <span style={{ fontSize: "0.8125rem", color: "#3A342D" }}>
-              {"New to InPhox? "}
-              <button type="button" onClick={st.toCreate} style={{ background: "none", border: "0", padding: "0", fontSize: "0.8125rem", fontWeight: "600", color: "#16130F", borderBottom: "1px solid #16130F", cursor: "pointer" }}>Create an account</button>
-            </span>
-          </form>
-        ) : null}
         {st.showStep1 ? (
           <form onSubmit={st.next1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(13.75rem,1fr))", gap: "1rem" }}>
             <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" }}>
@@ -86,21 +67,17 @@ export default function Start({ v }) {
                 </button>
               ))}
             </div>
-            {st.isCustom ? (
-              <div style={{ fontSize: "0.8125rem", color: "#3A342D", padding: "0.625rem 0.75rem", background: "#FBE7CC" }}>
-                {"Your current services estimate is "}
-                <strong><span>{st.customTotal}</span></strong>
-                {"/month. "}
-                <a href="#/pricing" style={{ color: "#16130F", fontWeight: "600" }}>Adjust services on Pricing →</a>
-              </div>
-            ) : null}
+            <div style={{ fontSize: "0.8125rem", color: "#3A342D", padding: "0.625rem 0.75rem", background: "#FBE7CC" }}>
+              <span>{st.billing}</span>
+              <a href="#/pricing" style={{ color: "#16130F", fontWeight: "600" }}>Change on Pricing →</a>
+            </div>
             <button onClick={st.toggleTrial} style={{ display: "flex", gap: "0.625rem", alignItems: "center", padding: "0", background: "transparent", border: "0", cursor: "pointer", fontSize: "0.875rem", color: "#16130F", textAlign: "left" }}>
               <span style={{ width: "1.125rem", height: "1.125rem", border: "1px solid #16130F", borderRadius: "2px", background: st.trialBg, color: "#FFFFFF", fontSize: "0.6875rem", display: "flex", alignItems: "center", justifyContent: "center" }}><span>{st.trialMark}</span></span>
               {" Book a free onboarding call. We'll help you connect your first station."}
             </button>
             <div style={{ display: "flex", gap: "0.625rem" }}>
               <button onClick={st.back} style={{ height: "3rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Back</button>
-              <button className="hv-2" onClick={st.next2} style={{ flex: "1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{st.cta2}</span></button>
+              <PlanButton a={st.act2} className="hv-2" style={{ flex: "1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{st.cta2}</span></PlanButton>
             </div>
           </div>
         ) : null}
@@ -123,7 +100,7 @@ export default function Start({ v }) {
               </div>
             </div>
             <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-              <button className="hv-2" style={{ height: "3rem", padding: "0 1.25rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Open workspace</button>
+              <a className="hv-2" href={st.loginUrl} style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", background: "#EB5E12", color: "#16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", textDecoration: "none" }}>Open workspace</a>
               <a href="#/home" style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none" }}>Back to site</a>
             </div>
           </div>

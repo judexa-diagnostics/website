@@ -1,5 +1,5 @@
 export default function Footer({ v }) {
-  const { goSignin, goTrial, langName } = v;
+  const { goTrial, langName, loginUrl } = v;
   return (
     <footer style={{ borderTop: "2px solid #16130F", padding: "2.5rem clamp(1rem,3vw,2.5rem) 1.75rem", display: "flex", flexDirection: "column", gap: "2.25rem", background: "#F6F2EA" }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(10.625rem,1fr))", gap: "1.75rem" }}>
@@ -22,7 +22,7 @@ export default function Footer({ v }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
           <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", marginBottom: "0.25rem" }}>Get started</span>
           <a href="#/start" onClick={goTrial} style={{ color: "#16130F", textDecoration: "none" }}>Join now</a>
-          <a href="#/start" onClick={goSignin} style={{ color: "#16130F", textDecoration: "none" }}>Sign in</a>
+          <a href={loginUrl} style={{ color: "#16130F", textDecoration: "none" }}>Sign in</a>
           <a href="#/contact" style={{ color: "#16130F", textDecoration: "none" }}>Contact sales</a>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>

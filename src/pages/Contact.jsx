@@ -66,6 +66,14 @@ export default function Contact({ v }) {
             </select>
             <span style={{ fontSize: "0.75rem" }} />
           </label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600", gridColumn: "1 / -1" }}>
+            {"What kind of business? "}
+            <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
+              {ct.segments.map((o, j) => (
+                <button key={j} type="button" onClick={o.pick} style={{ height: "2.25rem", padding: "0 0.75rem", borderRadius: "2px", border: `1px solid ${o.bd}`, background: o.bg, color: o.fg, fontSize: "0.8125rem", fontWeight: "500", cursor: "pointer" }}><span>{o.t}</span></button>
+              ))}
+            </div>
+          </div>
           <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600", gridColumn: "1 / -1" }}>
             {"Devices processed per month "}
             <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
@@ -89,8 +97,8 @@ export default function Contact({ v }) {
             <textarea className="fc-9" value={ct.v.msg} onChange={ct.set.msg} rows="4" placeholder="e.g. We grade 300 iPhones a week and track parts in a spreadsheet." style={{ padding: "0.625rem 0.75rem", border: "1px solid #D9D0C2", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", resize: "vertical", background: "#FFFFFF" }} />
           </label>
           <div style={{ gridColumn: "1 / -1", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", flexWrap: "wrap", paddingTop: "0.25rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#6B6257" }}>We'll only use this to follow up on your request.</span>
-            <button className="hv-2" type="submit" style={{ height: "3rem", padding: "0 1.375rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Request a walkthrough</button>
+            <span aria-live="polite" style={{ fontSize: "0.75rem", color: ct.noteFg }}><span>{ct.note}</span></span>
+            <button className="hv-2" type="submit" disabled={ct.sending} style={{ height: "3rem", padding: "0 1.375rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{ct.submitLabel}</span></button>
           </div>
         </form>
       ) : null}
