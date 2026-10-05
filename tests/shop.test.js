@@ -22,3 +22,34 @@ test('refuses what is not a shop name on this domain', () => {
 test('the shop sign-in URL is the shop app on the shop domain', () => {
   assert.equal(shopLoginUrl('bayareaphones', D), 'https://bayareaphones.inphox.net/web/login');
 });
+
+import { createThrottle, RESERVED } from '../src/shop.js';
+
+test('reserved and platform names are refused, however they are typed', () => {
+  for (const raw of ['www', 'API', 'intake', 'platform', 'admin', 'https://intake.inphox.net/web/login', 'sheets-micro']) {
+    assert.ok(shopFromInput(raw, D).error, raw);
+  }
+  assert.ok(RESERVED.has('www') && RESERVED.has('api') && RESERVED.has('intake') && RESERVED.has('platform') && RESERVED.has('admin'));
+  assert.deepEqual(shopFromInput('wwwshop', D), { shop: 'wwwshop' });
+});
+
+test('the name is a DNS label of 1 to 63 characters', () => {
+  assert.deepEqual(shopFromInput('a', D), { shop: 'a' });
+  assert.deepEqual(shopFromInput('a'.repeat(63), D), { shop: 'a'.repeat(63) });
+  assert.match(shopFromInput('a'.repeat(64), D).error, /too long/);
+  for (const raw of ['-a', 'a-', 'a--', 'a b', 'a\tb', 'ünï', '../x', 'a%20b', "a'b", 'a;b']) {
+    assert.ok(shopFromInput(raw, D).error, raw);
+  }
+});
+
+test('the throttle allows 5 tries a minute, then says how long to wait, then lets go', () => {
+  let t = 1000;
+  const th = createThrottle({ now: () => t });
+  for (let i = 0; i < 5; i++) { assert.deepEqual(th.try(), { ok: true }); t += 1000; }
+  const blocked = th.try();
+  assert.equal(blocked.ok, false);
+  assert.ok(blocked.wait >= 1 && blocked.wait <= 60);
+  t += 55000; // the the first try left the window
+  assert.equal(th.try().ok, true);
+  assert.equal(th.try().ok, false);
+});
