@@ -2,7 +2,7 @@ import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, sellsOnline, estimate, cheapestPlan, fitsStations, startRate, PER_CHECK_FLOOR, count, money as usd } from './pricing.js';
 import { SIGNIN_HREF, shopDomain, leadAction, signupAction } from './config.js';
-import { shopFromInput, shopLoginUrl } from './shop.js';
+import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 
 const PAGES = ['home','industries','features','pricing','contact','platform','start','signin'];
 // The last shop this browser signed in to, so Sign in is one click next time.
@@ -623,7 +623,13 @@ export default class SiteLogic extends DCLogic {
       ]
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
-    const goShop = shop => { saveLastShop(shop); location.assign(shopLoginUrl(shop, shopDomain)); };
+    // At most 5 tries a minute, so the box cannot be used to run through names.
+    const throttle = this.siThrottle || (this.siThrottle = createThrottle());
+    const goShop = shop => {
+      const t = throttle.try();
+      if (!t.ok) { this.setState({ siErr: `Please wait a moment (${t.wait}s) before trying again.` }); return; }
+      saveLastShop(shop); location.assign(shopLoginUrl(shop, shopDomain));
+    };
     const si = {
       domain: shopDomain, value: s.siShop, err: s.siErr, bd: s.siErr ? '#B3261E' : '#D9D0C2',
       last: s.siLast, lastHost: s.siLast ? `${s.siLast}.${shopDomain}` : '',
