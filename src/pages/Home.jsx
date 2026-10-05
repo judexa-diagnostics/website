@@ -649,7 +649,7 @@ export default function Home({ v }) {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#D9D0C2" }}>
-            Every plan includes the station app, diagnostics, certified erasure and inventory, set up on your own bench.
+            Every plan includes intake, device checks and inventory; Growth and up add the Double Puff station app on your own bench.
           </p>
           <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
             <button className="hv-2" onClick={goTrial} style={{ height: "3rem", padding: "0 1.25rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Get started</button>
