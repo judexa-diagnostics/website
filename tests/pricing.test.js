@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // Keep the shell's env out of the "unset" cases.
-delete process.env.VITE_BILLING_BASE_URL;
+delete process.env.VITE_PLATFORM_URL;
 delete process.env.VITE_SHOP_DOMAIN;
 
 const FOOTNOTE = "Included checks reset monthly and don't roll over. Checks past your included amount get cheaper the more you run, down to $0.35 each. Overage is billed at the end of the month and capped by a limit you set; you can turn overage off.";
@@ -156,9 +156,10 @@ describe('plan data', async () => {
     assert.deepEqual(rows['Stations'], ['—', '5', 'Unlimited']);
   });
 
-  test('with no env vars: no billing endpoints, default login URL', () => {
-    assert.equal(config.billingBaseUrl, '');
-    assert.equal(config.leadAction, null);
+  test('with no env vars: the forms go to the InPhox platform, default login URL', () => {
+    assert.equal(config.platformUrl, 'https://platform.inphox.net');
+    assert.equal(config.signupAction, 'https://platform.inphox.net/inphox/signup');
+    assert.equal(config.leadAction, 'https://platform.inphox.net/inphox/lead');
     assert.equal(config.shopDomain, 'inphox.net');
     assert.equal(config.SIGNIN_HREF, '#/signin');
     assert.equal(config.appLoginUrl, undefined, 'no intake login: Sign in goes to the shop app');
@@ -239,9 +240,9 @@ async function submitSignup(r, fetchImpl, plan = 'growth') {
   }
 }
 
-describe('rendered, billing service not configured', () => {
+describe('rendered, platform turned off', () => {
   let r;
-  before(async () => (r = await renderWith('')));
+  before(async () => (r = await renderWith('VITE_PLATFORM_URL=off\n')));
   after(() => r.close());
 
   test('every page renders, with no old plan names or prices left', () => {
@@ -354,9 +355,9 @@ describe('rendered, billing service not configured', () => {
   });
 });
 
-describe('rendered, billing service configured', () => {
+describe('rendered, platform configured', () => {
   let r;
-  before(async () => (r = await renderWith('VITE_BILLING_BASE_URL=https://billing.example.test/\nVITE_SHOP_DOMAIN=shops.example.test\n')));
+  before(async () => (r = await renderWith('VITE_PLATFORM_URL=https://platform.example.test/\nVITE_SHOP_DOMAIN=shops.example.test\n')));
   after(() => r.close());
 
   test('pricing and Start never post to the billing service, even when it is configured', () => {
@@ -367,10 +368,10 @@ describe('rendered, billing service configured', () => {
     }
   });
 
-  test('Start: Create account POSTs the sign-up (no password) to /billing/signup; 202 shows Check your email', async () => {
+  test('Start: Create account POSTs the sign-up (no password) to /inphox/signup; 202 shows Check your email', async () => {
     const { calls, state } = await submitSignup(r, () => ({ ok: true, status: 202, json: async () => ({ status: 'check_email' }) }));
     assert.equal(calls.length, 1);
-    assert.equal(calls[0].url, 'https://billing.example.test/billing/signup');
+    assert.equal(calls[0].url, 'https://platform.example.test/inphox/signup');
     assert.equal(calls[0].opts.method, 'POST');
     assert.deepEqual(Object.fromEntries(calls[0].opts.body), { owner_name: 'Pat Lee', company_name: 'Lee Phones', email: 'pat@shop.test', plan: 'growth', interval: 'month' });
     assert.equal(state.step, 3);
@@ -390,10 +391,10 @@ describe('rendered, billing service configured', () => {
     assert.ok(html.includes('.shops.example.test'));
   });
 
-  test('Contact form POSTs name, email, company, segment, volume to /billing/lead; 2xx shows success', async () => {
+  test('Contact form POSTs name, email, company, segment, volume to /inphox/lead; 2xx shows success', async () => {
     const { calls, state } = await submitLead(r, () => ({ ok: true, status: 204 }));
     assert.equal(calls.length, 1);
-    assert.equal(calls[0].url, 'https://billing.example.test/billing/lead');
+    assert.equal(calls[0].url, 'https://platform.example.test/inphox/lead');
     assert.equal(calls[0].opts.method, 'POST');
     assert.ok(calls[0].opts.body instanceof URLSearchParams);
     assert.deepEqual(Object.fromEntries(calls[0].opts.body), { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', segment: 'Independent repair shops', volume: '100–500' });

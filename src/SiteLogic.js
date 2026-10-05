@@ -11,7 +11,7 @@ const readLastShop = () => { try { return (typeof localStorage !== 'undefined' &
 const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KEY, shop); else localStorage.removeItem(LAST_SHOP_KEY); } catch (e) { /* private window */ } };
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const [STARTER, GROWTH, ENTERPRISE] = ['starter','growth','enterprise'].map(findPlan);
-const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /billing/lead receives
+const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /inphox/lead receives
 // Layout is sized in rem; converts a design-pixel value (at a 16px root) to
 // actual screen pixels at the current root font size.
 const sc = px => px * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) / 16;
@@ -509,9 +509,9 @@ export default class SiteLogic extends DCLogic {
         if (!c.company.trim()) er.company = 'Enter your company name.';
         if (!c.volume) er.volume = 'Pick your monthly volume.';
         if (Object.keys(er).length) { this.setState({ cErr: er, cSent:false }); window.scrollTo(0,0); return; }
-        // No billing service configured: client-side only, no network request.
+        // Platform turned off (VITE_PLATFORM_URL=off): client-side only, no network request.
         if (!leadAction) { this.setState({ cErr:{} }); sent(); return; }
-        // Billing service configured: send the lead form-encoded; show the success card only on a 2xx.
+        // Send the lead form-encoded to the platform; show the success card only on a 2xx.
         this.setState({ cErr:{}, cSending:true, cSendErr:'' });
         const body = new URLSearchParams(LEAD_FIELDS.map(k => [k, (c[k] || '').trim()]));
         fetch(leadAction, { method:'POST', headers:{ Accept:'application/json' }, body })
@@ -531,7 +531,7 @@ export default class SiteLogic extends DCLogic {
     const setA = k => e => this.setState(st => ({ a: { ...st.a, [k]: e.target.value }, aErr: { ...st.aErr, [k]: '' } }));
     const chosen = findPlan(s.plan) || GROWTH;
     // Create account: no password and no payment here. The sign-up goes to
-    // phone-intake, which emails a confirmation link; the shop is then created,
+    // the InPhox platform, which emails a confirmation link; the shop is then created,
     // the owner sets a password from the welcome email, finishes setup in the
     // app and pays for the plan as the last step.
     const createAccount = () => {

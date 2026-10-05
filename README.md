@@ -25,7 +25,7 @@ Two optional env vars, read at build time. Copy `.env.example` to `.env.local` (
 
 | Variable | Unset | Set |
 |---|---|---|
-| `VITE_BILLING_BASE_URL` | Create account and the Contact form show their success screens without sending anything. | Create account POSTs `owner_name`, `company_name`, `email`, `plan`, `interval` to `<base>/billing/signup` (202 shows "Check your email"); the Contact form POSTs to `<base>/billing/lead`. The site never takes payment. |
+| `VITE_PLATFORM_URL` | `https://platform.inphox.net`: Create account POSTs `owner_name`, `company_name`, `email`, `plan`, `interval` to `<platform>/inphox/signup` (202 shows "Check your email"); the Contact form POSTs to `<platform>/inphox/lead`. | `off`: both forms show their success screens without sending anything (local previews). The site never takes payment. |
 | `VITE_SHOP_DOMAIN` | Shops are at `<shop>.inphox.net`. | Shops are at `<shop>.<this domain>`. Every Sign in link opens `#/signin` ("Sign in to your shop"), which asks for the shop's name and goes to `https://<shop>.<domain>/web/login`; the last shop is remembered in the browser. |
 
 What the billing service receives:
