@@ -25,10 +25,10 @@ Two optional env vars, read at build time. Copy `.env.example` to `.env.local` (
 
 | Variable | Unset | Set |
 |---|---|---|
-| `VITE_BILLING_BASE_URL` | Plan buttons continue to the Start page (account, then plan). The Contact form shows its success card without sending anything. | Plan buttons submit a form POST to `<base>/billing/checkout` and the browser follows the redirect. The Contact form POSTs to `<base>/billing/lead`. |
+| `VITE_BILLING_BASE_URL` | Create account and the Contact form show their success screens without sending anything. | Create account POSTs `owner_name`, `company_name`, `email`, `plan`, `interval` to `<base>/billing/signup` (202 shows "Check your email"); the Contact form POSTs to `<base>/billing/lead`. The site never takes payment. |
 | `VITE_APP_LOGIN_URL` | Sign in links go to `https://intake.inphox.net/auth/login`. | Sign in links go to this URL. |
 
 What the billing service receives:
 
-- `POST /billing/checkout`, a normal form submission (`application/x-www-form-urlencoded`) with `plan` (`starter`, `growth`, `enterprise`), `interval` (`month`, `year`) and `payment_mode` (`card`, `invoice_usdc`). It comes from the plan cards and the estimate on the Pricing page, and from the last step of the Start page. The service answers with a redirect (to the hosted checkout page, or to the USDC invoice sign-up). The site never sends a pair the service refuses: choosing USDC invoice sets the interval to `month`, and Enterprise billed monthly (contract only) shows "Talk to us", linking to the Contact page, instead of a checkout button.
+- No checkout from the website. Every plan button (plan cards, the estimate, the last step of the Start page) continues the sign-up flow with that plan picked; the plan is paid for inside the app as the last step of shop setup. Enterprise billed monthly (contract only) shows "Talk to us", linking to the Contact page.
 - `POST /billing/lead`, sent with `fetch` as `application/x-www-form-urlencoded` with `name`, `email`, `company`, `segment` (the "What kind of business?" choice) and `volume` (devices processed per month). The Contact form's locations, current tools and message are not sent: the service stores only those five fields. The success card shows only on a 2xx response, so the service must allow the site's origin (`WEBSITE_ORIGIN` on the service). Anything else keeps the form and shows an inline "try again" line.

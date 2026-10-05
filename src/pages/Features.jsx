@@ -6,7 +6,7 @@ export default function Features({ v }) {
     <>
       <section style={{ padding: "clamp(3rem,6vw,4.5rem) clamp(1rem,3vw,2.5rem) 1.5rem", display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", alignItems: "end" }}>
         <h1 style={{ margin: "0", fontSize: "clamp(2rem,3.4vw,3.125rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em" }}>Features</h1>
-        <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "38.75rem" }}>Every feature, listed plainly. Every plan includes all of them; plans differ in included checks, stations, staff users and support.</p>
+        <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "38.75rem" }}>Every feature, listed plainly. Every plan includes all of them except the Double Puff station app, which comes with Growth and Enterprise; plans also differ in included checks, stations, staff users and support.</p>
       </section>
       <section style={{ padding: "0 clamp(1rem,3vw,2.5rem) clamp(3.5rem,7vw,5.5rem)" }}>
         <div style={{ position: "sticky", top: "4rem", zIndex: "5", background: "#F6F2EA", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", display: "flex", flexDirection: "column", gap: "0.625rem" }}>

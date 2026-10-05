@@ -42,12 +42,6 @@ export default function Start({ v }) {
               <input className="fc-9" type="email" value={st.a.email} onChange={st.setA.email} style={{ height: "2.75rem", padding: "0 0.75rem", border: `1px solid ${st.bd.email}`, borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
               <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E" }}><span>{st.e.email}</span></span>
             </label>
-            <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600", gridColumn: "1 / -1" }}>
-              {"Password "}
-              <span style={{ fontWeight: "400", color: "#6B6257" }}>At least 8 characters</span>
-              <input className="fc-9" type="password" value={st.a.pw} onChange={st.setA.pw} style={{ height: "2.75rem", padding: "0 0.75rem", border: `1px solid ${st.bd.pw}`, borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
-              <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E" }}><span>{st.e.pw}</span></span>
-            </label>
             <button className="hv-2" type="submit" style={{ gridColumn: "1 / -1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to plan</button>
           </form>
         ) : null}
@@ -79,6 +73,7 @@ export default function Start({ v }) {
               <button onClick={st.back} style={{ height: "3rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Back</button>
               <PlanButton a={st.act2} className="hv-2" style={{ flex: "1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{st.cta2}</span></PlanButton>
             </div>
+            {st.sErr ? <span role="alert" style={{ fontSize: "0.8125rem", color: "#B3261E" }}><span>{st.sErr}</span></span> : null}
           </div>
         ) : null}
         {st.showDone ? (
@@ -86,21 +81,15 @@ export default function Start({ v }) {
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#1E7A4A" }}><span>{st.doneTag}</span></span>
             <span style={{ fontSize: "clamp(1.375rem,2vw,1.75rem)", fontWeight: "600", fontStretch: "102%", lineHeight: "1.2" }}><span>{st.doneTitle}</span></span>
             <div style={{ borderTop: "1px solid #16130F" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "2.25rem 1fr", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", color: "#6B6257" }}>01</span>
-                <span>Install the InPhox station app on a Mac or Windows PC</span>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "2.25rem 1fr", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", color: "#6B6257" }}>02</span>
-                <span>Connect a USB hub and plug in your first device</span>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "2.25rem 1fr", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", color: "#6B6257" }}>03</span>
-                <span>Invite your technicians and set up your locations</span>
-              </div>
+              {st.doneSteps.map((t, j) => (
+                <div key={j} style={{ display: "grid", gridTemplateColumns: "2.25rem 1fr", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", color: "#6B6257" }}>{'0' + (j + 1)}</span>
+                  <span>{t}</span>
+                </div>
+              ))}
             </div>
             <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-              <a className="hv-2" href={st.loginUrl} style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", background: "#EB5E12", color: "#16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", textDecoration: "none" }}>Open workspace</a>
+              <a className="hv-2" href={st.loginUrl} style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", background: "#EB5E12", color: "#16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", textDecoration: "none" }}>Go to sign in</a>
               <a href="#/home" style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none" }}>Back to site</a>
             </div>
           </div>
