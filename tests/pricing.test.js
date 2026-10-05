@@ -225,12 +225,16 @@ async function submitLead(r, fetchImpl) {
 
 
 /** Run the Start page's Create account with valid values and a stubbed fetch; returns the calls and final state. */
-async function submitSignup(r, fetchImpl, plan = 'growth') {
+const SHOP = { street: '12 Main St', street2: '', city: 'Oakland', state: 'CA', zip: '94607', country: 'US',
+  phone: '(510) 555-0100', bemail: '', site: '' };
+
+async function submitSignup(r, fetchImpl, plan = 'growth', extra = {}) {
   const calls = [];
   const realFetch = globalThis.fetch;
   globalThis.fetch = async (url, opts) => { calls.push({ url, opts }); return fetchImpl(); };
   try {
-    const logic = r.logicWith({ page: 'start', step: 2, plan, a: { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones' } });
+    const logic = r.logicWith({ page: 'start', step: 3, plan, a: { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones' },
+      sh: { ...SHOP }, ...extra });
     logic.renderVals().st.act2.onClick();
     await new Promise(res => setTimeout(res, 10));
     return { calls, state: logic.state };
@@ -293,14 +297,43 @@ describe('rendered, billing service not configured', () => {
   });
 
   test('Start: the plan is the last step and nothing is charged; Enterprise monthly is Talk to us', () => {
-    const growth = r.render({ page: 'start', step: 2, plan: 'growth' });
+    const growth = r.render({ page: 'start', step: 3, plan: 'growth' });
     assert.equal(forms(growth).length, 0);
     assert.ok(growth.includes('<span>Create account on Growth</span>'));
     assert.ok(text(growth).includes('Nothing is charged now.'));
-    const ent = r.render({ page: 'start', step: 2, plan: 'enterprise' });
+    const ent = r.render({ page: 'start', step: 3, plan: 'enterprise' });
     assert.match(ent, /href="#\/contact"[^>]*><span>Talk to us<\/span>/);
-    const done = text(r.render({ page: 'start', step: 3, plan: 'growth', trial: false }));
+    const done = text(r.render({ page: 'start', step: 4, plan: 'growth', trial: false }));
     assert.ok(done.includes('Growth plan chosen · pay when you finish setup'));
+    assert.ok(done.includes('it works for 24 hours'));
+    assert.ok(done.includes('usually within a day'));
+  });
+
+  test('Start, Your shop: the in-app setup questions, logo optional; Continue checks the required ones', () => {
+    const html = text(r.render({ page: 'start', step: 2, a: { name: 'Pat', email: 'pat@shop.test', company: 'Lee Phones' } }));
+    for (const s of ['Your shop', 'Street address', 'City', 'State', 'ZIP', 'Country', 'Shop phone', 'Shop email (optional)',
+      'Website (optional)', 'Logo (optional)', 'Leave empty to use pat@shop.test', 'Continue to plan']) assert.ok(html.includes(s), s);
+    const empty = r.logicWith({ page: 'start', step: 2, a: { name: 'Pat', email: 'pat@shop.test', company: 'Lee Phones' } });
+    empty.renderVals().st.nextShop({ preventDefault() {} });
+    assert.equal(empty.state.step, 2);
+    assert.deepEqual(Object.keys(empty.state.shErr).sort(), ['city', 'phone', 'state', 'street', 'zip']);
+    const ok = r.logicWith({ page: 'start', step: 2, sh: { ...SHOP } });
+    ok.renderVals().st.nextShop({ preventDefault() {} });
+    assert.equal(ok.state.step, 3);
+  });
+
+  test('Start, logo: only a picture of at most 2 MB is kept', () => {
+    const logic = r.logicWith({ page: 'start', step: 2 });
+    const pick = f => logic.renderVals().st.pickLogo({ target: { files: [f], value: 'x' } });
+    pick({ name: 'logo.svg', type: 'image/svg+xml', size: 100 });
+    assert.equal(logic.state.logo, null);
+    assert.match(logic.state.logoErr, /PNG, JPG/);
+    pick({ name: 'big.png', type: 'image/png', size: 3 * 1024 * 1024 });
+    assert.equal(logic.state.logo, null);
+    const good = { name: 'logo.png', type: 'image/png', size: 2000 };
+    pick(good);
+    assert.equal(logic.state.logo, good);
+    assert.equal(logic.state.logoErr, '');
   });
 
   test('every Sign in link opens Sign in to your shop', () => {
@@ -340,7 +373,7 @@ describe('rendered, billing service not configured', () => {
   test('Start without a sign-up service: Create account shows the confirmation step, no request', async () => {
     const { calls, state } = await submitSignup(r, () => { throw new Error('no request expected'); });
     assert.equal(calls.length, 0);
-    assert.equal(state.step, 3);
+    assert.equal(state.step, 4);
     const html = text(r.render({ ...state, page: 'start' }));
     assert.ok(html.includes('Check your email.'));
     assert.ok(html.includes('We sent a confirmation link to pat@shop.test.'));
@@ -360,7 +393,7 @@ describe('rendered, billing service configured', () => {
   after(() => r.close());
 
   test('pricing and Start never post to the billing service, even when it is configured', () => {
-    for (const state of [{ page: 'pricing' }, { page: 'pricing', annual: true }, { page: 'start', step: 2, plan: 'growth' }]) {
+    for (const state of [{ page: 'pricing' }, { page: 'pricing', annual: true }, { page: 'start', step: 3, plan: 'growth' }]) {
       const html = r.render(state);
       assert.equal(forms(html).length, 0, JSON.stringify(state));
       assert.ok(!html.includes('/billing/checkout'), JSON.stringify(state));
@@ -372,8 +405,28 @@ describe('rendered, billing service configured', () => {
     assert.equal(calls.length, 1);
     assert.equal(calls[0].url, 'https://billing.example.test/billing/signup');
     assert.equal(calls[0].opts.method, 'POST');
-    assert.deepEqual(Object.fromEntries(calls[0].opts.body), { owner_name: 'Pat Lee', company_name: 'Lee Phones', email: 'pat@shop.test', plan: 'growth', interval: 'month' });
-    assert.equal(state.step, 3);
+    assert.ok(calls[0].opts.body instanceof FormData, 'multipart, so a logo can ride along (still a simple CORS request)');
+    assert.deepEqual(Object.fromEntries(calls[0].opts.body), { owner_name: 'Pat Lee', company_name: 'Lee Phones', email: 'pat@shop.test', plan: 'growth', interval: 'month',
+      street: '12 Main St', street2: '', city: 'Oakland', state: 'CA', zip: '94607', country: 'US', phone: '(510) 555-0100', business_email: '', shop_website: '' });
+    assert.ok(!calls[0].opts.body.has('website'), 'website is the server spam trap: never sent');
+    assert.ok(!('Content-Type' in calls[0].opts.headers));
+    assert.equal(state.step, 4);
+  });
+
+  test('Start: the logo file is sent with the sign-up', async () => {
+    const logo = new File([new Uint8Array([137, 80, 78, 71])], 'logo.png', { type: 'image/png' });
+    const { calls } = await submitSignup(r, () => ({ ok: true, status: 202, json: async () => ({}) }), 'growth', { logo });
+    const sent = calls[0].opts.body.get('logo');
+    assert.equal(sent.name, 'logo.png');
+  });
+
+  test('Start: a shop field or logo error from the service goes back to the shop step', async () => {
+    const bad = await submitSignup(r, () => ({ ok: false, status: 400, json: async () => ({ error: 'Enter the zip.', field: 'zip' }) }));
+    assert.equal(bad.state.step, 2);
+    assert.equal(bad.state.shErr.zip, 'Enter the zip.');
+    const logo = await submitSignup(r, () => ({ ok: false, status: 400, json: async () => ({ error: 'The logo can be at most 2 MB.', field: 'logo' }) }));
+    assert.equal(logo.state.step, 2);
+    assert.equal(logo.state.logoErr, 'The logo can be at most 2 MB.');
   });
 
   test('Start: a field error from the service goes back to the account step; other errors show a retry line', async () => {
@@ -381,7 +434,7 @@ describe('rendered, billing service configured', () => {
     assert.equal(bad.state.step, 1);
     assert.equal(bad.state.aErr.email, 'Enter a work email.');
     const down = await submitSignup(r, () => ({ ok: false, status: 503, json: async () => ({}) }));
-    assert.equal(down.state.step, 2);
+    assert.equal(down.state.step, 3);
     assert.match(down.state.sErr, /try again/);
   });
 
