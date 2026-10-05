@@ -26,6 +26,7 @@ export default class SiteLogic extends DCLogic {
     annual:false, checks:2500, stations:0, estPlan:null,
     c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
     step:1, a:{name:'',email:'',company:''}, aErr:{}, plan:'growth', trial:true, sSending:false, sErr:'',
+    sh:{street:'',street2:'',city:'',state:'',zip:'',country:'US',phone:'',bemail:'',site:''}, shErr:{}, logo:null, logoErr:'',
     siShop:'', siErr:'', siLast: readLastShop()
   };
   wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef(); heroBarRef = React.createRef();
@@ -438,7 +439,8 @@ export default class SiteLogic extends DCLogic {
     // Enterprise billed monthly is contract only, so it becomes "Talk to us".
     const interval = s.annual ? 'year' : 'month';
     const yearly = interval === 'year';
-    const choosePlan = code => { this.setState({ plan:code, step: s.a.email ? 2 : 1 }); location.hash = '#/start'; };
+    // Account, then the shop's details, then the plan (2026-10-05).
+    const choosePlan = code => { this.setState({ plan:code, step: !s.a.email ? 1 : !s.sh.street ? 2 : 3 }); location.hash = '#/start'; };
     const planAction = p => !sellsOnline(p, interval) ? { href:'#/contact' } : { onClick: () => choosePlan(p.code) };
     const planCta = p => sellsOnline(p, interval) ? `Start with ${p.name}` : 'Talk to us';
     const seg = on => on ? ['#16130F','#F6F2EA'] : ['transparent','#16130F'];
@@ -530,23 +532,35 @@ export default class SiteLogic extends DCLogic {
     const a = s.a, ae = s.aErr;
     const setA = k => e => this.setState(st => ({ a: { ...st.a, [k]: e.target.value }, aErr: { ...st.aErr, [k]: '' } }));
     const chosen = findPlan(s.plan) || GROWTH;
+    const sh = s.sh, she = s.shErr;
+    const setSh = k => e => this.setState(st => ({ sh: { ...st.sh, [k]: e.target.value }, shErr: { ...st.shErr, [k]: '' } }));
     // Create account: no password and no payment here. The sign-up goes to
-    // phone-intake, which emails a confirmation link; the shop is then created,
-    // the owner sets a password from the welcome email, finishes setup in the
-    // app and pays for the plan as the last step.
+    // phone-intake, which emails a confirmation link; once confirmed, InPhox
+    // approves the shop by hand and builds it with the details asked here
+    // (the shop's address, phone, email, website and logo), so the owner
+    // never sees a setup screen in the app.
     const createAccount = () => {
       if (s.sSending) return;
-      if (!signupAction) { this.setState({ step:3 }); return; }
+      if (!signupAction) { this.setState({ step:4 }); return; }
       this.setState({ sSending:true, sErr:'' });
-      const body = new URLSearchParams([['owner_name', a.name.trim()], ['company_name', a.company.trim()], ['email', a.email.trim()], ['plan', chosen.code], ['interval', interval]]);
+      const body = new FormData();
+      [['owner_name', a.name], ['company_name', a.company], ['email', a.email], ['plan', chosen.code], ['interval', interval],
+       ['street', sh.street], ['street2', sh.street2], ['city', sh.city], ['state', sh.state], ['zip', sh.zip],
+       ['country', sh.country], ['phone', sh.phone], ['business_email', sh.bemail], ['shop_website', sh.site]]
+        .forEach(([k, val]) => body.append(k, String(val || '').trim()));
+      if (s.logo) body.append('logo', s.logo, s.logo.name);
       fetch(signupAction, { method:'POST', headers:{ Accept:'application/json' }, body })
         .then(async res => {
-          if (res.ok) { this.setState({ sSending:false, step:3 }); return; }
+          if (res.ok) { this.setState({ sSending:false, step:4 }); return; }
           let data = {}; try { data = await res.json(); } catch (e) { /* not JSON */ }
           if (res.status === 400 && data.field) {
             const map = { owner_name:'name', company_name:'company', email:'email' };
             const f = map[data.field];
             if (f) { this.setState({ sSending:false, step:1, aErr: { [f]: data.error || 'Check this field.' } }); return; }
+            const shopMap = { street:'street', street2:'street2', city:'city', state:'state', zip:'zip', country:'country',
+                              phone:'phone', business_email:'bemail', shop_website:'site' };
+            if (shopMap[data.field]) { this.setState({ sSending:false, step:2, shErr: { [shopMap[data.field]]: data.error || 'Check this field.' } }); return; }
+            if (data.field === 'logo') { this.setState({ sSending:false, step:2, logoErr: data.error || 'Choose another picture.' }); return; }
           }
           if (res.status === 409) { this.setState({ sSending:false, sErr: 'Enterprise is billed annually. Switch to Annual on Pricing, or talk to us about monthly terms.' }); return; }
           throw new Error('Sign-up not accepted: ' + res.status);
@@ -555,10 +569,10 @@ export default class SiteLogic extends DCLogic {
     };
     const st = {
       loginUrl: SIGNIN_HREF,
-      showStep1: s.step === 1, showStep2: s.step === 2, showDone: s.step === 3,
-      headline: s.step === 3 ? 'Check your email.' : 'Set up InPhox for your shop.',
-      sub: 'Create an account and choose a plan. You pay for it at the end of setting up your shop, not here.',
-      steps: [['01','Account'],['02','Plan'],['03','Confirm your email']].map(([n,t],i) => { const cur = s.step === i + 1, dn = s.step > i + 1; return { n, t, fg: cur || dn ? '#F6F2EA' : '#8E857A', s: dn ? 'DONE' : cur ? 'NOW' : '', sc: dn ? '#7FC79F' : '#EB5E12' }; }),
+      showStep1: s.step === 1, showShop: s.step === 2, showStep2: s.step === 3, showDone: s.step === 4,
+      headline: s.step === 4 ? 'Check your email.' : 'Set up InPhox for your shop.',
+      sub: 'Create an account, tell us about your shop and choose a plan. Nothing is charged here.',
+      steps: [['01','Account'],['02','Your shop'],['03','Plan'],['04','Confirm your email']].map(([n,t],i) => { const cur = s.step === i + 1, dn = s.step > i + 1; return { n, t, fg: cur || dn ? '#F6F2EA' : '#8E857A', s: dn ? 'DONE' : cur ? 'NOW' : '', sc: dn ? '#7FC79F' : '#EB5E12' }; }),
       a, setA: { name: setA('name'), company: setA('company'), email: setA('email') },
       e: { name: ae.name || '', company: ae.company || '', email: ae.email || '' },
       bd: { name: ae.name ? '#B3261E' : '#D9D0C2', company: ae.company ? '#B3261E' : '#D9D0C2', email: ae.email ? '#B3261E' : '#D9D0C2' },
@@ -566,10 +580,30 @@ export default class SiteLogic extends DCLogic {
         if (!a.name.trim()) er.name = 'Enter your name.'; if (!a.company.trim()) er.company = 'Enter your company.';
         if (!/^\S+@\S+\.\S+$/.test(a.email)) er.email = 'Enter a valid work email.';
         this.setState(Object.keys(er).length ? { aErr: er } : { aErr:{}, step:2 }); },
+      sh, setSh: Object.fromEntries(Object.keys(sh).map(k => [k, setSh(k)])),
+      she: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] || ''])),
+      shBd: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] ? '#B3261E' : '#D9D0C2'])),
+      bemailHint: a.email ? `Leave empty to use ${a.email.trim()}` : '',
+      logoName: s.logo ? s.logo.name : '', logoErr: s.logoErr,
+      pickLogo: e => { const f = e.target.files && e.target.files[0]; e.target.value = '';
+        if (!f) return;
+        if (!/^image\/(png|jpeg|webp|gif)$/.test(f.type)) { this.setState({ logo:null, logoErr:'Choose a PNG, JPG, WEBP or GIF picture.' }); return; }
+        if (f.size > 2 * 1024 * 1024) { this.setState({ logo:null, logoErr:'The logo can be at most 2 MB.' }); return; }
+        this.setState({ logo:f, logoErr:'' }); },
+      clearLogo: () => this.setState({ logo:null, logoErr:'' }),
+      backShop: () => this.setState({ step:1 }),
+      nextShop: e => { e.preventDefault(); const er = {};
+        if (!sh.street.trim()) er.street = 'Enter the street address.';
+        if (!sh.city.trim()) er.city = 'Enter the city.';
+        if (!sh.state.trim()) er.state = 'Enter the state.';
+        if (!sh.zip.trim()) er.zip = 'Enter the ZIP code.';
+        if ((sh.phone.match(/[0-9]/g) || []).length < 7) er.phone = 'Enter the shop phone number.';
+        if (sh.bemail.trim() && !/^\S+@\S+\.\S+$/.test(sh.bemail)) er.bemail = 'Enter a valid email, or leave it empty.';
+        this.setState(Object.keys(er).length ? { shErr: er } : { shErr:{}, step:3 }); },
       plans: pricing.plans.map(p => { const c = planCard(p, interval), on = p === chosen; return { name: p.name, d: `${p.who} · ${c.checks}`, price: c.priceStr + '/mo', bg: on ? '#FBE7CC' : 'transparent', dot: on ? '#16130F' : 'transparent', pick: () => this.setState({ plan:p.code, sErr:'' }) }; }),
       billing: `Nothing is charged now. You'll add payment (card or monthly USDC invoice) as the last step of setting up your shop, ${yearly ? 'billed annually' : 'billed monthly'}. `,
       trialBg: s.trial ? '#16130F' : '#FFFFFF', trialMark: s.trial ? '✓' : '', toggleTrial: () => this.setState({ trial: !s.trial }),
-      back: () => this.setState({ step:1, sErr:'' }),
+      back: () => this.setState({ step:2, sErr:'' }),
       // The plan is the last choice of sign-up; no payment happens on this site.
       cta2: !sellsOnline(chosen, interval) ? 'Talk to us' : s.sSending ? 'Creating your account…' : `Create account on ${chosen.name}`,
       act2: !sellsOnline(chosen, interval) ? { href:'#/contact' } : { onClick: createAccount },
@@ -577,9 +611,9 @@ export default class SiteLogic extends DCLogic {
       doneTag: `${chosen.name} plan chosen · pay when you finish setup`,
       doneTitle: `We sent a confirmation link to ${a.email || 'your email'}.`,
       doneSteps: [
-        'Open the link to confirm your email',
-        `We set up ${a.company || 'your shop'} (usually a few minutes) and email you when it's ready`,
-        'Sign in, set your password, finish setting up your shop, and choose your plan'
+        'Open the link to confirm your email (it works for 24 hours)',
+        `We look over ${a.company || 'your shop'} and build it, usually within a day, and email you when it's ready`,
+        'Set your password from that email and sign in: your shop is already set up'
       ]
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
