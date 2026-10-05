@@ -3,6 +3,7 @@ import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, sellsOnline, estimate, cheapestPlan, fitsStations, startRate, PER_CHECK_FLOOR, count, money as usd } from './pricing.js';
 import { SIGNIN_HREF, shopDomain, leadAction, signupAction } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
+import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 const PAGES = ['home','industries','features','pricing','contact','platform','start','signin'];
 // The last shop this browser signed in to, so Sign in is one click next time.
@@ -506,9 +507,10 @@ export default class SiteLogic extends DCLogic {
       note: s.cSendErr || "We'll only use this to follow up on your request.", noteFg: s.cSendErr ? '#B3261E' : '#6B6257',
       reset: () => this.setState({ cSent:false, cSendErr:'', c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{} }),
       submit: e => { e.preventDefault(); if (s.cSending) return; const c = s.c, er = {};
-        if (!c.name.trim()) er.name = 'Enter your name.';
-        if (!/^\S+@\S+\.\S+$/.test(c.email)) er.email = 'Enter a valid work email.';
-        if (!c.company.trim()) er.company = 'Enter your company name.';
+        const cn = textProblem(c.name, 'Your name', true, 'Enter your name.'), cc = textProblem(c.company, 'Company name', true, 'Enter your company name.');
+        if (cn) er.name = cn;
+        if (!isEmail(c.email)) er.email = 'Enter a valid work email.';
+        if (cc) er.company = cc;
         if (!c.volume) er.volume = 'Pick your monthly volume.';
         if (Object.keys(er).length) { this.setState({ cErr: er, cSent:false }); window.scrollTo(0,0); return; }
         // Platform turned off (VITE_PLATFORM_URL=off): client-side only, no network request.
@@ -578,8 +580,10 @@ export default class SiteLogic extends DCLogic {
       e: { name: ae.name || '', company: ae.company || '', email: ae.email || '' },
       bd: { name: ae.name ? '#B3261E' : '#D9D0C2', company: ae.company ? '#B3261E' : '#D9D0C2', email: ae.email ? '#B3261E' : '#D9D0C2' },
       next1: e => { e.preventDefault(); const er = {};
-        if (!a.name.trim()) er.name = 'Enter your name.'; if (!a.company.trim()) er.company = 'Enter your company.';
-        if (!/^\S+@\S+\.\S+$/.test(a.email)) er.email = 'Enter a valid work email.';
+        const pn = textProblem(a.name, 'Your name', true, 'Enter your name.'), pc = textProblem(a.company, 'The shop name', true, 'Enter your company.');
+        if (pn) er.name = pn;
+        if (pc) er.company = pc;
+        if (!isEmail(a.email)) er.email = 'Enter a valid work email.';
         this.setState(Object.keys(er).length ? { aErr: er } : { aErr:{}, step:2 }); },
       sh, setSh: Object.fromEntries(Object.keys(sh).map(k => [k, setSh(k)])),
       she: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] || ''])),
@@ -599,12 +603,11 @@ export default class SiteLogic extends DCLogic {
       clearLogo: () => this.setState({ logo:null, logoRaw:null, logoPreview:'', logoEditing:false, logoErr:'' }),
       backShop: () => this.setState({ step:1 }),
       nextShop: e => { e.preventDefault(); const er = {};
-        if (!sh.street.trim()) er.street = 'Enter the street address.';
-        if (!sh.city.trim()) er.city = 'Enter the city.';
-        if (!sh.state.trim()) er.state = 'Enter the state.';
-        if (!sh.zip.trim()) er.zip = 'Enter the ZIP code.';
+        for (const [k, label, req, empty] of [['street', 'Street address', true], ['street2', 'Suite or unit', false, 'Enter the suite or unit, or leave it empty.'],
+          ['city', 'City', true], ['state', 'State', true], ['zip', 'ZIP code', true, 'Enter the ZIP code.']]) { const p = textProblem(sh[k], label, req, empty); if (p) er[k] = p; }
         if ((sh.phone.match(/[0-9]/g) || []).length < 7) er.phone = 'Enter the shop phone number.';
-        if (sh.bemail.trim() && !/^\S+@\S+\.\S+$/.test(sh.bemail)) er.bemail = 'Enter a valid email, or leave it empty.';
+        if (sh.bemail.trim() && !isEmail(sh.bemail)) er.bemail = 'Enter a valid email, or leave it empty.';
+        if (sh.site.trim() && !isWebsite(sh.site)) er.site = 'Enter a valid website, or leave it empty.';
         this.setState(Object.keys(er).length ? { shErr: er } : { shErr:{}, step:3 }); },
       plans: pricing.plans.map(p => { const c = planCard(p, interval), on = p === chosen; return { name: p.name, d: `${p.who} · ${c.checks}`, price: c.priceStr + '/mo', bg: on ? '#FBE7CC' : 'transparent', dot: on ? '#16130F' : 'transparent', pick: () => this.setState({ plan:p.code, sErr:'' }) }; }),
       billing: `Nothing is charged now. You'll add payment (card or monthly USDC invoice) as the last step of setting up your shop, ${yearly ? 'billed annually' : 'billed monthly'}. `,
