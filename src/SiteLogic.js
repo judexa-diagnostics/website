@@ -26,7 +26,7 @@ export default class SiteLogic extends DCLogic {
     annual:false, checks:2500, stations:0, estPlan:null,
     c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
     step:1, a:{name:'',email:'',company:''}, aErr:{}, plan:'growth', trial:true, sSending:false, sErr:'',
-    sh:{street:'',street2:'',city:'',state:'',zip:'',country:'US',phone:'',bemail:'',site:''}, shErr:{}, logo:null, logoErr:'',
+    sh:{street:'',street2:'',city:'',state:'',zip:'',country:'US',phone:'',bemail:'',site:''}, shErr:{}, logo:null, logoRaw:null, logoPreview:'', logoEditing:false, logoErr:'',
     siShop:'', siErr:'', siLast: readLastShop()
   };
   wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef(); heroBarRef = React.createRef();
@@ -585,13 +585,18 @@ export default class SiteLogic extends DCLogic {
       she: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] || ''])),
       shBd: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] ? '#B3261E' : '#D9D0C2'])),
       bemailHint: a.email ? `Leave empty to use ${a.email.trim()}` : '',
-      logoName: s.logo ? s.logo.name : '', logoErr: s.logoErr,
+      logoName: s.logoRaw ? s.logoRaw.name : '', logoErr: s.logoErr,
+      logoRaw: s.logoRaw, logoPreview: s.logoPreview, logoEditing: s.logoEditing && !!s.logoRaw, logoReady: !!s.logo,
+      // A picked picture opens the editor; "Use this logo" hands back the
+      // edited PNG, which is what is sent (2026-10-05).
+      applyLogo: (file, preview) => this.setState({ logo:file, logoPreview:preview, logoEditing:false, logoErr:'' }),
+      editLogo: () => this.setState({ logoEditing:true }),
       pickLogo: e => { const f = e.target.files && e.target.files[0]; e.target.value = '';
         if (!f) return;
-        if (!/^image\/(png|jpeg|webp|gif)$/.test(f.type)) { this.setState({ logo:null, logoErr:'Choose a PNG, JPG, WEBP or GIF picture.' }); return; }
-        if (f.size > 2 * 1024 * 1024) { this.setState({ logo:null, logoErr:'The logo can be at most 2 MB.' }); return; }
-        this.setState({ logo:f, logoErr:'' }); },
-      clearLogo: () => this.setState({ logo:null, logoErr:'' }),
+        if (!/^image\/(png|jpeg|webp|gif)$/.test(f.type)) { this.setState({ logo:null, logoRaw:null, logoErr:'Choose a PNG, JPG, WEBP or GIF picture.' }); return; }
+        if (f.size > 10 * 1024 * 1024) { this.setState({ logo:null, logoErr:'The picture can be at most 10 MB.' }); return; }
+        this.setState({ logo:null, logoRaw:f, logoPreview:'', logoEditing:true, logoErr:'' }); },
+      clearLogo: () => this.setState({ logo:null, logoRaw:null, logoPreview:'', logoEditing:false, logoErr:'' }),
       backShop: () => this.setState({ step:1 }),
       nextShop: e => { e.preventDefault(); const er = {};
         if (!sh.street.trim()) er.street = 'Enter the street address.';

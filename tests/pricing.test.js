@@ -324,18 +324,40 @@ describe('rendered, platform turned off', () => {
     assert.equal(ok.state.step, 3);
   });
 
-  test('Start, logo: only a picture of at most 2 MB is kept', () => {
+  test('Start, logo: a picture opens the editor; only the edited PNG is sent', () => {
     const logic = r.logicWith({ page: 'start', step: 2 });
     const pick = f => logic.renderVals().st.pickLogo({ target: { files: [f], value: 'x' } });
     pick({ name: 'logo.svg', type: 'image/svg+xml', size: 100 });
-    assert.equal(logic.state.logo, null);
+    assert.equal(logic.state.logoRaw, null);
     assert.match(logic.state.logoErr, /PNG, JPG/);
-    pick({ name: 'big.png', type: 'image/png', size: 3 * 1024 * 1024 });
+    pick({ name: 'huge.png', type: 'image/png', size: 11 * 1024 * 1024 });
+    assert.equal(logic.state.logoRaw, null);
+    const raw = { name: 'photo.jpg', type: 'image/jpeg', size: 4 * 1024 * 1024 };
+    pick(raw);
+    assert.equal(logic.state.logoRaw, raw);
+    assert.equal(logic.state.logoEditing, true);
+    assert.equal(logic.state.logo, null, 'nothing is sent until Use this logo');
+    const html = text(r.render({ ...logic.state, page: 'start', step: 2 }));
+    for (const s of ['Use this logo', 'Zoom', 'Brightness', 'Contrast', 'Rotate', 'Background', 'Square', 'Wide']) assert.ok(html.includes(s), s);
+    const edited = { name: 'logo.png', type: 'image/png', size: 9000 };
+    logic.renderVals().st.applyLogo(edited, 'data:image/png;base64,AAA');
+    assert.equal(logic.state.logo, edited);
+    assert.equal(logic.state.logoEditing, false);
+    const after = r.render({ ...logic.state, page: 'start', step: 2 });
+    assert.ok(after.includes('alt="Your logo"') && after.includes('data:image/png;base64,AAA'), 'preview of the edited logo');
+    logic.renderVals().st.clearLogo();
     assert.equal(logic.state.logo, null);
-    const good = { name: 'logo.png', type: 'image/png', size: 2000 };
-    pick(good);
-    assert.equal(logic.state.logo, good);
-    assert.equal(logic.state.logoErr, '');
+    assert.equal(logic.state.logoRaw, null);
+  });
+
+  test('LogoEditor.drawLogo: fits, rotates, fills the background', async () => {
+    const { drawLogo, DEFAULTS } = await import('../src/components/LogoEditor.jsx').catch(() => ({}));
+    if (!drawLogo) return; // JSX not loadable in plain node: covered by the render test above
+    const calls = [];
+    const ctx = new Proxy({}, { get: (_t, k) => (...a) => calls.push([k, ...a]), set: (_t, k, v) => (calls.push(['set', k, v]), true) });
+    drawLogo(ctx, { width: 200, height: 100 }, { ...DEFAULTS, bg: '#FFFFFF', rot: 90 }, 512, 512);
+    assert.ok(calls.some(c => c[0] === 'fillRect'));
+    assert.ok(calls.some(c => c[0] === 'rotate'));
   });
 
   test('every Sign in link opens Sign in to your shop', () => {

@@ -1,4 +1,5 @@
 import PlanButton from '../components/PlanButton.jsx';
+import LogoEditor from '../components/LogoEditor.jsx';
 
 const LABEL = { display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" };
 const INPUT = { height: "2.75rem", padding: "0 0.75rem", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" };
@@ -82,14 +83,23 @@ export default function Start({ v }) {
             <ShopField st={st} k="site" label="Website (optional)" wide placeholder="yourshop.com" autoComplete="url" />
             <div style={{ ...LABEL, gridColumn: "1 / -1" }}>
               {"Logo (optional)"}
-              <div style={{ display: "flex", gap: "0.625rem", alignItems: "center", flexWrap: "wrap" }}>
-                <label style={{ height: "2.75rem", padding: "0 1rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", background: "#FFFFFF" }}>
-                  {st.logoName ? 'Choose another' : 'Choose a picture'}
-                  <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={st.pickLogo} style={{ display: "none" }} />
-                </label>
-                {st.logoName ? <span style={{ fontSize: "0.875rem", fontWeight: "400" }}>{st.logoName} <button type="button" onClick={st.clearLogo} style={{ marginLeft: "0.375rem", background: "transparent", border: "0", color: "#B3261E", cursor: "pointer", fontSize: "0.8125rem", fontWeight: "600" }}>Remove</button></span>
-                  : <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#6B6257" }}>PNG, JPG, WEBP or GIF, up to 2 MB. You can add it later too.</span>}
-              </div>
+              {st.logoEditing ? <LogoEditor file={st.logoRaw} onApply={st.applyLogo} onCancel={st.clearLogo} /> : null}
+              {!st.logoEditing && st.logoReady ? (
+                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+                  <img src={st.logoPreview} alt="Your logo" style={{ height: "4rem", maxWidth: "10rem", objectFit: "contain", border: "1px solid #D9D0C2",
+                    background: "repeating-conic-gradient(#E9E3D8 0% 25%, #FFFFFF 0% 50%) 50% / 12px 12px" }} />
+                  <button type="button" onClick={st.editLogo} style={{ height: "2.5rem", padding: "0 0.875rem", border: "1px solid #16130F", borderRadius: "2px", background: "#FFFFFF", fontSize: "0.8125rem", fontWeight: "600", cursor: "pointer" }}>Edit</button>
+                  <button type="button" onClick={st.clearLogo} style={{ background: "transparent", border: "0", color: "#B3261E", cursor: "pointer", fontSize: "0.8125rem", fontWeight: "600" }}>Remove</button>
+                </div>) : null}
+              {!st.logoEditing && !st.logoReady ? (
+                <div style={{ display: "flex", gap: "0.625rem", alignItems: "center", flexWrap: "wrap" }}>
+                  <label style={{ height: "2.75rem", padding: "0 1rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", background: "#FFFFFF" }}>
+                    {"Choose a picture"}
+                    <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={st.pickLogo} style={{ display: "none" }} />
+                  </label>
+                  <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#6B6257" }}>PNG, JPG, WEBP or GIF. You can crop, zoom and fix it before sending.</span>
+                </div>) : null}
+              {st.logoEditing && st.logoRaw ? <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#6B6257" }}>Press Use this logo to keep it. Without that, no logo is sent.</span> : null}
               <span style={ERR}><span>{st.logoErr}</span></span>
             </div>
             <div style={{ gridColumn: "1 / -1", display: "flex", gap: "0.625rem" }}>
