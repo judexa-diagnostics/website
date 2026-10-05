@@ -7,6 +7,7 @@ import Pricing from './pages/Pricing.jsx';
 import Contact from './pages/Contact.jsx';
 import Platform from './pages/Platform.jsx';
 import Start from './pages/Start.jsx';
+import Signin from './pages/Signin.jsx';
 import Footer from './components/Footer.jsx';
 import PromoBar from './components/PromoBar.jsx';
 
@@ -24,6 +25,7 @@ export default function Layout({ v }) {
         {is.contact ? <Contact v={v} /> : null}
         {is.platform ? <Platform v={v} /> : null}
         {is.start ? <Start v={v} /> : null}
+        {is.signin ? <Signin v={v} /> : null}
       </main>
       <Footer v={v} />
       {promo.show ? <PromoBar v={v} /> : null}

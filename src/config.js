@@ -6,13 +6,17 @@ const env = import.meta.env || {};
 
 const read = key => (typeof env[key] === 'string' ? env[key].trim() : '');
 
-export const DEFAULT_APP_LOGIN_URL = 'https://intake.inphox.net/auth/login';
+/** Every shop runs its own InPhox app at <shop>.<this domain>. */
+export const DEFAULT_SHOP_DOMAIN = 'inphox.net';
 
 /** Base URL of the InPhox billing service, without a trailing slash. Empty when billing is not live. */
 export const billingBaseUrl = read('VITE_BILLING_BASE_URL').replace(/\/+$/, '');
 
-/** Where every Sign in link and button goes. */
-export const appLoginUrl = read('VITE_APP_LOGIN_URL') || DEFAULT_APP_LOGIN_URL;
+/** The domain shops live under: Sign in sends people to https://<shop>.<shopDomain>/web/login. */
+export const shopDomain = (read('VITE_SHOP_DOMAIN') || DEFAULT_SHOP_DOMAIN).replace(/^\.+|\.+$/g, '').toLowerCase();
+
+/** Every Sign in link and button opens the site's own "Sign in to your shop" page. */
+export const SIGNIN_HREF = '#/signin';
 
 /** Where the Start page sends a new sign-up (no payment): phone-intake emails a confirmation link,
  *  then the shop is created and the owner pays inside the app. Null: the Start page stays client-side. */

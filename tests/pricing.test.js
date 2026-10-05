@@ -13,7 +13,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // Keep the shell's env out of the "unset" cases.
 delete process.env.VITE_BILLING_BASE_URL;
-delete process.env.VITE_APP_LOGIN_URL;
+delete process.env.VITE_SHOP_DOMAIN;
 
 const FOOTNOTE = "Included checks reset monthly and don't roll over. Checks past your included amount get cheaper the more you run, down to $0.35 each. Overage is billed at the end of the month and capped by a limit you set; you can turn overage off.";
 const PAYMENT_LINE = "Nothing is charged on this site. Choose your plan at the end of sign-up, then add a card or set up monthly USDC invoicing when you finish setting up your shop.";
@@ -159,7 +159,9 @@ describe('plan data', async () => {
   test('with no env vars: no billing endpoints, default login URL', () => {
     assert.equal(config.billingBaseUrl, '');
     assert.equal(config.leadAction, null);
-    assert.equal(config.appLoginUrl, 'https://intake.inphox.net/auth/login');
+    assert.equal(config.shopDomain, 'inphox.net');
+    assert.equal(config.SIGNIN_HREF, '#/signin');
+    assert.equal(config.appLoginUrl, undefined, 'no intake login: Sign in goes to the shop app');
   });
 
   test('no Odoo, vendor or P&M names in src/ or index.html', () => {
@@ -202,7 +204,7 @@ async function renderWith(envFile) {
 const forms = html => html.match(/<form[^>]*>.*?<\/form>/gs) ?? [];
 const text = html => html.replaceAll('&#x27;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 const hidden = (form, name) => form.match(new RegExp(`<input type="hidden" name="${name}" value="([^"]*)"`))?.[1];
-const PAGES = ['home', 'industries', 'features', 'pricing', 'contact', 'platform', 'start'];
+const PAGES = ['home', 'industries', 'features', 'pricing', 'contact', 'platform', 'start', 'signin'];
 
 /** Run a Contact form submit with valid values and a stubbed fetch; returns the fetch calls and the final state. */
 async function submitLead(r, fetchImpl) {
@@ -301,11 +303,38 @@ describe('rendered, billing service not configured', () => {
     assert.ok(done.includes('Growth plan chosen · pay when you finish setup'));
   });
 
-  test('Sign in links use the default login URL', () => {
+  test('every Sign in link opens Sign in to your shop', () => {
     const html = r.render({ page: 'start', menu: true });
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
-    for (const h of hrefs) assert.equal(h, 'https://intake.inphox.net/auth/login');
+    for (const h of hrefs) assert.equal(h, '#/signin');
+    assert.ok(!html.includes('intake.inphox.net'));
+  });
+
+  test('Sign in to your shop: asks for the shop name on inphox.net; remembers the last one', () => {
+    const html = text(r.render({ page: 'signin' }));
+    for (const s of ['Sign in to your shop.', "Your shop's address", '.inphox.net', 'Continue to sign in']) assert.ok(html.includes(s), s);
+    assert.ok(!html.includes('Last time you signed in to'));
+    const again = text(r.render({ page: 'signin', siLast: 'bayareaphones' }));
+    assert.ok(again.includes('bayareaphones.inphox.net'));
+    assert.ok(again.includes('Continue to this shop'));
+  });
+
+  test('Sign in to your shop: a bad name shows an error and goes nowhere', () => {
+    const realLocation = globalThis.location;
+    const visited = [];
+    globalThis.location = { assign: url => visited.push(url), hash: '#/signin' };
+    try {
+      const logic = r.logicWith({ page: 'signin', siShop: 'not a shop!' });
+      logic.renderVals().si.submit({ preventDefault() {} });
+      assert.equal(visited.length, 0);
+      assert.match(logic.state.siErr, /letters, numbers and dashes/);
+      const good = r.logicWith({ page: 'signin', siShop: 'https://BayAreaPhones.inphox.net/web/login' });
+      good.renderVals().si.submit({ preventDefault() {} });
+      assert.deepEqual(visited, ['https://bayareaphones.inphox.net/web/login']);
+    } finally {
+      globalThis.location = realLocation;
+    }
   });
 
   test('Start without a sign-up service: Create account shows the confirmation step, no request', async () => {
@@ -327,7 +356,7 @@ describe('rendered, billing service not configured', () => {
 
 describe('rendered, billing service configured', () => {
   let r;
-  before(async () => (r = await renderWith('VITE_BILLING_BASE_URL=https://billing.example.test/\nVITE_APP_LOGIN_URL=https://app.example.test/auth/login\n')));
+  before(async () => (r = await renderWith('VITE_BILLING_BASE_URL=https://billing.example.test/\nVITE_SHOP_DOMAIN=shops.example.test\n')));
   after(() => r.close());
 
   test('pricing and Start never post to the billing service, even when it is configured', () => {
@@ -356,11 +385,9 @@ describe('rendered, billing service configured', () => {
     assert.match(down.state.sErr, /try again/);
   });
 
-  test('Sign in links use the configured login URL', () => {
-    const html = r.render({ page: 'start', menu: true });
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
-    assert.equal(hrefs.length, 4);
-    for (const h of hrefs) assert.equal(h, 'https://app.example.test/auth/login');
+  test('a configured shop domain is used on Sign in to your shop', () => {
+    const html = text(r.render({ page: 'signin' }));
+    assert.ok(html.includes('.shops.example.test'));
   });
 
   test('Contact form POSTs name, email, company, segment, volume to /billing/lead; 2xx shows success', async () => {

@@ -1,9 +1,14 @@
 import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, sellsOnline, estimate, cheapestPlan, fitsStations, startRate, PER_CHECK_FLOOR, count, money as usd } from './pricing.js';
-import { appLoginUrl, leadAction, signupAction } from './config.js';
+import { SIGNIN_HREF, shopDomain, leadAction, signupAction } from './config.js';
+import { shopFromInput, shopLoginUrl } from './shop.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','start'];
+const PAGES = ['home','industries','features','pricing','contact','platform','start','signin'];
+// The last shop this browser signed in to, so Sign in is one click next time.
+const LAST_SHOP_KEY = 'inphox_last_shop';
+const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };
+const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KEY, shop); else localStorage.removeItem(LAST_SHOP_KEY); } catch (e) { /* private window */ } };
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const [STARTER, GROWTH, ENTERPRISE] = ['starter','growth','enterprise'].map(findPlan);
 const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /billing/lead receives
@@ -20,7 +25,8 @@ export default class SiteLogic extends DCLogic {
     fMod:'All', fQ:'',
     annual:false, checks:2500, stations:0, estPlan:null,
     c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
-    step:1, a:{name:'',email:'',company:''}, aErr:{}, plan:'growth', trial:true, sSending:false, sErr:''
+    step:1, a:{name:'',email:'',company:''}, aErr:{}, plan:'growth', trial:true, sSending:false, sErr:'',
+    siShop:'', siErr:'', siLast: readLastShop()
   };
   wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef(); heroBarRef = React.createRef();
   moreRef = React.createRef(); xfRef = React.createRef(); testiRef = React.createRef();
@@ -343,7 +349,7 @@ export default class SiteLogic extends DCLogic {
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
       langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? '#FBE7CC' : '#FFFFFF', pick: () => this.setState({ lang:code, langOpen:false }) })),
       goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.goto('start', { step:1, trial:true, menu:false }); },
-      loginUrl: appLoginUrl, // every Sign in link goes to the InPhox app's login page
+      loginUrl: SIGNIN_HREF, // every Sign in link opens "Sign in to your shop"
       hero, heroBarRef: this.heroBarRef, moreRef: this.moreRef, wrapRef: this.wrapRef, trackRef: this.trackRef, xfRef: this.xfRef, testiRef: this.testiRef,
       sb, rail, s1, s2, s3, s4, s5, s6, s7, stageRef: this.stageRef, cr,
       toggleMode: () => this.setMode(anim ? 'slides' : 'anim'),
@@ -548,7 +554,7 @@ export default class SiteLogic extends DCLogic {
         .catch(() => this.setState({ sSending:false, sErr:"That didn't go through. Please try again in a moment." }));
     };
     const st = {
-      loginUrl: appLoginUrl,
+      loginUrl: SIGNIN_HREF,
       showStep1: s.step === 1, showStep2: s.step === 2, showDone: s.step === 3,
       headline: s.step === 3 ? 'Check your email.' : 'Set up InPhox for your shop.',
       sub: 'Create an account and choose a plan. You pay for it at the end of setting up your shop, not here.',
@@ -576,6 +582,20 @@ export default class SiteLogic extends DCLogic {
         'Sign in, set your password, finish setting up your shop, and choose your plan'
       ]
     };
-    return { ind, feat, pr, ct, plat, rec, st };
+    // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
+    const goShop = shop => { saveLastShop(shop); location.assign(shopLoginUrl(shop, shopDomain)); };
+    const si = {
+      domain: shopDomain, value: s.siShop, err: s.siErr, bd: s.siErr ? '#B3261E' : '#D9D0C2',
+      last: s.siLast, lastHost: s.siLast ? `${s.siLast}.${shopDomain}` : '',
+      set: e => this.setState({ siShop: e.target.value, siErr: '' }),
+      submit: e => { if (e && e.preventDefault) e.preventDefault();
+        const r = shopFromInput(s.siShop, shopDomain);
+        if (r.error) { this.setState({ siErr: r.error }); return; }
+        goShop(r.shop); },
+      continueLast: () => goShop(s.siLast),
+      forget: () => { saveLastShop(''); this.setState({ siLast: '' }); },
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.goto('start', { step:1, trial:true, menu:false }); }
+    };
+    return { ind, feat, pr, ct, plat, rec, st, si };
   }
 }
