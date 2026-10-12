@@ -246,3 +246,8 @@
   .sx-copy,.sx-lane,.sx-mac .label{animation:none}
 }
 .sx-flash.day{background:radial-gradient(ellipse at 60% 45%,#ffffff 0%,#dcebff 45%,#9cc3ff 100%)}
+.sx-next{transition:color .3s}
+.sx-next.on{color:#F6F2EA;animation:sx-nudge 1.6s ease-in-out infinite}
+@keyframes sx-nudge{0%,100%{opacity:.55}50%{opacity:1}}
+.sx-btns{display:flex;gap:1.25rem;pointer-events:auto}
+.sx-keys{opacity:.7}

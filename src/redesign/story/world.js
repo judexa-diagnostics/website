@@ -7,7 +7,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { makePhone, makeTote, makeRollerConveyor, makeRacks, makeShippingBox, makeTools, makeMacStudio, makeStand, PHONE_STYLES, PW, PH, PD, MAT } from './models.js';
 import { screenTexture, cardTexture, matTexture, sortTableTexture, shippingLabelTexture, toteLabelTexture, rackBoxTexture, glowSprite, LANES } from './textures.js';
-import { buildEarth, LOCATIONS, TOUR, facing, latLonToVec, R as ER } from './earth.js';
+import { buildEarth, LOCATIONS, facing, latLonToVec, R as ER } from './earth.js';
+import { makePlane, setPlaneDoor, buildAirport } from './airport.js';
 
 // ---- small math helpers -------------------------------------------------
 export const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -48,8 +49,9 @@ const TABLE = V(0, BENCH_Y, 420), TK = 0.5;
 const tpos = (x, z, y = 0) => V(TABLE.x + x * TK, BENCH_Y + 0.6 + y, TABLE.z + z * TK);
 const TRAY_SLOT = i => tpos(-39 + (i % 4) * 26, -98 + Math.floor(i / 4) * 34);
 const laneIndex = k => LANES.findIndex(l => l.key === k);
-const LANE_SLOT = (lane, n) => tpos(-152 + laneIndex(lane) * 76 - 18 + (n % 3) * 18, 56 + Math.floor(n / 3) * 36);
-const BOX_POS = V(132, BENCH_Y, 462);
+const LANE_SLOT = (lane, n) => tpos(-152 + laneIndex(lane) * 76 - 22 + (n % 3) * 22, 56 + Math.floor(n / 3) * 36);
+const ROLL_TOP = BENCH_Y + 2; // top of the runway rollers
+const BOX_POS = V(132, ROLL_TOP, 462);
 const RUN_Z = 462;
 
 export function createWorld(canvas, { onEarthReady } = {}) {
@@ -170,7 +172,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   st.position.set(TABLE.x, BENCH_Y - 1.4, TABLE.z); st.receiveShadow = true; sortTable.add(st);
   [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => { const l = new THREE.Mesh(new THREE.BoxGeometry(5, BENCH_Y - 4, 5), MAT.darkMetal); l.position.set(TABLE.x + a * 95, (BENCH_Y - 4) / 2, TABLE.z + b * 60); sortTable.add(l); });
   // a side shelf where the shipping box waits, joined to the runway
-  const shelf = new THREE.Mesh(new THREE.BoxGeometry(60, 4, 60), MAT.darkMetal); shelf.position.set(BOX_POS.x, BENCH_Y - 2, BOX_POS.z); shelf.receiveShadow = true; scene.add(shelf);
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(60, 4, 60), MAT.darkMetal); shelf.position.set(BOX_POS.x, ROLL_TOP - 2, BOX_POS.z); shelf.receiveShadow = true; scene.add(shelf);
 
   const cards = DEVICES.map((d, i) => {
     const col = KCOL[d.kind];
@@ -188,20 +190,28 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   [3, 5, 6, 7, 1].forEach((slot, k) => { const p = makePhone(PHONE_STYLES[(k * 3 + 2) % 12], OFF(), { lite: true }); p.position.copy(boxSlot(slot)); box.add(p); prefilled.push(p); });
   const shipOrder = DEVICES.map((d, i) => i).filter(i => DEVICES[i].lane === 'ship'); // 0,4,8
   const shipSlots = [0, 2, 4];
-  const runway = makeRollerConveyor(5200, 40, { startX: 0, spacing: 9 }); runway.position.set(BOX_POS.x + 20, CONV_Y - 2, RUN_Z); scene.add(runway);
+  const RUN_X0 = BOX_POS.x + 24;
+  const runway = makeRollerConveyor(3200 + 500 - RUN_X0, 40, { startX: 0, spacing: 9 }); runway.position.set(RUN_X0, ROLL_TOP, RUN_Z); scene.add(runway);
   const racksL = makeRacks({ x0: 260, x1: 3150, z: RUN_Z - 230, boxTex: rackBoxTexture(4) }); scene.add(racksL);
   const racksR = makeRacks({ x0: 260, x1: 3150, z: RUN_Z + 230, boxTex: rackBoxTexture(9) }); scene.add(racksR);
   const racksBack = makeRacks({ x0: -1100, x1: 1100, z: -430, boxTex: rackBoxTexture(2) }); scene.add(racksBack);
   // the bay door at the far end of the runway: daylight
   const DOOR_X = 3200;
-  const skyTex = (() => { const c = document.createElement('canvas'); c.width = 16; c.height = 256; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#7fb2ff'); gr.addColorStop(0.7, '#dcebff'); gr.addColorStop(1, '#fff6e6'); g.fillStyle = gr; g.fillRect(0, 0, 16, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
-  const door = new THREE.Mesh(new THREE.PlaneGeometry(520, 560), new THREE.MeshBasicMaterial({ map: skyTex, fog: false }));
-  door.rotation.y = -Math.PI / 2; door.position.set(DOOR_X, 280, RUN_Z); scene.add(door);
+  const outsideSky = (() => { const c = document.createElement('canvas'); c.width = 16; c.height = 256; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#6f9fd8'); gr.addColorStop(0.75, '#cfe0f2'); gr.addColorStop(1, '#e9e2d4'); g.fillStyle = gr; g.fillRect(0, 0, 16, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+  const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(9000, 4000), new THREE.MeshBasicMaterial({ map: outsideSky, fog: false }));
+  backdrop.rotation.y = -Math.PI / 2; backdrop.position.set(DOOR_X + 7000, 1600, RUN_Z); scene.add(backdrop);
+  const apron = new THREE.Mesh(new THREE.PlaneGeometry(9000, 9000), new THREE.MeshStandardMaterial({ color: '#8f8b84', roughness: 0.95, fog: false }));
+  apron.rotation.x = -Math.PI / 2; apron.position.set(DOOR_X + 4500, 0.5, RUN_Z); scene.add(apron);
   const wallM = new THREE.MeshStandardMaterial({ color: '#2a2622', roughness: 0.9 });
   [[RUN_Z - 1400, 2280], [RUN_Z + 1400, 2280]].forEach(([z, w]) => { const wl = new THREE.Mesh(new THREE.BoxGeometry(20, 1400, w), wallM); wl.position.set(DOOR_X + 10, 700, z); scene.add(wl); });
   const lintel = new THREE.Mesh(new THREE.BoxGeometry(20, 840, 520), wallM); lintel.position.set(DOOR_X + 10, 560 + 420, RUN_Z); scene.add(lintel);
-  const trail = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowSprite('#EB5E12'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-  trail.scale.set(60, 60, 1); scene.add(trail);
+  // the freighter waits outside with its rear ramp down; the conveyor runs into the hold
+  const dockPlane = makePlane({ fog: false });
+  dockPlane.scale.setScalar(100);
+  dockPlane.position.set(DOOR_X + 260, ROLL_TOP + 4, RUN_Z);
+  setPlaneDoor(dockPlane, 1);
+  dockPlane.traverse(o => { if (o.isPointLight) { o.intensity = 1.2e4; o.distance = 3000; } });
+  scene.add(dockPlane);
   // ceiling light strips along the runway
   const stripM = new THREE.MeshBasicMaterial({ color: '#fff4de' });
   const strips = new THREE.InstancedMesh(new THREE.BoxGeometry(160, 2, 8), stripM, 34);
@@ -217,6 +227,25 @@ export function createWorld(canvas, { onEarthReady } = {}) {
 
   // ---- earth ----
   const E = buildEarth(renderer, onEarthReady);
+  const A = buildAirport();
+  const AIR_END = 5.42;
+  // take-off: the freighter rolls, rotates and climbs; the camera follows then looks up
+  function updateAir(a, time) {
+    const pl = A.plane;
+    const roll = easeIn(a, 0, 0.62);
+    const climb = seg(a, 0.42, 1);
+    pl.position.set(-40 + roll * 900 + climb * 900, 2.3 + climb * climb * 520, 0);
+    pl.rotation.z = Math.min(0.16, seg(a, 0.38, 0.5) * 0.16) + climb * 0.08;
+    const cam = A.camera;
+    const behind = V(-62 + a * 14, 3.2 + a * 16, 26 - a * 6);
+    cam.position.copy(pl.position).add(behind);
+    const look = pl.position.clone().add(V(20, 6, 0));
+    look.y += ease(a, 0.72, 1) * 900;
+    cam.lookAt(look);
+    A.sun.target.position.copy(pl.position); A.sun.position.copy(pl.position).add(V(-300, 400, 200));
+    const wide = W / H > 1.2;
+    cam.setViewOffset(W, H, (wide ? -0.16 : 0) * W, 0, W, H);
+  }
 
   // ---- textures by state ----
   function OFF() { return TEX.off || (TEX.off = screenTexture('off')); }
@@ -249,7 +278,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     [4.74, V(150, 222, 606), V(98, 90, 452)],
     [4.84, V(40, 118, RUN_Z), V(1400, 108, RUN_Z)],
     [4.92, V(40, 118, RUN_Z), V(1400, 108, RUN_Z)],
-    [5.00, V(260, 150, RUN_Z), V(3200, 230, RUN_Z)]
+    [5.00, V(1400, 150, RUN_Z), V(3600, 220, RUN_Z)]
   ];
   const _p = new THREE.Vector3(), _t = new THREE.Vector3();
   function shotAt(P) {
@@ -273,6 +302,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
     E.camera.aspect = w / h; E.camera.updateProjectionMatrix();
+    A.camera.aspect = w / h; A.camera.updateProjectionMatrix();
     // narrow screens: pull the camera back so the subject still fits
     aspectK = Math.max(1, 1.5 / (w / h));
   }
@@ -388,15 +418,17 @@ export function createWorld(canvas, { onEarthReady } = {}) {
       const r5 = ease(t5, 0.29, 0.33);    // flip back
       const flipAmt = r1 * (1 - r5);
       const base = LANE_SLOT('repair', laneSlotOf[1]);
-      rp.position.set(base.x + 6, base.y + PD / 2 + Math.sin(flipAmt * Math.PI) * 6 + flipAmt * 0.4, base.z - 4);
+      rp.position.set(base.x - 3, base.y + PD / 2 + Math.sin(flipAmt * Math.PI) * 6 + flipAmt * 0.4, base.z);
+      const other = cards[5], ob = LANE_SLOT('repair', laneSlotOf[5]);
+      other.position.set(ob.x + 4, ob.y + PD / 2, ob.z);
       rp.rotation.set(-Math.PI / 2, Math.PI * flipAmt, 0);
       ru.inner.visible = r2 > 0 && r4 < 1;
-      ru.hinge.rotation.y = -(r2 * (1 - r4)) * 1.9;
+      ru.hinge.rotation.y = -(r2 * (1 - r4)) * 1.35;
       ru.battOld.visible = r3 < 0.5; ru.battNew.visible = r3 >= 0.5;
       const sw = r3 < 0.5 ? r3 * 2 : (1 - r3) * 2;
       (r3 < 0.5 ? ru.battOld : ru.battNew).position.set(0, -2.2 - sw * 12, -0.12 - sw * 2);
       driver.visible = P > 4.05 && P < 4.34;
-      driver.position.set(base.x + 6 + 10 - r3 * 6, base.y + 18 + Math.sin(time * 3) * 0.8, base.z - 6);
+      driver.position.set(base.x - 3 - 12 + r3 * 6, base.y + 18 + Math.sin(time * 3) * 0.8, base.z - 6);
       driver.rotation.set(0.25, time * 0.6, -0.5);
       if (t5 > 0.32) setScreen(rp, resultTex('pass', 'B'));
       else setScreen(rp, resultTex('fail', 'B'));
@@ -435,15 +467,12 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     bu.tape.visible = tp > 0; bu.tape.scale.x = Math.max(0.001, tp);
     bu.label.visible = t5 > 0.74 && P > 4;
     // runway: box slides on, accelerates, lifts off
-    const slide = ease(t5, 0.77, 0.82);
-    const run = easeIn(t5, 0.8, 0.98);
-    const liftK = sm(seg(t5, 0.84, 0.98));
-    box.position.set(BOX_POS.x + slide * 30 + run * (DOOR_X - BOX_POS.x + 200), BENCH_Y + slide * (CONV_Y - BENCH_Y) + liftK * 170, BOX_POS.z);
-    box.rotation.z = liftK * 0.18;
-    box.visible = P < 5.02;
-    trail.visible = t5 > 0.82 && P < 5;
-    trail.position.copy(box.position).add(V(-26, 9, 0));
-    trail.material.opacity = seg(t5, 0.82, 0.88);
+    const run = sm(seg(t5, 0.8, 0.97));
+    box.position.set(BOX_POS.x + run * (DOOR_X - BOX_POS.x + 900), ROLL_TOP + (box.position.x > DOOR_X - 175 ? 5 : 0), BOX_POS.z);
+    box.rotation.z = 0;
+    box.visible = P < 5;
+    // ramp lifts once the box is aboard
+    setPlaneDoor(dockPlane, 1 - ease(t5, 0.975, 1));
     if (P < 4.4 && P > 3) { prefilled.forEach(p => p.visible = true); }
 
     // ===== camera (warehouse) =====
@@ -460,7 +489,9 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     camera.setViewOffset(W, H, shiftX * W, 0, W, H);
 
     // ===== earth (scenes 6-7) =====
-    const useEarth = P >= 5;
+    const useAir = P >= 5 && P < AIR_END;
+    const useEarth = P >= AIR_END;
+    if (useAir) updateAir(seg(P, 5, AIR_END), time);
     if (useEarth) updateEarth(t6, t7, P, time);
 
     // labels
@@ -478,51 +509,44 @@ export function createWorld(canvas, { onEarthReady } = {}) {
       out[k] = { x: (tmp.x * 0.5 + 0.5) * W, y: (-tmp.y * 0.5 + 0.5) * H, v: tmp.z < 1 };
     }
     if (useEarth) Object.assign(out, earthLabels());
-    renderer.render(useEarth ? E.scene : scene, useEarth ? E.camera : camera);
+    if (useAir) renderer.render(A.scene, A.camera);
+    else renderer.render(useEarth ? E.scene : scene, useEarth ? E.camera : camera);
     return out;
   }
 
   // ---- earth update ----
-  const tourFace = TOUR.map(id => { const l = LOCATIONS.find(x => x.id === id); return facing(l.lat, l.lon); });
   const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
   let lastTime = 0;
+  const dal0 = facing(LOCATIONS[0].lat, LOCATIONS[0].lon);
+  globe.yaw = dal0.yaw; globe.pitch = dal0.pitch;
   function updateEarth(t6, t7, P, time) {
-    const dt = Math.min(0.05, time - lastTime); lastTime = time;
-    // tour target from scroll
-    const tour = seg(t6, 0.16, 1) * (TOUR.length - 1);
-    const i0 = Math.floor(tour), i1 = Math.min(TOUR.length - 1, i0 + 1), f = sm(tour - i0);
-    let yawT = tourFace[i0].yaw + wrap(tourFace[i1].yaw - tourFace[i0].yaw) * f;
-    let pitchT = lerp(tourFace[i0].pitch, tourFace[i1].pitch, f);
-    if (P >= 6) { yawT = tourFace[0].yaw + (P - 6) * 2.4 + time * 0.04; pitchT = 0.35; }
-    if (globe.focus) { const l = LOCATIONS.find(x => x.id === globe.focus); const fc = facing(l.lat, l.lon); if (time - globe.focusAt < 6) { yawT = fc.yaw; pitchT = fc.pitch; } else globe.focus = null; }
-    const manual = globe.dragging || time - globe.lastDrag < 3.5;
+    const dt = Math.max(0, Math.min(0.05, time - lastTime)); lastTime = time;
+    const z = ease(P, AIR_END, AIR_END + 0.16);
+    let yawT = null, pitchT = 0.32;
+    if (globe.focus) {
+      const l = LOCATIONS.find(x => x.id === globe.focus); const fc = facing(l.lat, l.lon);
+      if (time - globe.focusAt < 6) { yawT = fc.yaw; pitchT = fc.pitch; } else globe.focus = null;
+    }
+    if (z < 1) { yawT = dal0.yaw; pitchT = dal0.pitch; }
+    const manual = globe.dragging || time - globe.lastDrag < 3;
     if (manual) { globe.yaw = globe.userYaw; globe.pitch = globe.userPitch; }
     else {
-      const k = 1 - Math.exp(-dt * 3.2);
-      globe.yaw += wrap(yawT - globe.yaw) * k; globe.pitch += (pitchT - globe.pitch) * k;
+      const k = 1 - Math.exp(-dt * 2.6);
+      if (yawT !== null) globe.yaw += wrap(yawT - globe.yaw) * k; else globe.yaw += dt * 0.16;
+      globe.pitch += (pitchT - globe.pitch) * k;
       globe.userYaw = globe.yaw; globe.userPitch = globe.pitch;
     }
     E.group.rotation.set(globe.pitch, globe.yaw, 0);
     E.clouds.rotation.y = time * 0.006;
-    // zoom out from Dallas
-    const z = ease(t6, 0, 0.16);
     const wide = W / H > 1.2;
     const dist = lerp(ER * 1.32, ER * (wide ? 4.9 : 6.2), z) * (P >= 6 ? lerp(1, 1.12, ease(t7, 0, 0.2)) : 1);
     E.camera.position.set(0, 0, dist);
     E.camera.lookAt(0, 0, 0);
-    const offX = wide ? lerp(0, -ER * 0.62, z) : 0;
     E.camera.setViewOffset(W, H, (wide ? -0.16 : 0) * W * z, 0, W, H);
-    E.group.position.set(-offX * 0, 0, 0);
-    E.atmo.position.copy(E.group.position);
     E.earthMat.uniforms.boost.value = P >= 6 ? lerp(1, 0.55, ease(t7, 0, 0.25)) : 1;
-    // arcs + pins
-    E.arcs.forEach(a => { a.mat.uniforms.reveal.value = ease(t6, 0.12 + a.delay, 0.5 + a.delay); a.mat.uniforms.time.value = time; });
+    E.arcs.forEach(a => { a.mat.uniforms.reveal.value = ease(P, AIR_END + 0.1 + a.delay, AIR_END + 0.4 + a.delay); a.mat.uniforms.time.value = time; });
     E.markers.forEach((m, i) => { const s = 1 + ((time * 0.6 + i * 0.13) % 1) * 3; m.ring.scale.setScalar(s); m.ring.material.opacity = 0.8 * (1 - ((time * 0.6 + i * 0.13) % 1)); });
-    // box lands on Dallas
-    const dal = LOCATIONS[0];
-    const land = ease(t6, 0, 0.1);
-    const pDal = latLonToVec(dal.lat, dal.lon, ER * (1.01 + (1 - land) * 0.5));
-    E.box.position.copy(pDal); E.box.lookAt(0, 0, 0); E.box.visible = t6 < 0.14;
+    E.box.visible = false;
   }
 
   function earthLabels() {
