@@ -1,0 +1,8 @@
+.is-wrap{position:relative;width:100%;max-width:32rem;aspect-ratio:4/3;border:1px solid #D9D0C2;border-radius:4px;background:#F6F2EA;overflow:hidden;box-sizing:border-box}
+.is-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.is-t{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#6B6257;letter-spacing:.01em}
+.is-b{font-family:'Archivo',system-ui,sans-serif;font-size:11px;font-weight:600;fill:#16130F}
+.is-big{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;fill:#16130F}
+.is-ink{fill:#16130F}.is-or{fill:#EB5E12}.is-gr{fill:#1E7A4A}.is-am{fill:#B7791F}.is-wh{fill:#FFFFFF}
+.is-sm{font-size:8px}
+@media (prefers-reduced-motion:reduce){.is-svg *{transition:none!important}}

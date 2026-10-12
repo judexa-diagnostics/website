@@ -6,6 +6,7 @@ import Features from './pages/Features.jsx';
 import Pricing from './pages/Pricing.jsx';
 import Contact from './pages/Contact.jsx';
 import Platform from './pages/Platform.jsx';
+import Careers from './pages/Careers.jsx';
 import Start from './pages/Start.jsx';
 import Signin from './pages/Signin.jsx';
 import Footer from './components/Footer.jsx';
@@ -24,6 +25,7 @@ export default function Layout({ v }) {
         {is.pricing ? <Pricing v={v} /> : null}
         {is.contact ? <Contact v={v} /> : null}
         {is.platform ? <Platform v={v} /> : null}
+        {is.careers ? <Careers v={v} /> : null}
         {is.start ? <Start v={v} /> : null}
         {is.signin ? <Signin v={v} /> : null}
       </main>

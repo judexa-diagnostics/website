@@ -26,6 +26,43 @@ export function makePlane({ fog = true } = {}) {
   const floor = new THREE.Mesh(new THREE.BoxGeometry(L, 0.12, 3.4), new THREE.MeshStandardMaterial({ color: '#6b6e73', roughness: 0.6, fog }));
   floor.position.set(L / 2, -0.06, 0); g.add(floor);
   const lamp = new THREE.PointLight('#fff3dc', 40, 30, 1.6); lamp.position.set(4, 1.6, 0); g.add(lamp);
+  // the hold is already mostly loaded: stacked cartons along both walls,
+  // and a full centre row past where the new box stops
+  {
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const spots = [];
+    for (let x = 1.2; x < L - 1.5; x += 1.05) {
+      [-1.15, 1.15].forEach(z => {
+        let y = 0; const tiers = 2 + Math.floor(rnd() * 2);
+        for (let k = 0; k < tiers && y < 2.1; k++) {
+          const w = 0.75 + rnd() * 0.25, h = 0.45 + rnd() * 0.3, d = 0.8 + rnd() * 0.2;
+          spots.push([x + (rnd() - 0.5) * 0.08, y + h / 2, z + (rnd() - 0.5) * 0.1, w, h, d]); y += h;
+        }
+      });
+      if (x > 8.5) {
+        let y = 0; const tiers = 3 + Math.floor(rnd() * 2);
+        for (let k = 0; k < tiers && y < 2.8; k++) { const h = 0.5 + rnd() * 0.25; spots.push([x, y + h / 2, (rnd() - 0.5) * 0.15, 0.9, h, 1.0]); y += h; }
+      }
+    }
+    const kraft = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.85, fog });
+    const boxes = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), kraft, spots.length);
+    const mtx = new THREE.Matrix4(), col = new THREE.Color();
+    spots.forEach(([x, y, z, w, h, d], i) => {
+      mtx.compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), (rnd() - 0.5) * 0.06), new THREE.Vector3(w, h, d));
+      boxes.setMatrixAt(i, mtx);
+      boxes.setColorAt(i, col.setHSL(0.085 + rnd() * 0.02, 0.42 + rnd() * 0.12, 0.5 + rnd() * 0.1));
+    });
+    g.add(boxes);
+    // tape band across each carton top
+    const tape = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: '#d8c39a', roughness: 0.5, fog }), spots.length);
+    spots.forEach(([x, y, z, w, h, d], i) => { mtx.compose(new THREE.Vector3(x, y + h / 2 + 0.004, z), new THREE.Quaternion(), new THREE.Vector3(0.14, 0.01, d * 1.002)); tape.setMatrixAt(i, mtx); });
+    g.add(tape);
+    // cargo nets: a few dark straps across the wall stacks
+    const strapM = new THREE.MeshStandardMaterial({ color: '#2a2622', roughness: 0.9, fog });
+    for (let x = 2.5; x < L - 2; x += 3.2) [-1.15, 1.15].forEach(z => {
+      const s = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.2, 0.05), strapM); s.position.set(x, 1.1, z + Math.sign(z) * -0.52); g.add(s);
+    });
+  }
   // nose
   const nose = new THREE.Mesh(new THREE.SphereGeometry(R, 40, 24, 0, Math.PI * 2, 0, Math.PI / 2), white);
   nose.rotation.z = -Math.PI / 2; nose.scale.set(1, 1.9, 1); nose.position.set(L, R - 0.9, 0); g.add(nose);
