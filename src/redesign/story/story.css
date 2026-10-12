@@ -43,6 +43,15 @@
 @keyframes sx-pop{from{transform:translate(-50%,-110%) scale(.7);opacity:0}to{transform:translate(-50%,-140%) scale(1);opacity:1}}
 .sx-callout{transform:translate(1.5rem,-108%);width:19rem;background:rgba(22,19,15,.92);border:1px solid #3A342D;border-top:3px solid #E5574B;border-radius:3px;padding:.75rem .875rem;backdrop-filter:blur(8px);box-shadow:0 1rem 2rem rgba(0,0,0,.4)}
 .sx-callout.ship{border-top-color:#EB5E12}
+.sx-shipcard{position:absolute;right:clamp(1rem,3vw,2.5rem);top:8.75rem;width:19.5rem;z-index:4;pointer-events:none;background:rgba(22,19,15,.9);border:1px solid #3A342D;border-top:3px solid #EB5E12;border-radius:3px;padding:.75rem .875rem;backdrop-filter:blur(8px);box-shadow:0 1rem 2rem rgba(0,0,0,.4);opacity:0;transform:translateX(1.5rem);transition:opacity .45s,transform .6s cubic-bezier(.2,.75,.2,1)}
+.sx-shipcard.show{opacity:1;transform:none}
+.sx-shipcard .h{display:flex;justify-content:space-between;gap:.75rem;font:600 .6875rem 'JetBrains Mono',monospace;color:#B9AE9E;letter-spacing:.03em;margin-bottom:.5rem}
+.sx-shipcard .h span:first-child{color:#EB5E12}
+.sx-shipcard .r{display:flex;justify-content:space-between;gap:1rem;font-size:.8125rem;padding:.3125rem 0;border-top:1px solid #2A251F;color:#8E857A;transition:color .3s}
+.sx-shipcard .r span:last-child{font-family:'JetBrains Mono',monospace;font-size:.75rem}
+.sx-shipcard .r.next{color:#D9D0C2}.sx-shipcard .r.next span:last-child{color:#E39B0B}
+.sx-shipcard .r.done{color:#D9D0C2}.sx-shipcard .r.done span:last-child{color:#3FB27F}
+.sx-shipcard .f{margin-top:.375rem;font:500 .6875rem 'JetBrains Mono',monospace;color:#8E857A}
 .sx-callout .h{font:600 .6875rem 'JetBrains Mono',monospace;color:#B9AE9E;letter-spacing:.03em;margin-bottom:.5rem}
 .sx-callout .r{display:flex;justify-content:space-between;gap:1rem;font-size:.8125rem;padding:.3125rem 0;border-top:1px solid #2A251F;color:#D9D0C2}
 .sx-callout .r span:last-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#E39B0B}
@@ -225,6 +234,8 @@
   .sx-offers .pov{grid-column:1}
   .sx-phone{max-height:17rem}
   .sx-callout{width:14rem;transform:translate(-50%,-115%)}
+  .sx-shipcard{left:1rem;right:1rem;width:auto;top:auto;bottom:8.5rem;transform:translateY(1rem)}
+  .sx-shipcard .r:nth-child(-n+3){display:none}
   .sx-record,.sx-mac,.sx-offers{bottom:8.5rem}
   .sx-foot{padding-bottom:7.5rem}
   .sx-lane{font-size:.625rem;padding:.25rem .375rem}

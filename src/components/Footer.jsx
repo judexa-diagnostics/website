@@ -17,7 +17,7 @@ export default function Footer({ v }) {
           <a href="#/features" style={{ color: "#16130F", textDecoration: "none" }}>Features</a>
           <a href="#/industries" style={{ color: "#16130F", textDecoration: "none" }}>Industries</a>
           <a href="#/pricing" style={{ color: "#16130F", textDecoration: "none" }}>Pricing</a>
-          <a href="#/platform" style={{ color: "#16130F", textDecoration: "none" }}>Integrations</a>
+          <a href="#/platform" style={{ color: "#16130F", textDecoration: "none" }}>How it's built</a>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
           <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", marginBottom: "0.25rem" }}>Get started</span>
@@ -28,6 +28,7 @@ export default function Footer({ v }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
           <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", marginBottom: "0.25rem" }}>Company</span>
           <a href="#/platform" style={{ color: "#16130F", textDecoration: "none" }}>{"Security & compliance"}</a>
+          <a href="#/careers" style={{ color: "#16130F", textDecoration: "none" }}>Careers</a>
           <a href="#/contact" style={{ color: "#16130F", textDecoration: "none" }}>Contact</a>
           <a href="#/home" style={{ color: "#16130F", textDecoration: "none" }}>Privacy</a>
           <a href="#/home" style={{ color: "#16130F", textDecoration: "none" }}>Terms</a>

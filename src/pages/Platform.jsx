@@ -5,7 +5,7 @@ export default function Platform({ v }) {
   return (
     <>
       <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) 0" }}>
-        <h1 style={{ margin: "0", fontSize: "clamp(2rem,3.6vw,3.375rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance", maxWidth: "66.25rem" }}>One record per device, shared with every tool you already run.</h1>
+        <h1 style={{ margin: "0", fontSize: "clamp(2rem,3.6vw,3.375rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance", maxWidth: "66.25rem" }}>Built in house, end to end. One record per device.</h1>
       </section>
       <section style={{ padding: "2rem clamp(1rem,3vw,2.5rem) 0" }}>
         <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap", paddingBottom: "1rem", borderBottom: "1px solid #16130F" }}>
@@ -23,18 +23,18 @@ export default function Platform({ v }) {
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", padding: "1.5rem 0" }}>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257", lineHeight: "1.6" }}>LIVE = available today<br />IN DEV = being built, not yet available</span>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257", lineHeight: "1.6" }}>BUILT IN = part of InPhox today<br />ON REQUEST = set up with your shop when you need it</span>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", maxWidth: "45rem" }}>
             <p style={{ margin: "0", fontSize: "1.0625rem", lineHeight: "1.6", color: "#3A342D" }}>
-              Diagnostics apps, marketplaces, carriers and accounting software each keep their own copy of a device. InPhox keeps the original record, which is the IMEI and everything that has happened to it, and syncs the parts each tool needs.
+              We build InPhox ourselves, from the station that tests a phone to the invoice that sells it. There is no stack of plug-ins underneath, so there is one record per device: the IMEI and everything that has happened to it.
             </p>
             {plat.more ? (
               <>
                 <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D" }}>
-                  When a marketplace order comes in, the device reserves itself, a label is created with the carrier, and the sale posts to your books. If a buyer opens a return, the device comes back into the test-and-grade flow with its full history intact.
+                  Because it is one system, an accepted offer reserves the device, the sales order prints the label and invoice, and a return goes straight back into testing with its history intact.
                 </p>
                 <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D" }}>
-                  We only mark an integration Live when it works today. If you need one that isn't listed, tell us. Customer requests decide what we build next.
+                  We don't connect to much on purpose. When a shop needs payments, shipping, a marketplace or its books connected, we set that up with them. Tell us what you use and we'll be straight about what works today.
                 </p>
               </>
             ) : null}

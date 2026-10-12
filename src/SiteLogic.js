@@ -5,7 +5,7 @@ import { SIGNIN_HREF, shopDomain, leadAction, signupAction } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','start','signin'];
+const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };
@@ -44,7 +44,7 @@ export default class SiteLogic extends DCLogic {
     ['iPhone 13',['Grade B','128GB','Midnight','Unlocked'],'353012119874205','WH-A / 02-C4','Warehouse A','Available','9d',429],
     ['iPhone 13',['Grade C','128GB','Blue','T-Mobile'],'353012119802911','WH-A / 02-C4','Warehouse A','On hold','12d',355],
     ['Pixel 7',['Grade A','128GB','Obsidian','Unlocked'],'358240501177962','Elm St. Store','Elm St. Store','Available','3d',389],
-    ['Pixel 8 Pro',['Grade A','256GB','Bay','Unlocked'],'358240512230048','UPS · 1Z84…','In transit','In transit','0d',749],
+    ['Pixel 8 Pro',['Grade A','256GB','Bay','Unlocked'],'358240512230048','Carrier · 1Z84…','In transit','In transit','0d',749],
     ['iPhone 12',['Grade B','64GB','Blue','Unlocked'],'356702108836129','WH-A / 04-A1','Warehouse A','Available','21d',279],
     ['Galaxy S22 Ultra',['Grade B','256GB','Burgundy','Verizon'],'350211337650182','WH-A / 03-A4','Warehouse A','Reserved','5d',529],
     ['iPhone 11',['Grade B','64GB','White','Unlocked'],'353988103452017','Elm St. Store','Elm St. Store','Available','14d',219],
@@ -64,13 +64,13 @@ export default class SiteLogic extends DCLogic {
   caps = [
     ['Custom workflows','Intake, grading and routing steps that match how your floor actually runs.'],
     ['CRM for customers and vendors','Accounts, purchase history, terms and price lists for buyers and suppliers.'],
-    ['Online listings','Publish graded stock to connected marketplaces and keep quantities in sync.'],
+    ['Online listings','Graded stock is ready to list the moment it is graded. Marketplace connections are set up with you on request.'],
     ['Returns','RMA intake that brings returned devices back into the test-and-grade flow.'],
     ['Auction and vendor marketplace','Sell lots to vetted buyers, or buy from vendors, without leaving InPhox.'],
     ['Data insights','Dwell time, margin by model and grade, and technician throughput.'],
     ['Third-party routing','Send devices to outside repair or recycling partners and track them while they are out.'],
-    ['Integrations','Diagnostics apps, marketplaces, carriers and Zapier.'],
-    ['Live accounting','Cost, sale and repair entries post to your books as they happen.']
+    ['Built in house','Testing, erasure, inventory, repairs and sales are one product we build ourselves, not a bundle of plug-ins.'],
+    ['Exports','Any list, report or certificate comes out as CSV or PDF when your accountant or buyer asks.']
   ].map(([t,d]) => ({t,d}));
   xfRows = [
     ['Diagnostic results copied into a spreadsheet at the end of every shift','Results are written to the device record the moment testing finishes'],
@@ -288,7 +288,7 @@ export default class SiteLogic extends DCLogic {
     const s4 = {
       tiles: Array.from({length:12}, (_, i) => ({ o: p4 >= 1 ? 0 : 1, t: p4 >= 1 ? 'translateX(3.75rem) scale(.4)' : 'none', d: (i * 45) + 'ms' })),
       count: p4 >= 2 ? 12 : p4 >= 1 ? 7 : 0, boxT: p4 >= 2 ? 'scale(1)' : 'scale(.94)',
-      lanes: [['Repair','3','25%','#B3261E','→ Bench R-2 · rear camera, battery'],['Sale / ship','6','50%','#EB5E12','→ SO-10422 · UPS Ground · Fri'],['Storage','3','25%','#1E7A4A','→ WH-A · C-14-03, C-14-04']]
+      lanes: [['Repair','3','25%','#B3261E','→ Bench R-2 · rear camera, battery'],['Sale / ship','6','50%','#EB5E12','→ SO-10422 · Ground · Fri'],['Storage','3','25%','#1E7A4A','→ WH-A · C-14-03, C-14-04']]
         .map(([name,n,w,c,dest]) => ({ name, n: p4 >= 3 ? n : '0', w: p4 >= 3 ? w : '0%', c, dest, o: p4 >= 4 ? 1 : 0 }))
     };
     const s5 = {
@@ -345,7 +345,7 @@ export default class SiteLogic extends DCLogic {
       ui, is, nav,
       menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? '#16130F' : 'transparent', menuBtnFg: s.menu ? '#F6F2EA' : '#16130F',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
-      menuItems: [['Industries','industries','Refurbishers, repair shops, wholesale, retail chains, online sellers'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${STARTER.name}, ${GROWTH.name} and ${ENTERPRISE.name} plans`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','Integrations and the device record']]
+      menuItems: [['Industries','industries','Refurbishers, repair shops, wholesale, retail chains, online sellers'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${STARTER.name}, ${GROWTH.name} and ${ENTERPRISE.name} plans`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record'],['Careers','careers','Sales intern, or send us your CV']]
         .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? '#FBE7CC' : '#FFFFFF' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
@@ -372,9 +372,9 @@ export default class SiteLogic extends DCLogic {
     ['Independent repair shops','Know every part and every device on the bench.','Check in customer devices, log the fault, pull the part with its serial and retest before handing it back. The customer history stays with the device.',['Check in the customer device','Diagnose the fault','Pull the part and log its serial','Repair and retest','Notify the customer and hand back'],['Repair suite','Parts inventory','Retest','Invoices'],STARTER.name],
     ['Wholesale & trade-in buyers','Price lots quickly, and pay only for what arrived.','Verify every unit against the manifest on arrival, flag discrepancies automatically, and counter offers using rules instead of gut feel.',['Accept an offer or send a quote','Receive and verify against the manifest','Flag discrepancies to the vendor','Grade','Resell in lots'],['Offers & auto-counter','Diagnostics','Vendor CRM','Auction marketplace'],GROWTH.name],
     ['Multi-location retail','Every store, every shelf, one count.','Trade-ins at the counter, transfers to a refurb hub and restocking by demand, with staff roles and live stock for every location.',['Take the trade-in at the counter','Transfer to the refurb hub','Restock stores by demand','Sell in store or online'],['Locations & transfers','Roles & permissions','Listings','Data insights'],ENTERPRISE.name],
-    ['Online marketplace sellers','List what\'s graded, ship what sold.','Graded stock goes straight to your listings with quantities kept in sync. Orders create labels, and returns come back into testing.',['Source devices','Test and grade','List to marketplaces','Pick, pack and label','Handle returns'],['Listings','Shipping & labels','Returns','Live accounting'],GROWTH.name]
+    ['Online marketplace sellers','List what\'s graded, ship what sold.','Graded stock is ready to list the moment it is graded, with marketplace connections set up with you on request. Orders print labels, and returns come back into testing.',['Source devices','Test and grade','List to marketplaces','Pick, pack and label','Handle returns'],['Listings','Shipping & labels','Returns','Exports'],GROWTH.name]
   ];
-  ladder = [['One bench','A single technician testing and repairing.',`${STARTER.name} · ${money(STARTER.price.month)}/mo`],['One store','Counter trade-ins, repairs and retail stock.',`${STARTER.name} → ${GROWTH.name}`],['A few locations','Transfers, staff roles and shared stock.',`${GROWTH.name} · ${money(GROWTH.price.month)}/mo`],['A network','Refurb hubs, many stores, API and insights.',`${ENTERPRISE.name} · ${money(ENTERPRISE.price.month)}/mo`]];
+  ladder = [['One bench','A single technician testing and repairing.',`${STARTER.name} · ${money(STARTER.price.month)}/mo`],['One store','Counter trade-ins, repairs and retail stock.',`${STARTER.name} → ${GROWTH.name}`],['A few locations','Transfers, staff roles and shared stock.',`${GROWTH.name} · ${money(GROWTH.price.month)}/mo`],['A network','Refurb hubs, many stores and insights.',`${ENTERPRISE.name} · ${money(ENTERPRISE.price.month)}/mo`]];
   features = [
     ['Diagnostics','Bulk port diagnostics','Test up to 40 devices per station in parallel'],
     ['Diagnostics','42-point functional test','Screen, touch, cameras, speakers, sensors, charging and more'],
@@ -399,18 +399,17 @@ export default class SiteLogic extends DCLogic {
     ['Sales','Offers queue','Customer and vendor offers in one place'],
     ['Sales','Auto-counter rules','Counter below-floor offers automatically'],
     ['Sales','Auction & vendor marketplace','Sell lots or buy from vendors'],
-    ['Listings','Marketplace listings','Publish graded stock and sync quantities'],
+    ['Listings','Marketplace listings','Graded stock ready to list; connections on request'],
     ['CRM','Customer & vendor accounts','History, terms and contacts'],
     ['CRM','Price lists','Per-customer pricing by model and grade'],
     ['Insights','Margin by model & grade','Cost, repair and sale rolled up'],
     ['Insights','Technician throughput','Devices tested and repaired per tech'],
     ['Platform','Roles & permissions','Control who can grade, price or ship'],
-    ['Platform','Zapier','Connect other tools without code'],
-    ['Platform','API & webhooks','Build on InPhox data'],
-    ['Platform','Live accounting sync','Entries post to your books']
+    ['Platform','Exports','CSV and PDF from any list or report'],
+    ['Platform','Connections on request','Tell us what your shop needs connected']
   ];
-  integrations = [['PhoneCheck','Diagnostics','LIVE'],['M360','Diagnostics','LIVE'],['eBay','Marketplaces','LIVE'],['Zapier','Automation','LIVE'],['Webhooks','Developer','LIVE'],['REST API','Developer','LIVE'],['Amazon','Marketplaces','IN DEV'],['Back Market','Marketplaces','IN DEV'],['Swappa','Marketplaces','IN DEV'],['Shopify','Marketplaces','IN DEV'],['UPS','Shipping','IN DEV'],['FedEx','Shipping','IN DEV'],['USPS','Shipping','IN DEV'],['ShipStation','Shipping','IN DEV'],['QuickBooks Online','Accounting','IN DEV'],['Xero','Accounting','IN DEV'],['Stripe','Payments','IN DEV']];
-  record = [['Oct 2 · 08:14','Received in lot L-0418','Manifest scan','D. Chen','WH-A · Dock 2'],['08:31','Connected · port 17','Station B-04','D. Chen','WH-A'],['08:33','Functional test 41/42 · rear camera','InPhox Diagnostics','—','Station B-04'],['08:34','Erasure certified · NIST 800-88','InPhox Diagnostics','—','Station B-04'],['09:02','Repair RT-2207 · rear camera replaced','Repair suite','M. Ortiz','Bench R-2'],['09:24','Retest 42/42 · graded A-','InPhox Diagnostics','M. Ortiz','Bench R-2'],['09:30','Shelved','Handheld scan','Sam P.','C-14-03'],['Oct 3 · 10:02','Listed at $869','eBay','—','—'],['14:47','Sold · UPS label created','eBay · UPS','Sam P.','Dock 1']];
+  integrations = [['Diagnostics','Devices','BUILT IN'],['Erasure certificates','Devices','BUILT IN'],['Grading','Devices','BUILT IN'],['Repairs & parts','Devices','BUILT IN'],['Inventory & locations','Stock','BUILT IN'],['Transfers','Stock','BUILT IN'],['Offers','Sales','BUILT IN'],['Sales orders & invoices','Sales','BUILT IN'],['Customer portal','Sales','BUILT IN'],['Reports','Stock','BUILT IN'],['CSV & PDF export','Connections','BUILT IN'],['Payments','Connections','ON REQUEST'],['Shipping labels','Connections','ON REQUEST'],['Marketplaces','Connections','ON REQUEST'],['Accounting','Connections','ON REQUEST']];
+  record = [['Oct 2 · 08:14','Received in lot L-0418','Manifest scan','D. Chen','WH-A · Dock 2'],['08:31','Connected · port 17','Station B-04','D. Chen','WH-A'],['08:33','Functional test 41/42 · rear camera','InPhox Diagnostics','—','Station B-04'],['08:34','Erasure certified · NIST 800-88','InPhox Diagnostics','—','Station B-04'],['09:02','Repair RT-2207 · rear camera replaced','Repair suite','M. Ortiz','Bench R-2'],['09:24','Retest 42/42 · graded A-','InPhox Diagnostics','M. Ortiz','Bench R-2'],['09:30','Shelved','Handheld scan','Sam P.','C-14-03'],['Oct 3 · 10:02','Offer accepted at $869','Offers','—','—'],['14:47','Sold · label printed','Sales order SO-10422','Sam P.','Dock 1']];
 
   pickChips(list, cur, on, multi) {
     return list.map(t => { const sel = multi ? !!cur[t] : cur === t; return { t, bg: sel ? '#16130F' : '#FFFFFF', fg: sel ? '#F6F2EA' : '#16130F', bd: sel ? '#16130F' : '#D9D0C2', pick: () => on(t) }; });
@@ -526,7 +525,7 @@ export default class SiteLogic extends DCLogic {
     const cats = ['All', ...Array.from(new Set(this.integrations.map(i => i[1])))];
     const plat = {
       cats: cats.map(c => { const sel = c === s.platCat; return { t:c, bg: sel ? '#16130F' : '#FFFFFF', fg: sel ? '#F6F2EA' : '#16130F', bd: sel ? '#16130F' : '#D9D0C2', pick: () => this.setState({ platCat:c }) }; }),
-      items: this.integrations.map(([n,c,st]) => { const hit = s.platCat === 'All' || s.platCat === c; return { n, s: st, fg: hit ? '#16130F' : '#D9D0C2', sc: !hit ? '#D9D0C2' : st === 'LIVE' ? '#1E7A4A' : '#8E857A' }; }),
+      items: this.integrations.map(([n,c,st]) => { const hit = s.platCat === 'All' || s.platCat === c; return { n, s: st, fg: hit ? '#16130F' : '#D9D0C2', sc: !hit ? '#D9D0C2' : st === 'BUILT IN' ? '#1E7A4A' : '#8E857A' }; }),
       more: s.platMore, moreLabel: s.platMore ? 'Read less ▴' : 'Read more ▾', toggle: () => this.setState({ platMore: !s.platMore })
     };
     const rec = this.record.map(([t,e,src,u,l]) => ({ t, e, s:src, u, l }));

@@ -1,5 +1,6 @@
 import { Fragment, Suspense, lazy } from 'react';
 import HeroConsole from '../redesign/HeroConsole.jsx';
+import HeroPhone from '../redesign/HeroPhone.jsx';
 import Station from '../redesign/Station.jsx';
 const Story = lazy(() => import('../redesign/Story.jsx'));
 
@@ -10,19 +11,7 @@ export default function Home({ v }) {
       <section style={{ position: "relative", borderBottom: "1px solid #D9D0C2", overflow: "hidden" }}>
         <div style={{ display: ui.wideBlock, position: "absolute", top: "0", bottom: "0", left: "40%", right: "0", background: "#EDE6DA" }} />
         <div style={{ position: "relative", display: "grid", gridTemplateColumns: ui.hero, alignItems: "center", gap: "clamp(1.5rem,3vw,2.5rem)", padding: "clamp(2rem,4.5vw,3.75rem) clamp(1rem,3vw,2.5rem)" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem", minWidth: "0", position: "relative", zIndex: "2" }}>
-            <h1 style={{ margin: "0", fontSize: "clamp(2rem,2.9vw,2.75rem)", lineHeight: "1.06", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance" }}>
-              {"The all-in-one platform for used electronics. "}
-              <span style={{ color: "#C2470A" }}>Literally.</span>
-            </h1>
-            <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", textWrap: "pretty" }}>
-              Diagnose, erase, grade, repair, store and sell from one system. Every device is tracked by IMEI from the moment it's plugged in until it ships.
-            </p>
-            <div style={{ display: "flex", gap: "0.625rem", alignItems: "center", flexWrap: "wrap" }}>
-              <button className="hv-2" onClick={goTrial} style={{ height: "3.125rem", padding: "0 1.625rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}>Join now</button>
-              <a className="hv-3" href="#/pricing" style={{ height: "3.125rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "1rem", fontWeight: "600", color: "#16130F", textDecoration: "none", background: "#F6F2EA" }}>See pricing</a>
-            </div>
-          </div>
+          <HeroPhone goTrial={goTrial} />
           <HeroConsole />
         </div>
       </section>

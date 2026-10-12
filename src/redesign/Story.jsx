@@ -292,14 +292,7 @@ export default function Story() {
             <div className="f">Part cost logged to the device · back to stock</div>
           </div>
         </div>
-        <div className="sx-anchor" ref={reg('box')}>
-          <div className="sx-callout ship">
-            <div className="h">SO-10422 · Ortega Mobile Wholesale</div>
-            <div className="r done"><span>8 of 8 scanned in</span><span>Packed</span></div>
-            <div className="r done"><span>Ship to</span><span>London, UK</span></div>
-            <div className="f">Label printed · 3.4 kg · leaving Dallas DC</div>
-          </div>
-        </div>
+        <ShipCard P={P} />
         <div className="sx-pill" style={{ opacity: P > 4.36 && P < 4.66 ? 1 : 0 }}>Picking SO-10422 · scan each IMEI into the box</div>
 
         {/* scenes 6-7: globe labels */}
@@ -343,6 +336,28 @@ const RECORD = [
   ['Battery', '91% health · 312 cycles', 'battery'],
   ['Parts', 'Screen · battery · camera genuine', 'parts']
 ];
+// Docked shipment card: appears once the box is packed and stays put while
+// the box rides into the hold and the plane takes off, so it can be read.
+function ShipCard({ P }) {
+  const steps = [
+    ['8 of 8 scanned in', 'Packed', 4.62],
+    ['Label printed · 3.4 kg', 'Printed', 4.7],
+    ['Conveyor to dock 1', 'Moving', 4.79],
+    ['Loaded · freighter IX-418', 'In hold', 4.98],
+    ['Dallas → London', 'Wheels up', 5.12]
+  ];
+  return (
+    <div className={'sx-shipcard' + (P > 4.6 && P < 5.36 ? ' show' : '')}>
+      <div className="h"><span>SO-10422</span><span>Ortega Mobile Wholesale</span></div>
+      {steps.map(([k, v, at], i) => {
+        const on = P >= at, next = !on && (i === 0 || P >= steps[i - 1][2]);
+        return <div key={k} className={'r' + (on ? ' done' : next ? ' next' : '')}><span>{k}</span><span>{on ? v : next ? '…' : '—'}</span></div>;
+      })}
+      <div className="f">Ship to London, UK · invoice INV-2214 attached</div>
+    </div>
+  );
+}
+
 function DeviceRecord({ t, show }) {
   const n = Math.round(seg(t, 0.3, 0.55) * RECORD.length);
   return (
