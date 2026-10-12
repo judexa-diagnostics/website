@@ -228,18 +228,26 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   scene.add(driver);
 
   // ---- earth ----
-  const E = buildEarth(renderer, onEarthReady);
+  const warmQueue = []; // scenes to render once off-screen-in-time so their first real frame doesn't hitch
+  const E = buildEarth(renderer, () => { warmQueue.push('earth'); if (onEarthReady) onEarthReady(); });
   const A = buildAirport();
   const AIR_END = 5.42;
-  // take-off: the freighter rolls, rotates and climbs; the camera follows then looks up
-  function updateAir(a, time) {
+  // Warehouse -> runway crossfade window (inside the 5.00..5.06 beat). Both
+  // cameras keep moving through it, so the eye never sees a still frame.
+  const XF0 = 5.012, XF1 = 5.048;
+  // take-off: the freighter rolls, rotates and climbs; the camera follows then looks up.
+  // `arrive` (0..1) eases the chase camera in from further back while the
+  // crossfade plays, settling at rest exactly when the plane is ready to roll.
+  function updateAir(a, time, arrive = 1) {
     const pl = A.plane;
     const roll = easeIn(a, 0, 0.62);
     const climb = seg(a, 0.42, 1);
     pl.position.set(-40 + roll * 900 + climb * 900, 2.3 + climb * climb * 520, 0);
     pl.rotation.z = Math.min(0.16, seg(a, 0.38, 0.5) * 0.16) + climb * 0.08;
     const cam = A.camera;
-    const behind = V(-62 + a * 14, 3.2 + a * 16, 26 - a * 6);
+    const ca = sm(a); // starts and ends at rest: no jerk when the take-off beat begins
+    const back = 1 - arrive;
+    const behind = V(-62 + ca * 14 - back * 70, 3.2 + ca * 16 + back * 9, 26 - ca * 6 + back * 16);
     cam.position.copy(pl.position).add(behind);
     const look = pl.position.clone().add(V(20, 6, 0));
     look.y += ease(a, 0.72, 1) * 900;
@@ -499,7 +507,10 @@ export function createWorld(canvas, { onEarthReady } = {}) {
 
     // ===== camera (warehouse) =====
     shotAt(Math.min(P, 5));
-    // follow the box during the flight
+    // after the box is aboard, keep dollying toward the bay door (starts from
+    // rest, still moving while the runway shot fades in over it)
+    const dolly = seg(P, 5.0, 5.06);
+    if (dolly > 0) { _p.x += 1500 * dolly * dolly; _p.y += 30 * dolly * dolly; }
 
     camera.position.copy(_t).addScaledVector(_p.clone().sub(_t), aspectK);
     camera.lookAt(_t);
@@ -511,9 +522,10 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     camera.setViewOffset(W, H, shiftX * W, 0, W, H);
 
     // ===== earth (scenes 6-7) =====
-    const useAir = P > 5.03 && P < AIR_END;
+    const xf = ease(P, XF0, XF1);          // 0 = warehouse, 1 = runway
+    const useAir = xf >= 1 && P < AIR_END;  // runway is the main view
     const useEarth = P >= AIR_END;
-    if (useAir) updateAir(seg(P, 5.06, AIR_END), time);
+    if (P > XF0 && P < AIR_END) updateAir(seg(P, 5.06, AIR_END), time, easeOut(P, 5.0, 5.06));
     if (useEarth) updateEarth(t6, t7, P, time);
 
     // labels
@@ -531,9 +543,84 @@ export function createWorld(canvas, { onEarthReady } = {}) {
       out[k] = { x: (tmp.x * 0.5 + 0.5) * W, y: (-tmp.y * 0.5 + 0.5) * H, v: tmp.z < 1 };
     }
     if (useEarth) Object.assign(out, earthLabels());
-    if (useAir) renderer.render(A.scene, A.camera);
-    else renderer.render(useEarth ? E.scene : scene, useEarth ? E.camera : camera);
+    warmUp(time);
+    if (xf > 0 && xf < 1) crossfade(xf, P);
+    else if (useAir) draw(A.scene, A.camera, P < 5.06);
+    else if (useEarth) draw(E.scene, E.camera, false);
+    else draw(scene, camera, P >= 5.0);
     return out;
+  }
+
+  // ---- drawing --------------------------------------------------------------
+  // Shadow maps are the most expensive pass. While a scene's lights and
+  // casters are still (warehouse after the box is aboard, runway before the
+  // roll) its shadow map is rendered once and reused, so the crossfade, which
+  // draws two scenes per frame, stays inside the frame budget.
+  const freshShadows = new Set();
+  function draw(sc, cam, still) {
+    if (still) {
+      renderer.shadowMap.autoUpdate = false;
+      renderer.shadowMap.needsUpdate = !freshShadows.has(sc);
+      freshShadows.add(sc);
+    } else { renderer.shadowMap.autoUpdate = true; freshShadows.delete(sc); }
+    renderer.render(sc, cam);
+  }
+  // Crossfade: draw the outgoing warehouse frame, copy the finished pixels
+  // into a texture, draw the runway frame, then lay the copy over it at
+  // (1 - k). Both ends are pixel-exact with the plain renders, so the blend
+  // starts and finishes without a pop.
+  const fbSize = new THREE.Vector2();
+  let fbTex = null;
+  // Raw copy of display pixels: no tone mapping, no colour conversion (the
+  // copy is already display-ready), alpha-blended in display space.
+  const xfMat = new THREE.ShaderMaterial({
+    uniforms: { map: { value: null }, opacity: { value: 1 } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    fragmentShader: 'uniform sampler2D map; uniform float opacity; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(map, vUv).rgb, opacity); }',
+    transparent: true, depthTest: false, depthWrite: false
+  });
+  const xfScene = new THREE.Scene();
+  const xfQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), xfMat); xfQuad.frustumCulled = false; xfScene.add(xfQuad);
+  const xfCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  function crossfade(k, P) {
+    renderer.getDrawingBufferSize(fbSize);
+    if (!fbTex || fbTex.image.width !== fbSize.x || fbTex.image.height !== fbSize.y) {
+      if (fbTex) fbTex.dispose();
+      fbTex = new THREE.FramebufferTexture(fbSize.x, fbSize.y); // linear bytes: same format as the canvas, so the copy is legal
+      xfMat.uniforms.map.value = fbTex;
+    }
+    draw(scene, camera, true);
+    renderer.copyFramebufferToTexture(fbTex);
+    draw(A.scene, A.camera, P < 5.06);
+    xfMat.uniforms.opacity.value = 1 - k;
+    renderer.autoClear = false;
+    renderer.render(xfScene, xfCam);
+    renderer.autoClear = true;
+  }
+
+  // ---- warm-up --------------------------------------------------------------
+  // The runway and globe scenes are first drawn mid-story. Compiling their
+  // shaders, uploading their textures and building the sky's environment map
+  // at that moment costs several hundred ms: the hitch at the cut. Instead
+  // each is drawn once, early, on a frame whose output is overwritten by the
+  // normal render in the same rAF, so nobody ever sees it.
+  try { renderer.compileAsync(A.scene, A.camera).then(() => warmQueue.push('air'), () => warmQueue.push('air')); }
+  catch (e) { warmQueue.push('air'); }
+  let warmed = 0;
+  function warmUp(time) {
+    if (!warmQueue.length || warmed++ < 2) return; // let the first frames through untouched
+    const which = warmQueue.shift();
+    if (which === 'air') {
+      A.scene.traverse(o => { const m = o.material; if (m) [m.map, m.emissiveMap].forEach(t => t && renderer.initTexture(t)); });
+      updateAir(0, time, 1);
+      renderer.shadowMap.autoUpdate = true;
+      renderer.render(A.scene, A.camera);
+      crossfade(0.5, 5.03); // also compiles the overlay and sizes the copy texture
+    } else if (which === 'earth') {
+      renderer.compile(E.scene, E.camera);
+      renderer.render(E.scene, E.camera);
+    }
+    freshShadows.clear();
   }
 
   // ---- earth update ----
@@ -593,7 +680,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   }
   function focusLocation(id, time) { globe.focus = id; globe.focusAt = time; globe.lastDrag = -1e9; }
 
-  function dispose() { renderer.dispose(); pmrem.dispose(); }
+  function dispose() { if (fbTex) fbTex.dispose(); xfMat.dispose(); renderer.dispose(); pmrem.dispose(); }
   return { update, setSize, drag, focusLocation, dispose, renderer };
 }
 

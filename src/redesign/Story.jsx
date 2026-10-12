@@ -35,6 +35,7 @@ const BEATS = [
 ];
 const SCENE_OF_BEAT = [0, 0, 1, 2, 3, 4, 4, 4, 5, 5, 6];
 const AIR_END = 5.42;
+const smooth = x => x * x * (3 - 2 * x);
 const WHEELS_UP = { name: 'Locations', title: 'Wheels up.', body: 'The order is on its way to London. The label, the units and the invoice travel together, and every location knows what it holds.' };
 const LEAD = 0.6; // idle band before the first beat (viewport heights)
 const BAND = [LEAD, ...BEATS.map(b => b[3])];
@@ -47,7 +48,7 @@ const bandMid = beat => (BAND_CUM[beat + 1] + BAND[beat + 1] * 0.5) / BAND_TOTAL
 
 export default function Story() {
   const rootRef = useRef(null), stageRef = useRef(null), canvasRef = useRef(null), worldRef = useRef(null);
-  const anchorEls = useRef({});
+  const anchorEls = useRef({}), flashRef = useRef(null);
   const [P, setP] = useState(0);
   const [ready, setReady] = useState(false);
   const [webgl, setWebgl] = useState(true);
@@ -62,7 +63,7 @@ export default function Story() {
     if (import.meta.env.DEV) window.__world = world;
     const resize = () => { const r = stageRef.current.getBoundingClientRect(); world.setSize(r.width, r.height, window.devicePixelRatio || 1); };
     resize(); window.addEventListener('resize', resize);
-    let raf, last = performance.now(), visible = true, shownP = -1, waitingShown = false;
+    let raf, last = performance.now(), visible = true, shownP = -1, waitingShown = false, shownFlash = -1, readyShown = false;
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { rootMargin: '200px' });
     io.observe(rootRef.current);
     let done = -1, playing = null; // index of last finished beat, current beat
@@ -116,10 +117,17 @@ export default function Story() {
         if (a && a.v) { el.style.transform = `translate(${a.x}px, ${a.y}px)`; el.style.opacity = a.f !== undefined ? clamp((a.f - 0.12) * 5) : 1; el.style.visibility = 'visible'; }
         else el.style.visibility = 'hidden';
       }
+      // The dip into the globe is set here, every frame, from the unrounded P
+      // (driving it from React state stepped it ~7 times a second).
+      if (flashRef.current) {
+        const p = Pref.current;
+        const fo = p > 5.34 && p < 5.5 ? (p < AIR_END ? smooth(seg(p, 5.34, AIR_END)) : 1 - smooth(seg(p, AIR_END, 5.5))) : 0;
+        if (fo !== shownFlash) { shownFlash = fo; flashRef.current.style.opacity = fo.toFixed(4); }
+      }
       const q = Math.round(Pref.current * 250) / 250;
       if (q !== shownP) { shownP = q; setP(q); }
       if (waitingRef.current !== waitingShown) { waitingShown = waitingRef.current; setWaiting(waitingShown); }
-      if (!ready) setReady(true);
+      if (!readyShown) { readyShown = true; setReady(true); }
     };
     raf = requestAnimationFrame(loop);
 
@@ -245,7 +253,8 @@ export default function Story() {
         <canvas ref={canvasRef} className="sx-canvas" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} style={{ cursor: P >= 5 ? (dragRef.current ? 'grabbing' : 'grab') : 'default', touchAction: P >= 5 ? 'pan-y' : 'auto' }} />
         {!webgl ? <div className="sx-nogl">3D preview needs WebGL. The steps below still read top to bottom.</div> : null}
         <div className="sx-vignette" />
-        <div className="sx-flash" style={{ opacity: P > 5.0 && P < 5.06 ? (P < 5.03 ? seg(P, 5.0, 5.03) : 1 - seg(P, 5.03, 5.06)) : P > 5.34 && P < 5.5 ? (P < AIR_END ? seg(P, 5.34, AIR_END) : 1 - seg(P, AIR_END, 5.5)) : 0 }} />
+        {/* warehouse -> runway is a WebGL crossfade (world.js); this only dips into the globe */}
+        <div className="sx-flash" ref={flashRef} />
 
         <header className="sx-head">
           <div className="sx-kicker"><span>01</span> How InPhox fits into your workflow</div>
