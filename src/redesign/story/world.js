@@ -222,7 +222,9 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   // repair callout props: screwdriver hovering over the repair lane
   const driver = new THREE.Group();
   const dh = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.5, 11, 16), new THREE.MeshStandardMaterial({ color: '#EB5E12', roughness: 0.45 })); dh.position.y = 7; driver.add(dh);
-  const ds = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 9, 10), MAT.steel); ds.position.y = -3; driver.add(ds);
+  const ds = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 8.4, 10), MAT.steel); ds.position.y = -2.7; driver.add(ds);
+  const dtip = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.6, 5), MAT.steel); dtip.rotation.x = Math.PI; dtip.position.y = -7.2; driver.add(dtip);
+  const DRIVER_TIP = 7.5; // distance from the driver's origin down to its tip
   scene.add(driver);
 
   // ---- earth ----
@@ -272,8 +274,8 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     [2.85, V(0, 196, 132), V(0, 100, -20)],
     [3.15, V(0, 330, 640), V(0, 90, 428)],
     [3.95, V(0, 330, 640), V(0, 90, 428)],
-    [4.12, V(-112, 196, 548), V(-74, 90, 446)],
-    [4.40, V(-112, 196, 548), V(-74, 90, 446)],
+    [4.12, V(-96, 152, 506), V(-78, 90, 442)],
+    [4.40, V(-96, 152, 506), V(-78, 90, 442)],
     [4.52, V(150, 222, 606), V(98, 90, 452)],
     [4.74, V(150, 222, 606), V(98, 90, 452)],
     [4.84, V(40, 118, RUN_Z), V(1400, 108, RUN_Z)],
@@ -403,7 +405,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
       // lying flat, top toward -z; flipped by rotating about the long axis
       ph.rotation.order = 'XYZ';
       ph.rotation.set(-Math.PI / 2, Math.PI * (1 - flip), 0);
-      ph.visible = P > 2.9 && appear > 0.001 && !(d.lane === 'ship' && P > 4.4);
+      ph.visible = P > 2.9 && appear > 0.001;
       ph.scale.setScalar(1);
       if (ph.userData.card) ph.userData.card.visible = flip < 0.5;
     });
@@ -411,26 +413,46 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     // ===== scene 5: repair, pack, ship =====
     const rp = cards[1], ru = rp.userData;
     if (P > 4) {
-      const r1 = ease(t5, 0.06, 0.1);     // flip face down
-      const r2 = ease(t5, 0.1, 0.14);     // back opens
-      const r3 = ease(t5, 0.15, 0.24);    // battery swap
-      const r4 = ease(t5, 0.25, 0.29);    // back closes
-      const r5 = ease(t5, 0.29, 0.33);    // flip back
+      // repair plays inside its own beat (t5 0.12 .. 0.40)
+      const r1 = ease(t5, 0.13, 0.16);    // flip face down
+      const r2 = ease(t5, 0.205, 0.23);   // back opens (after the two bottom screws)
+      const r3 = ease(t5, 0.255, 0.32);   // battery swap (after the bracket screw)
+      const r4 = ease(t5, 0.325, 0.35);   // back closes
+      const r5 = ease(t5, 0.35, 0.38);    // flip back
       const flipAmt = r1 * (1 - r5);
       const base = LANE_SLOT('repair', laneSlotOf[1]);
-      rp.position.set(base.x - 3, base.y + PD / 2 + Math.sin(flipAmt * Math.PI) * 6 + flipAmt * 0.4, base.z);
+      rp.position.set(base.x + 2, base.y + PD / 2 + Math.sin(flipAmt * Math.PI) * 6 + flipAmt * 0.4, base.z);
       const other = cards[5], ob = LANE_SLOT('repair', laneSlotOf[5]);
       other.position.set(ob.x + 4, ob.y + PD / 2, ob.z);
       rp.rotation.set(-Math.PI / 2, Math.PI * flipAmt, 0);
+      rp.updateMatrixWorld(true);
       ru.inner.visible = r2 > 0 && r4 < 1;
       ru.hinge.rotation.y = -(r2 * (1 - r4)) * 1.35;
       ru.battOld.visible = r3 < 0.5; ru.battNew.visible = r3 >= 0.5;
       const sw = r3 < 0.5 ? r3 * 2 : (1 - r3) * 2;
       (r3 < 0.5 ? ru.battOld : ru.battNew).position.set(0, -2.2 - sw * 12, -0.12 - sw * 2);
-      driver.visible = P > 4.05 && P < 4.34;
-      driver.position.set(base.x - 3 - 12 + r3 * 6, base.y + 18 + Math.sin(time * 3) * 0.8, base.z - 6);
-      driver.rotation.set(0.25, time * 0.6, -0.5);
-      if (t5 > 0.32) setScreen(rp, resultTex('pass', 'B'));
+      // screwdriver: hover -> bottom screw L -> bottom screw R -> hover -> bracket screw -> away.
+      // Points are on the phone's back (local -z), so they follow the phone exactly.
+      const backZ = -PD / 2 - 0.05;
+      const keys = [ // [t5, local point, contact 0..1]
+        [0.155, V(0, -2, backZ), 0], [0.165, V(-1.6, -PH / 2 + 0.55, backZ), 0], [0.172, V(-1.6, -PH / 2 + 0.55, backZ), 1],
+        [0.183, V(-1.6, -PH / 2 + 0.55, backZ), 1], [0.188, V(-1.6, -PH / 2 + 0.55, backZ), 0], [0.193, V(1.6, -PH / 2 + 0.55, backZ), 0],
+        [0.197, V(1.6, -PH / 2 + 0.55, backZ), 1], [0.202, V(1.6, -PH / 2 + 0.55, backZ), 1], [0.207, V(1.6, -PH / 2 + 0.55, backZ), 0],
+        [0.232, V(0, 1.7, -PD / 2 + 0.15), 0], [0.238, V(0, 1.7, -PD / 2 + 0.15), 1], [0.25, V(0, 1.7, -PD / 2 + 0.15), 1],
+        [0.255, V(0, 1.7, -PD / 2 + 0.15), 0], [0.27, V(5, 4, backZ), 0]
+      ];
+      let k = 0; while (k < keys.length - 2 && t5 > keys[k + 1][0]) k++;
+      const [ta, pa, ca] = keys[k], [tb, pb, cb] = keys[k + 1];
+      const f = sm(seg(t5, ta, tb));
+      const local = pa.clone().lerp(pb, f);
+      const contact = lerp(ca, cb, f);
+      const tipW = rp.localToWorld(local);
+      driver.position.set(tipW.x, tipW.y + DRIVER_TIP + (1 - contact) * 6, tipW.z);
+      const turning = contact > 0.9;
+      driver.userData.spin = (driver.userData.spin || 0) + (turning ? 0.35 : 0.02);
+      driver.rotation.set(0, driver.userData.spin, 0);
+      driver.visible = t5 > 0.15 && t5 < 0.27;
+      if (t5 > 0.37) setScreen(rp, resultTex('pass', 'B'));
       else setScreen(rp, resultTex('fail', 'B'));
     } else { driver.visible = false; if (ru.inner) { ru.inner.visible = false; ru.hinge.rotation.y = 0; } }
 
@@ -470,7 +492,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     const run = sm(seg(t5, 0.8, 0.97));
     box.position.set(BOX_POS.x + run * (DOOR_X - BOX_POS.x + 900), ROLL_TOP + (box.position.x > DOOR_X - 175 ? 5 : 0), BOX_POS.z);
     box.rotation.z = 0;
-    box.visible = P < 5;
+    box.visible = P <= 5.03;
     // ramp lifts once the box is aboard
     setPlaneDoor(dockPlane, 1 - ease(t5, 0.975, 1));
     if (P < 4.4 && P > 3) { prefilled.forEach(p => p.visible = true); }
@@ -489,9 +511,9 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     camera.setViewOffset(W, H, shiftX * W, 0, W, H);
 
     // ===== earth (scenes 6-7) =====
-    const useAir = P >= 5 && P < AIR_END;
+    const useAir = P > 5.03 && P < AIR_END;
     const useEarth = P >= AIR_END;
-    if (useAir) updateAir(seg(P, 5, AIR_END), time);
+    if (useAir) updateAir(seg(P, 5.06, AIR_END), time);
     if (useEarth) updateEarth(t6, t7, P, time);
 
     // labels

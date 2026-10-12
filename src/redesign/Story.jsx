@@ -29,10 +29,11 @@ const BEATS = [
   [4.12, 4.40, 4.2, 1.0],  // 05 the repair
   [4.40, 4.79, 4.8, 1.0],  // 05 pick, pack, close, label
   [4.79, 5.00, 3.6, 1.0],  // 05 down the line into the freighter
-  [5.00, 5.60, 5.0, 1.0],  // 06 take-off, then the globe
+  [5.00, 5.06, 2.2, 1.0],  // 06 cut to the runway: the freighter waits
+  [5.06, 5.60, 5.4, 1.0],  // 06 take-off, then the globe
   [6.00, 7.00, 9.0, 1.2]   // 07 offers, then verification
 ];
-const SCENE_OF_BEAT = [0, 0, 1, 2, 3, 4, 4, 4, 5, 6];
+const SCENE_OF_BEAT = [0, 0, 1, 2, 3, 4, 4, 4, 5, 5, 6];
 const AIR_END = 5.42;
 const WHEELS_UP = { name: 'Locations', title: 'Wheels up.', body: 'The order is on its way to London. The label, the units and the invoice travel together, and every location knows what it holds.' };
 const LEAD = 0.6; // idle band before the first beat (viewport heights)
@@ -40,7 +41,7 @@ const BAND = [LEAD, ...BEATS.map(b => b[3])];
 const BAND_CUM = BAND.reduce((a, w, i) => (a.push(a[i] + w), a), [0]);
 const BAND_TOTAL = BAND_CUM[BAND_CUM.length - 1];
 const UNIT_VH = 100;
-const SCENE_FIRST_BEAT = [0, 2, 3, 4, 5, 8, 9];
+const SCENE_FIRST_BEAT = [0, 2, 3, 4, 5, 8, 10];
 const bandAt = f => { const x = f * BAND_TOTAL; let i = 0; while (i < BAND.length - 1 && x >= BAND_CUM[i + 1]) i++; return i - 1; }; // -1 = idle
 const bandMid = beat => (BAND_CUM[beat + 1] + BAND[beat + 1] * 0.5) / BAND_TOTAL;
 
@@ -207,7 +208,7 @@ export default function Story() {
 
   const beatNow = Math.max(0, BEATS.findIndex(b => P <= b[1] + 1e-6));
   const scene = P <= 0 ? 0 : SCENE_OF_BEAT[beatNow];
-  const inAir = P >= 5 && P < AIR_END;
+  const inAir = P > 5.015 && P < AIR_END;
   const t = i => seg(P, i, i + 1);
   const jump = i => {
     const r = rootRef.current.getBoundingClientRect();
@@ -244,7 +245,7 @@ export default function Story() {
         <canvas ref={canvasRef} className="sx-canvas" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} style={{ cursor: P >= 5 ? (dragRef.current ? 'grabbing' : 'grab') : 'default', touchAction: P >= 5 ? 'pan-y' : 'auto' }} />
         {!webgl ? <div className="sx-nogl">3D preview needs WebGL. The steps below still read top to bottom.</div> : null}
         <div className="sx-vignette" />
-        <div className="sx-flash" style={{ opacity: P > 4.97 && P < 5.05 ? (P < 5 ? seg(P, 4.97, 5) : 1 - seg(P, 5, 5.05)) : P > 5.34 && P < 5.5 ? (P < AIR_END ? seg(P, 5.34, AIR_END) : 1 - seg(P, AIR_END, 5.5)) : 0 }} />
+        <div className="sx-flash" style={{ opacity: P > 5.0 && P < 5.06 ? (P < 5.03 ? seg(P, 5.0, 5.03) : 1 - seg(P, 5.03, 5.06)) : P > 5.34 && P < 5.5 ? (P < AIR_END ? seg(P, 5.34, AIR_END) : 1 - seg(P, AIR_END, 5.5)) : 0 }} />
 
         <header className="sx-head">
           <div className="sx-kicker"><span>01</span> How InPhox fits into your workflow</div>
@@ -286,8 +287,8 @@ export default function Story() {
         <div className="sx-anchor" ref={reg('repair')}>
           <div className="sx-callout">
             <div className="h">Repair · Bench R-2 · iPhone 13</div>
-            <div className={'r' + (t(4) > 0.15 ? ' done' : '')}><span>Battery 71% · 1,204 cycles</span><span>{t(4) > 0.2 ? 'Replaced' : 'Replacing…'}</span></div>
-            <div className={'r' + (t(4) > 0.3 ? ' done' : '')}><span>Retest</span><span>{t(4) > 0.3 ? '42 / 42' : 'Queued'}</span></div>
+            <div className={'r' + (t(4) > 0.32 ? ' done' : '')}><span>Battery 71% · 1,204 cycles</span><span>{t(4) > 0.32 ? 'Replaced' : t(4) > 0.16 ? 'Replacing…' : 'Queued'}</span></div>
+            <div className={'r' + (t(4) > 0.38 ? ' done' : '')}><span>Retest</span><span>{t(4) > 0.38 ? '42 / 42' : 'Queued'}</span></div>
             <div className="f">Part cost logged to the device · back to stock</div>
           </div>
         </div>
@@ -316,11 +317,11 @@ export default function Story() {
         <Offers t={t(6)} show={P > 6.02} />
 
         <footer className="sx-foot">
-          <span className={'sx-next' + (waiting ? ' on' : '')}>{scene === 6 && !waiting ? 'End of the walkthrough' : waiting ? 'Scroll, swipe or press → for the next step' : 'Playing…'}</span>
           <span className="sx-btns">
+            <span className={'sx-next' + (waiting ? ' on' : '')}>{scene === 6 && !waiting ? 'End of the walkthrough' : waiting ? 'Scroll, swipe or press → for the next step' : 'Playing…'}</span>
             {!waiting && P > 0 && !(scene === 6 && P >= 6.999) ? <button onClick={() => skipRef.current && skipRef.current()}>Skip animation ⏭</button> : null}
-            <button onClick={skip}>Skip the walkthrough ↓</button>
           </span>
+          <span className="sx-btns"><button onClick={skip}>Skip the walkthrough ↓</button></span>
         </footer>
       </div>
     </section>
