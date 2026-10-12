@@ -51,7 +51,7 @@ export default function Story() {
       raf = requestAnimationFrame(loop);
     // test hook: jump straight to a story position (used by screenshots)
     if (import.meta.env.DEV) window.__storyGo = P => { const r = rootRef.current.getBoundingClientRect(); window.scrollTo(0, window.scrollY + r.top + pToFrac(P) * (r.height - window.innerHeight)); Pref.current = P; };
-      const dt = Math.min(0.1, (now - last) / 1000); last = now;
+      const dt = Math.max(0, Math.min(0.1, (now - last) / 1000)); last = now;
       if (!visible) return;
       readScroll();
       clock.current += dt;

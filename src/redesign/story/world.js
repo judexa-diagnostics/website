@@ -317,7 +317,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
     packets.forEach((s, i) => {
       s.visible = flowing;
       if (!flowing) return;
-      const u = ((time * 0.22 + i / packets.length) % 1);
+      const u = clamp((((time * 0.22 + i / packets.length) % 1) + 1) % 1, 0, 0.9999);
       s.position.copy(cableCurve.getPointAt(u)); s.position.y += 0.8;
       s.material.opacity = 0.9 * Math.sin(u * Math.PI);
     });

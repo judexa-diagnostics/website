@@ -225,6 +225,22 @@
   .sx-offers .pov{grid-column:1}
   .sx-phone{max-height:17rem}
   .sx-callout{width:14rem;transform:translate(-50%,-115%)}
+  .sx-record,.sx-mac,.sx-offers{bottom:8.5rem}
+  .sx-foot{padding-bottom:7.5rem}
+  .sx-lane{font-size:.625rem;padding:.25rem .375rem}
+  .sx-pin .ct{display:none}
+  .sx-pin .nm{font-size:.625rem}
+  .sx-offers .pov{grid-template-columns:1fr}
+  .sx-offers .vs,.sx-phone.buyer{display:none}
+  .sx-phone{aspect-ratio:auto;max-height:15rem}
+  .sx-phone .island{display:none}
+  .sx-phone .row:has(.px.cut){display:none}
+  .sx-phone .row.in{max-height:2rem}
+  .sx-phone .sh{padding-top:.75rem}
+  .sx-mac .lid{padding:.375rem}
+  .sx-mac .notch{display:none}
+  .sx-mac .scr{aspect-ratio:auto}
+  .sx-mac .bar span:not(.cnt){display:none}
 }
 @media (prefers-reduced-motion: reduce){
   .sx-copy,.sx-lane,.sx-mac .label{animation:none}
