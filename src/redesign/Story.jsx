@@ -37,6 +37,18 @@ const SCENE_OF_BEAT = [0, 0, 1, 2, 3, 4, 4, 4, 5, 5, 6];
 const AIR_END = 5.42;
 const smooth = x => x * x * (3 - 2 * x);
 const WHEELS_UP = { name: 'Locations', title: 'Wheels up.', body: 'The order is on its way to London. The label, the units and the invoice travel together, and every location knows what it holds.' };
+// One call to action per step: the primary always starts the sign-up, the
+// quiet link fits the step.
+const CTA = [
+  ['See the platform →', '#/platform'],
+  ['See what it reads →', '#/features'],
+  ['See pricing →', '#/pricing'],
+  ['See every feature →', '#/features'],
+  ['Built for your industry →', '#/industries'],
+  ['Talk to sales →', '#/contact'],
+  ['See how offers work →', '#/features']
+];
+const CTA_AIR = ['See pricing →', '#/pricing'];
 const LEAD = 0.6; // idle band before the first beat (viewport heights)
 const BAND = [LEAD, ...BEATS.map(b => b[3])];
 const BAND_CUM = BAND.reduce((a, w, i) => (a.push(a[i] + w), a), [0]);
@@ -46,7 +58,9 @@ const SCENE_FIRST_BEAT = [0, 2, 3, 4, 5, 8, 10];
 const bandAt = f => { const x = f * BAND_TOTAL; let i = 0; while (i < BAND.length - 1 && x >= BAND_CUM[i + 1]) i++; return i - 1; }; // -1 = idle
 const bandMid = beat => (BAND_CUM[beat + 1] + BAND[beat + 1] * 0.5) / BAND_TOTAL;
 
-export default function Story() {
+const defaultTrial = () => { location.hash = '#/start'; };
+
+export default function Story({ goTrial = defaultTrial } = {}) {
   const rootRef = useRef(null), stageRef = useRef(null), canvasRef = useRef(null), worldRef = useRef(null);
   const anchorEls = useRef({}), flashRef = useRef(null);
   const [P, setP] = useState(0);
@@ -147,7 +161,15 @@ export default function Story() {
     const busy = () => !!playing;
     const finishBeat = () => { if (!playing) return; Pref.current = BEATS[playing.i][1]; done = playing.i; playing = null; };
     skipRef.current = finishBeat;
-    const canExit = dir => (dir > 0 && done >= BEATS.length - 1 && !playing) || (dir < 0 && done < 0 && !playing);
+    // Past the last beat, going down releases the page. Going up mirrors it:
+    // on the first beat (finished or still playing) or the idle lead-in there
+    // is nothing earlier to show, so the page scrolls back up to the hero.
+    // Only beat 0 releases, so an upward fling mid-story still steps one beat.
+    const canExit = dir => (dir > 0 && done >= BEATS.length - 1 && !playing) ||
+      (dir < 0 && done <= 0 && (!playing || playing.i === 0));
+    // Leaving upward: drop any pending gesture. The frame loop resets beat 0
+    // (done = -1) once the scroll reaches the lead-in, so it replays next time.
+    const release = () => { if (gestureTimer) { clearTimeout(gestureTimer); gestureTimer = null; } gestureDir = 0; };
     // One continuous gesture (incl. trackpad inertia) = one step. A gesture
     // ends after a short pause; input that lands while a beat is playing
     // uses up the whole gesture.
@@ -169,7 +191,7 @@ export default function Story() {
     };
     const onIntent = (dir, e) => {
       if (!pinned()) return false;
-      if (canExit(dir)) return false;           // let the page scroll on
+      if (canExit(dir)) { if (dir < 0) release(); return false; } // let the page scroll on
       if (e && e.cancelable) e.preventDefault();
       const now = (e && e.timeStamp) || performance.now();
       if (now - lastInput > 240) consumed = false; // a pause: this is a new gesture
@@ -193,10 +215,19 @@ export default function Story() {
     const onTouchEnd = () => { ty = null; lastInput = 0; };
     const onKey = e => {
       if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+      // Space / Enter on a focused button or link activates it, not the story
+      if ((e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') && e.target && e.target.closest && e.target.closest('button,a,[role="button"]')) return;
       const down = ['ArrowDown', 'ArrowRight', 'PageDown', ' ', 'Spacebar'].includes(e.key), up = ['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key);
       if (!down && !up) return;
       if (down && busy() && pinned()) { e.preventDefault(); finishBeat(); return; } // skip the rest of this beat
       lastInput = 0; // every key press is its own gesture
+      if (up && pinned() && canExit(-1)) {
+        // a key scroll is only ~40px; carry the page clear of the story instead
+        e.preventDefault(); release();
+        const r = rootRef.current.getBoundingClientRect();
+        window.scrollTo({ top: Math.max(0, Math.round(window.scrollY + r.top - window.innerHeight * 0.55)), behavior: 'smooth' });
+        return;
+      }
       if (onIntent(down ? 1 : -1, e) && gestureTimer) { clearTimeout(gestureTimer); commit(); }
     };
     window.addEventListener('wheel', onWheel, { passive: false });
@@ -272,6 +303,7 @@ export default function Story() {
           <span className="sx-num">0{scene + 1} / 07</span>
           <h3>{sc.title}</h3>
           <p>{sc.body}</p>
+          <StepCta goTrial={goTrial} link={inAir ? CTA_AIR : CTA[scene]} />
           {scene === 5 && !inAir ? <LocationList onPick={id => worldRef.current?.focusLocation(id, clock.current)} /> : null}
         </div>
 
@@ -327,6 +359,15 @@ export default function Story() {
         </footer>
       </div>
     </section>
+  );
+}
+
+function StepCta({ goTrial, link }) {
+  return (
+    <div className="sx-cta">
+      <button type="button" className="sx-cta-go" onClick={() => goTrial()}>Join now</button>
+      <a className="sx-cta-link" href={link[1]}>{link[0]}</a>
+    </div>
   );
 }
 

@@ -1,0 +1,118 @@
+/* Shared motion kit (src/redesign/fx). Content is visible by default: JS only
+   hides an element ([data-fx-state="pre"]) when it starts below the fold and an
+   IntersectionObserver is there to bring it back. Reduced motion = no motion. */
+
+:root { --fx-ease: cubic-bezier(.2,.75,.2,1); --fx-dur: 640ms; }
+
+/* ---- Scroll reveal: below the fold, waiting ---- */
+[data-fx-state="pre"] { opacity: 0; transform: translate3d(0, 1.125rem, 0); }
+[data-fx-state="pre"][data-fx="fade"] { transform: none; }
+[data-fx-state="pre"][data-fx="x"] { transform: translate3d(1.5rem, 0, 0); }
+[data-fx-state="pre"][data-fx="scale"] { transform: scale(.97); }
+[data-fx-state="pre"][data-fx="type"] { opacity: 1; transform: none; clip-path: inset(0 100% 0 0); }
+[data-fx-state="pre"][data-fx="line"] { opacity: 1; transform: scaleX(0); transform-origin: left center; }
+
+/* ---- Scroll reveal: entering ---- */
+[data-fx-state="in"] {
+  opacity: 1; transform: none;
+  transition: opacity var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms), transform var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms);
+}
+[data-fx-state="in"][data-fx="type"] {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 620ms steps(22, end) var(--fx-d, 0ms);
+}
+[data-fx-state="in"][data-fx="line"] { transform-origin: left center; transition: transform 900ms var(--fx-ease) var(--fx-d, 0ms); }
+
+/* ---- On screen when the page mounts: page entrance (keyframes end visible) ---- */
+[data-fx-state="enter"] { animation: fx-rise var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms) backwards; }
+[data-fx-state="enter"][data-fx="fade"] { animation-name: fx-fade; }
+[data-fx-state="enter"][data-fx="x"] { animation-name: fx-x; }
+[data-fx-state="enter"][data-fx="scale"] { animation-name: fx-scale; }
+[data-fx-state="enter"][data-fx="type"] { animation: fx-type 620ms steps(22, end) var(--fx-d, 0ms) backwards; }
+[data-fx-state="enter"][data-fx="line"] { transform-origin: left center; animation: fx-line 900ms var(--fx-ease) var(--fx-d, 0ms) backwards; }
+
+@keyframes fx-rise { from { opacity: 0; transform: translate3d(0, 1.125rem, 0); } }
+@keyframes fx-fade { from { opacity: 0; } }
+@keyframes fx-x { from { opacity: 0; transform: translate3d(1.5rem, 0, 0); } }
+@keyframes fx-scale { from { opacity: 0; transform: scale(.97); } }
+@keyframes fx-type { from { clip-path: inset(0 100% 0 0); } }
+@keyframes fx-line { from { transform: scaleX(0); } }
+@keyframes fx-pop { from { opacity: .25; transform: translate3d(0, .35em, 0); } }
+@keyframes fx-drop { from { opacity: 0; transform: translate3d(0, -.375rem, 0); } }
+@keyframes fx-sheet { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes fx-slide-up { from { transform: translate3d(0, 100%, 0); } }
+@keyframes fx-shake { 0%,100% { transform: none; } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+
+/* Route change: Layout keys <main> by page, so each page fades in fresh. */
+.fx-page { animation: fx-fade 360ms ease backwards; }
+
+/* Mounted-in pieces: step forms, success cards, menus, error messages. */
+.fx-mount { animation: fx-rise 520ms var(--fx-ease) backwards; }
+.fx-pop { display: inline-block; animation: fx-pop 420ms var(--fx-ease) calc(var(--i, 0) * 28ms) backwards; }
+.fx-err:not(:empty) { display: inline-block; animation: fx-drop 260ms var(--fx-ease) backwards; }
+.fx-drop { animation: fx-drop 220ms var(--fx-ease) backwards; }
+.fx-backdrop { animation: fx-fade 260ms ease backwards; }
+.fx-sheet { animation: fx-sheet 380ms var(--fx-ease) backwards; }
+.fx-sheet .fx-item { animation: fx-rise 420ms var(--fx-ease) calc(80ms + var(--i, 0) * 45ms) backwards; }
+.fx-promo { animation: fx-slide-up 560ms var(--fx-ease) 500ms backwards; }
+
+/* ---- Header: frosted once the page scrolls (no height change, no shift) ---- */
+.fx-head { transition: background-color 300ms ease, box-shadow 300ms ease, border-color 300ms ease; }
+.fx-head[data-scrolled="1"] {
+  background: rgba(246, 242, 234, .82) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: 0 .5rem 1.5rem -1rem rgba(22, 19, 15, .28);
+}
+.fx-head .fx-logo img { transition: transform 500ms var(--fx-ease); }
+.fx-head .fx-logo:hover img { transform: rotate(-8deg) scale(1.06); }
+
+/* Underline that slides in from the left on hover. */
+.fx-ul { position: relative; }
+.fx-ul::after {
+  content: ""; position: absolute; left: .75rem; right: .75rem; bottom: .3rem; height: 2px;
+  background: #EB5E12; transform: scaleX(0); transform-origin: right center;
+  transition: transform 320ms var(--fx-ease);
+}
+.fx-ul:hover::after, .fx-ul:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+.fx-ul-tight::after { left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; }
+
+/* Buttons: a gentle press, and an arrow that nudges forward. */
+.fx-press { transition: transform 160ms ease, background-color 200ms ease, color 200ms ease; }
+.fx-press:active { transform: translateY(1px) scale(.985); }
+.fx-arrow .fx-arr { display: inline-block; transition: transform 260ms var(--fx-ease); }
+.fx-arrow:hover .fx-arr { transform: translateX(.25rem); }
+
+/* ---- Cards that lift with a soft orange spotlight under the pointer ---- */
+.fx-spot { position: relative; isolation: isolate; transition: transform 380ms var(--fx-ease), opacity var(--fx-dur) var(--fx-ease) var(--fx-d, 0ms); }
+.fx-spot::before, .fx-spot::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 320ms ease; }
+.fx-spot::before { z-index: -1; background: radial-gradient(26rem circle at var(--mx, 50%) var(--my, 0%), rgba(235, 94, 18, .10), transparent 62%); }
+.fx-spot::after { z-index: -2; box-shadow: 0 1.25rem 2.5rem -1.25rem rgba(22, 19, 15, .35); }
+@media (hover: hover) {
+  .fx-spot:hover { transform: translateY(-.25rem); z-index: 1; }
+  .fx-spot:hover::before, .fx-spot:hover::after { opacity: 1; }
+}
+
+/* ---- Fields: border and ring ease in; label tints while you type ---- */
+.fc-9 { transition: border-color 220ms ease, box-shadow 220ms ease; }
+.fx-form label:focus-within { color: #C2470A; }
+.fx-form label { transition: color 220ms ease; }
+
+/* Home 04: the paper ledger gets struck through row by row, then pushed aside. */
+.fx-strike { position: absolute; left: 0; right: 0; top: 52%; height: 1.5px; background: #B3261E; transform-origin: left center; border-radius: 1px; transform: scaleX(0); transition: transform 380ms cubic-bezier(.6,0,.3,1); pointer-events: none; }
+.fx-ledger-on .fx-strike { transform: scaleX(1); }
+.fx-ledger-row { transition: color 400ms ease; }
+.fx-ledger-on .fx-ledger-row { color: #8E857A !important; }
+.fx-paper { transition: transform 900ms var(--fx-ease) 1000ms, box-shadow 900ms ease 1000ms; }
+.fx-ledger-on.fx-paper { transform: rotate(-2.6deg) translate(-.375rem, .5rem) !important; box-shadow: 0 .25rem .75rem rgba(22,19,15,.10) !important; }
+.fx-stamp { position: absolute; right: .875rem; bottom: 1.125rem; padding: .25rem .5rem; border: 2px solid #EB5E12; border-radius: 2px; background: rgba(255,251,242,.92); color: #C2470A; font-weight: 700; font-size: .6875rem; letter-spacing: .06em; line-height: 1.3; text-transform: uppercase; opacity: 0; transform: rotate(-7deg) scale(1.35); transition: opacity 260ms ease 1150ms, transform 420ms cubic-bezier(.3,1.5,.5,1) 1150ms; pointer-events: none; }
+.fx-ledger-on .fx-stamp { opacity: 1; transform: rotate(-7deg) scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fx-state] { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; transition: none !important; }
+  .fx-page, .fx-mount, .fx-pop, .fx-err, .fx-drop, .fx-backdrop, .fx-sheet, .fx-sheet .fx-item, .fx-promo { animation: none !important; }
+  .fx-spot, .fx-spot:hover, .fx-press:active, .fx-arrow:hover .fx-arr, .fx-head .fx-logo:hover img { transform: none !important; }
+  .fx-strike, .fx-ledger-row, .fx-paper, .fx-stamp { transition: none !important; }
+}
+@media print {
+  [data-fx-state] { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+}

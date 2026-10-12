@@ -125,7 +125,7 @@ export default function IndustriesStage({ initial = 0, onChange }) {
       if (cancelled) { next.dispose(); return; }
       next.camera.aspect = r.width / r.height; next.camera.updateProjectionMatrix();
       L.renderer.compile(next.scene, next.camera);
-      const prev = L.cur; L.cur = next; L.t = 0;
+      const prev = L.cur; L.cur = next; L.t = L.pendingT != null ? L.pendingT % next.duration : 0; L.pendingT = null; L.loadedIdx = idx;
       prev && prev.dispose();
       setLoading(false);
     })().catch(err => { console.error('[industries] scene failed', key, err); if (!cancelled) setFailed(true); });
@@ -134,7 +134,14 @@ export default function IndustriesStage({ initial = 0, onChange }) {
   }, [idx, failed]);
 
   useEffect(() => {
-    if (import.meta.env.DEV) window.__indGo = (i, t) => { setIdx(i); if (t != null) setTimeout(() => { live.current.t = t; }, 1500); };
+    // Dev hook: jump to tab i at t seconds. The time is applied once that
+    // scene is live (immediately if it already is).
+    if (import.meta.env.DEV) window.__indGo = (i, t) => {
+      const L = live.current;
+      if (L.cur && L.loadedIdx === i) { if (t != null) L.t = t % L.cur.duration; }
+      else { L.pendingT = t; }
+      setIdx(i);
+    };
   }, []);
 
   const pointer = type => e => {

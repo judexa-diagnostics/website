@@ -1,3 +1,4 @@
+import './redesign/fx/fx.css';
 import Header from './components/Header.jsx';
 import SiteMenu from './components/SiteMenu.jsx';
 import Home from './pages/Home.jsx';
@@ -14,11 +15,12 @@ import PromoBar from './components/PromoBar.jsx';
 
 export default function Layout({ v }) {
   const { is, menuOpen, promo } = v;
+  const page = Object.keys(is).find(k => is[k]) || 'home';
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Header v={v} />
       {menuOpen ? <SiteMenu v={v} /> : null}
-      <main style={{ flex: "1" }}>
+      <main key={page} className="fx-page" style={{ flex: "1" }}>
         {is.home ? <Home v={v} /> : null}
         {is.industries ? <Industries v={v} /> : null}
         {is.features ? <Features v={v} /> : null}
