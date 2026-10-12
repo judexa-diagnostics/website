@@ -41,7 +41,7 @@
 .sx-lane{transform:translate(-50%,-140%);white-space:nowrap;font:600 .8125rem 'Archivo',sans-serif;padding:.375rem .625rem;background:#16130F;border:1px solid var(--c);border-left:4px solid var(--c);border-radius:2px;color:#F6F2EA;animation:sx-pop .4s cubic-bezier(.2,1.4,.4,1)}
 .sx-lane b{font-family:'JetBrains Mono',monospace;color:var(--c);margin-right:.25rem}
 @keyframes sx-pop{from{transform:translate(-50%,-110%) scale(.7);opacity:0}to{transform:translate(-50%,-140%) scale(1);opacity:1}}
-.sx-callout{transform:translate(-118%,-30%);width:19rem;background:rgba(22,19,15,.92);border:1px solid #3A342D;border-top:3px solid #E5574B;border-radius:3px;padding:.75rem .875rem;backdrop-filter:blur(8px);box-shadow:0 1rem 2rem rgba(0,0,0,.4)}
+.sx-callout{transform:translate(1.5rem,-108%);width:19rem;background:rgba(22,19,15,.92);border:1px solid #3A342D;border-top:3px solid #E5574B;border-radius:3px;padding:.75rem .875rem;backdrop-filter:blur(8px);box-shadow:0 1rem 2rem rgba(0,0,0,.4)}
 .sx-callout.ship{border-top-color:#EB5E12}
 .sx-callout .h{font:600 .6875rem 'JetBrains Mono',monospace;color:#B9AE9E;letter-spacing:.03em;margin-bottom:.5rem}
 .sx-callout .r{display:flex;justify-content:space-between;gap:1rem;font-size:.8125rem;padding:.3125rem 0;border-top:1px solid #2A251F;color:#D9D0C2}
@@ -251,3 +251,17 @@
 @keyframes sx-nudge{0%,100%{opacity:.55}50%{opacity:1}}
 .sx-btns{display:flex;gap:1.25rem;pointer-events:auto}
 .sx-keys{opacity:.7}
+
+/* Fit overlays between the step rail and the footer on any screen height */
+@media (min-width: 980px){
+  .sx-offers{top:8.25rem;bottom:5.25rem;transform:translateX(3rem);grid-template-rows:auto minmax(0,1fr);align-content:stretch}
+  .sx-offers.show{transform:none}
+  .sx-offers .pov,.sx-offers .verify{min-height:0;height:100%}
+  .sx-offers .pov{align-items:stretch}
+  .sx-phone{aspect-ratio:auto;height:100%;max-height:34rem;width:100%;max-width:17rem;justify-self:center;align-self:center}
+  .sx-offers .cam{aspect-ratio:auto;flex:0 0 38%}
+  .sx-offers .list{overflow:hidden;min-height:0}
+  .sx-mac{width:min(64rem,60vw,calc((100vh - 17.5rem) * 1.5));top:calc(50% + 2.5rem)}
+  .sx-record{top:calc(50% + 2.5rem)}
+  .sx-record .paper{max-height:calc(100vh - 16rem);overflow:hidden}
+}
