@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { FxScope, spot } from '../redesign/fx/index.jsx';
 
 const MAIL = 'christopher@inphox.net';
 const mono = "'JetBrains Mono',monospace";
@@ -69,15 +70,14 @@ function Inbox() {
 function Role({ r }) {
   const [hover, setHover] = useState(false);
   const list = items => items.map((t, j) => (
-    <div key={j} style={{ display: 'grid', gridTemplateColumns: '1.5rem 1fr', padding: '0.5rem 0', borderBottom: '1px solid #EDE7DC', fontSize: '0.9375rem', lineHeight: 1.5 }}>
+    <div key={j} data-fx="" data-fx-gap="40" style={{ display: 'grid', gridTemplateColumns: '1.5rem 1fr', padding: '0.5rem 0', borderBottom: '1px solid #EDE7DC', fontSize: '0.9375rem', lineHeight: 1.5 }}>
       <span style={{ fontFamily: mono, fontSize: '0.75rem', color: '#B9AE9E', paddingTop: '2px' }}>{'0' + (j + 1)}</span><span>{t}</span>
     </div>
   ));
   return (
-    <m.article
-      initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6, ease: [0.2, 0.75, 0.2, 1] }}
+    <article data-fx="" data-fx-gap="120" className="fx-spot" onPointerMove={spot}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-      style={{ background: '#FFFFFF', border: '1px solid ' + (hover ? '#16130F' : '#D9D0C2'), borderTop: '3px solid #EB5E12', borderRadius: '4px', padding: 'clamp(1.25rem,3vw,2rem)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'border-color .2s', minWidth: 0 }}>
+      style={{ background: '#FFFFFF', border: '1px solid ' + (hover ? '#16130F' : '#D9D0C2'), borderTop: '3px solid #EB5E12', borderRadius: '4px', padding: 'clamp(1.25rem,3vw,2rem)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'border-color .2s, transform 380ms cubic-bezier(.2,.75,.2,1), opacity 640ms cubic-bezier(.2,.75,.2,1) var(--fx-d, 0ms)', minWidth: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', fontFamily: mono, fontSize: '0.6875rem', color: '#6B6257' }}>
         <span style={{ color: '#C2470A' }}>{r.k + ' · ' + r.tag}</span><span>Open</span>
       </div>
@@ -92,8 +92,8 @@ function Role({ r }) {
         {list(r.you)}
       </div>
       <p style={{ margin: 0, fontFamily: mono, fontSize: '0.75rem', color: '#6B6257' }}>{r.note}</p>
-      <a className="hv-2" href={mailto(r.subject)} style={{ marginTop: 'auto', minHeight: '3rem', padding: '0.5rem 1.125rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: '#EB5E12', color: '#16130F', borderRadius: '2px', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', overflowWrap: 'anywhere' }}>{r.cta}</a>
-    </m.article>
+      <a className="hv-2 fx-press" href={mailto(r.subject)} style={{ marginTop: 'auto', minHeight: '3rem', padding: '0.5rem 1.125rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: '#EB5E12', color: '#16130F', borderRadius: '2px', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', overflowWrap: 'anywhere' }}>{r.cta}</a>
+    </article>
   );
 }
 
@@ -101,19 +101,21 @@ export default function Careers({ v }) {
   const { ui } = v;
   return (
     <LazyMotion features={domAnimation}>
+    <FxScope>
       <section style={{ padding: 'clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) 2.5rem', display: 'grid', gridTemplateColumns: ui.c57, gap: 'clamp(1.5rem,4vw,3rem)', alignItems: 'center', borderBottom: '2px solid #16130F' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.125rem', minWidth: 0 }}>
-          <div style={{ fontFamily: mono, fontSize: '0.6875rem', letterSpacing: '.02em', color: '#6B6257' }}>Careers · 2 openings</div>
-          <h1 style={{ margin: 0, fontSize: 'clamp(2rem,3.4vw,3.125rem)', lineHeight: 1.04, fontWeight: 650, fontStretch: '104%', letterSpacing: '-.02em', textWrap: 'balance' }}>Help build the system used electronics run on.</h1>
-          <p style={{ margin: 0, fontSize: '1.0625rem', lineHeight: 1.6, color: '#3A342D', maxWidth: '36rem', textWrap: 'pretty' }}>
+          <div data-fx="" style={{ fontFamily: mono, fontSize: '0.6875rem', letterSpacing: '.02em', color: '#6B6257' }}>Careers · 2 openings</div>
+          <h1 data-fx="" style={{ margin: 0, fontSize: 'clamp(2rem,3.4vw,3.125rem)', lineHeight: 1.04, fontWeight: 650, fontStretch: '104%', letterSpacing: '-.02em', textWrap: 'balance' }}>Help build the system used electronics run on.</h1>
+          <p data-fx="" style={{ margin: 0, fontSize: '1.0625rem', lineHeight: 1.6, color: '#3A342D', maxWidth: '36rem', textWrap: 'pretty' }}>
             We're small, we build everything in house, and we work closely with the shops that use InPhox every day. No forms and no portals: email us and a person will reply.
           </p>
         </div>
-        <Inbox />
+        <div data-fx="scale" data-fx-delay="200" style={{ minWidth: 0 }}><Inbox /></div>
       </section>
       <section style={{ padding: 'clamp(2rem,5vw,4rem) clamp(1rem,3vw,2.5rem) clamp(3rem,6vw,5rem)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,24rem),1fr))', gap: 'clamp(1rem,3vw,2rem)' }}>
         {ROLES.map(r => <Role key={r.k} r={r} />)}
       </section>
+    </FxScope>
     </LazyMotion>
   );
 }

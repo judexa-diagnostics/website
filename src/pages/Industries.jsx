@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
-import IndustryScene from '../redesign/IndustryScene.jsx';
+import { Suspense, lazy } from 'react';
+const IndustriesStage = lazy(() => import('../redesign/industries/IndustriesStage.jsx'));
 
 export default function Industries({ v }) {
   const { goTrial, ind, ui } = v;
@@ -13,6 +14,9 @@ export default function Industries({ v }) {
             The same system runs a single repair counter or a 40-store network. You move up a plan as your volume grows, and every price is published.
           </p>
         </div>
+      </section>
+      <section style={{ padding: "clamp(1.5rem,3vw,2.5rem) clamp(1rem,3vw,2.5rem)", borderBottom: "1px solid #D9D0C2" }}>
+        <Suspense fallback={<div style={{ height: "min(78vh,46rem)", background: "#16130F", borderRadius: "4px" }} />}><IndustriesStage /></Suspense>
       </section>
       <section style={{ display: "grid", gridTemplateColumns: ui.c39, padding: "0 clamp(1rem,3vw,2.5rem)" }}>
         <aside style={{ display: ui.wideBlock, borderRight: "1px solid #D9D0C2" }}>
@@ -41,7 +45,6 @@ export default function Industries({ v }) {
                   </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                  <IndustryScene index={j} />
                   <div>
                     <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", paddingBottom: "0.5rem", borderBottom: "1px solid #16130F" }}>Your workflow in InPhox</div>
                     {" "}
