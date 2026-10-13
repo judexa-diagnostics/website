@@ -588,8 +588,8 @@ export default async function create(ctx) {
   extra.push(beamGeo);
 
   // ---------------------------------------------------------------- people
-  // Semi-realistic cast: shared body, photoreal heads, staff in InPhox work shirts.
-  const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset, heads: ['curls', 'young', 'grey', 'bun'] });
+  // Pictogram cast: staff in an InPhox-orange vest, visitors plain white.
+  const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset });
   const mixers = [];
   function person(opts) {
     const p = kit.person(opts);
@@ -687,7 +687,7 @@ export default async function create(ctx) {
     const target = clamp01(st.speed / 60);
     p.w += (target - p.w) * Math.min(1, dt * 10);
     p.walk.setEffectiveWeight(p.w); p.idle.setEffectiveWeight(1 - p.w);
-    p.walk.timeScale = st.speed > 1 ? THREE.MathUtils.clamp(st.speed / 135, 0.7, 1.35) : 1;
+    p.walk.timeScale = st.speed > 1 ? THREE.MathUtils.clamp(kit.walkRate(p, st.speed), 0.5, 1.6) : 1;
     return st;
   }
   // world point in a person's local frame (x right, y up, z forward)
@@ -758,6 +758,15 @@ export default async function create(ctx) {
   const qY = new THREE.Quaternion(), eul = new THREE.Euler();
   const toteHeld = new THREE.Vector3(), boxHeld = new THREE.Vector3();
   // the walk-in's bag hangs from her left hand (bag origin = its base; handles 40 up)
+  // a phone held in the right hand: its back on the palm, screen to the holder
+  const _gn = new THREE.Vector3(), qG = new THREE.Quaternion();
+  const _gd = new THREE.Vector3();
+  const inHand = (person, rot, out, w = 1) => {
+    _gn.set(0, 0, 1).applyEuler(rot); _gd.set(0, 1, 0).applyEuler(rot);
+    kit.orientHand(person, 'Right', _gd, _gn, w); // palm flat against the phone's back
+    kit.hand(person, 'Right', out);
+    return out.addScaledVector(_gn, kit.palmHalf(person) + 0.45).addScaledVector(_gd, 2.5);
+  };
   const bagInHand = out => { kit.hand(seller, 'Left', out); out.y -= 39; return out; };
 
   function update(dt, t) {
@@ -790,12 +799,11 @@ export default async function create(ctx) {
     if (carryPhone > 0) kit.reach(clerk, 'Right', local(clerk, -10, 100, 26, vD), carryPhone);
 
     // handheld phones: clerk holds one while scanning; tech while packing
-    kit.hand(clerk, 'Right', vA);
-    handClerk.position.copy(vA);
     handClerk.rotation.set(lerp(-0.3, -1.25, clerkUp), clerk.root.rotation.y + Math.PI, 0, 'YXZ');
+    inHand(clerk, handClerk.rotation, handClerk.position, t < 13 ? 1 : 0);
     handClerk.visible = t < 13;
-    kit.hand(tech, 'Right', vA);
-    handTech.position.copy(vA); handTech.rotation.set(lerp(-0.3, -1.25, techUp), tech.root.rotation.y + Math.PI, 0, 'YXZ');
+    handTech.rotation.set(lerp(-0.3, -1.25, techUp), tech.root.rotation.y + Math.PI, 0, 'YXZ');
+    inHand(tech, handTech.rotation, handTech.position, t >= 26.6 && t < 35.2 ? 1 : 0);
     handTech.visible = t >= 26.6 && t < 35.2;
 
     // --- bag: carried in, set on the counter, folded away after the offer
@@ -852,8 +860,8 @@ export default async function create(ctx) {
       p.position.copy(vA); p.position.y += (1 - k) * 14;
       p.quaternion.copy(stand.getWorldQuaternion(qY)); p.rotateX(-0.18);
       if (i === 0 && t >= 19.8 && t < 25.1) { // clerk takes the first tested phone to the shelf
-        if (t < 24.4) { kit.hand(clerk, 'Right', vB); const kk = smooth((t - 19.8) / 0.5); p.position.lerpVectors(vA, vB, kk); p.rotation.set(-0.4, clerk.root.rotation.y + Math.PI, 0, 'YXZ'); }
-        else { const kk = smooth((t - 24.6) / 0.5); kit.hand(clerk, 'Right', vB); vC.copy(hotBinPos).add(vA.set(12, 8 + PH / 2, 0)); p.position.lerpVectors(vB, vC, kk); p.position.y += Math.sin(kk * Math.PI) * 25; p.rotation.set(0, Math.PI / 2, 0); }
+        if (t < 24.4) { const kk = smooth((t - 19.8) / 0.5); eul.set(-0.4, clerk.root.rotation.y + Math.PI, 0, 'YXZ'); inHand(clerk, eul, vB); p.position.lerpVectors(vA, vB, kk); p.quaternion.copy(stand.getWorldQuaternion(qY)).slerp(qG.setFromEuler(eul), kk); }
+        else { const kk = smooth((t - 24.6) / 0.5); eul.set(-0.4, clerk.root.rotation.y + Math.PI, 0, 'YXZ'); inHand(clerk, eul, vB); vC.copy(hotBinPos).add(vA.set(12, 8 + PH / 2, 0)); p.position.lerpVectors(vB, vC, kk); p.position.y += Math.sin(kk * Math.PI) * 25; p.quaternion.setFromEuler(eul).slerp(qY.setFromEuler(eul.set(0, Math.PI / 2, 0)), kk); }
       }
       const passed = t >= stationPass[i];
       const testing = t >= tIn && !passed;

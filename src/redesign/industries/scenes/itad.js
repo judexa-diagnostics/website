@@ -374,14 +374,14 @@ export default async function create(ctx) {
     new THREE.BoxGeometry(1.2, 0.1, 0.14).translate(0, 0.06, 0),
     new THREE.BoxGeometry(1.2, 0.1, 0.14).translate(0, 0.06, 0.43)
   ]);
-  const gaylordGeo = new THREE.CylinderGeometry(0.66, 0.62, 0.95, 8, 1, true).rotateY(Math.PI / 8).translate(0, 0.15 + 0.475, 0);
-  const gaylordMat = new THREE.MeshStandardMaterial({ map: kraftTex, roughness: 0.9, side: THREE.DoubleSide });
+  const palletBoxGeo = new THREE.CylinderGeometry(0.66, 0.62, 0.95, 8, 1, true).rotateY(Math.PI / 8).translate(0, 0.15 + 0.475, 0);
+  const palletBoxMat = new THREE.MeshStandardMaterial({ map: kraftTex, roughness: 0.9, side: THREE.DoubleSide });
   const pileGeo = new THREE.CircleGeometry(0.6, 8).rotateZ(Math.PI / 8).rotateX(-Math.PI / 2);
   const pileMat = new THREE.MeshStandardMaterial({ map: pileTex, roughness: 0.6 });
-  function gaylord(parent, keep = false) {
+  function palletBox(parent, keep = false) {
     const g = new THREE.Group();
     const p = new THREE.Mesh(palletGeo, wood); p.castShadow = p.receiveShadow = true; g.add(p);
-    const b = new THREE.Mesh(gaylordGeo, gaylordMat); b.castShadow = b.receiveShadow = true; g.add(b);
+    const b = new THREE.Mesh(palletBoxGeo, palletBoxMat); b.castShadow = b.receiveShadow = true; g.add(b);
     const c = new THREE.Mesh(pileGeo, pileMat); c.position.y = 0.95; c.receiveShadow = true; g.add(c);
     if (keep) g.traverse(o => { o.userData.keep = true; });
     parent.add(g); return g;
@@ -408,7 +408,7 @@ export default async function create(ctx) {
 
   // ---------------------------------------------------------- 01 receive
   const statics = [[-17.3, -8.6], [-18.7, -8.6], [-17.3, -10.0], [-18.7, -10.0], [-21.6, -9.8], [-21.6, -8.4]];
-  statics.forEach(([x, z]) => { const g = gaylord(stat); g.position.set(x, FY, z); });
+  statics.forEach(([x, z]) => { const g = palletBox(stat); g.position.set(x, FY, z); });
   const rcvDesk = bench(stat, -18.8, 1.6, 1.8, 0.7);
   monitor(stat, uiTex('Receive · Lot L-0418', [['IMEI 3567…0331', 'On manifest', PASS], ['IMEI 3530…4205', 'On manifest', PASS], ['IMEI 3582…7962', 'On manifest', PASS], ['IMEI 3502…0182', 'Not on manifest', ORANGE]], 'Scanned against manifest · 0 missing'), -18.25, FY + 0.93, 1.55, 0.2);
   box(stat, 0.6, 0.25, 0.4, M('#3d5368', 0.7), -19.4, FY + 1.05, 1.6); // tote on desk
@@ -682,9 +682,9 @@ export default async function create(ctx) {
   addParked(semi(13.6, false, '#E9E2D6', false), BX + 0.35, -4, 0);
   [-26, -12, 2, 16].forEach((x, i) => addParked(semi(13.6, false, ['#2B2722', '#8A2B1E', GREEN, '#E9E2D6'][i], i % 2 === 0), x, -36 + (i % 2) * 0.4, Math.PI / 2));
 
-  // animated inbound semi (cutaway so the gaylords inside show)
+  // animated inbound semi (cutaway so the pallet boxes inside show)
   const inTruck = semi(13.6, true, ORANGE, true); scene.add(inTruck); inTruck.rotation.y = Math.PI; inTruck.scale.z = -1; // cut side toward the camera
-  const inPallets = [0, 1, 2].map(() => gaylord(dyn, true));
+  const inPallets = [0, 1, 2].map(() => palletBox(dyn, true));
   const PLOC = k => 1.0 + k * 1.4; // trailer-local x of pallet k (from the rear)
   // animated outbound box trucks (two identical so the loop seam is invisible)
   const outA = boxTruck(true, '#2B2722'), outB = boxTruck(true, '#2B2722');
@@ -814,7 +814,7 @@ export default async function create(ctx) {
   const lbRepair = label('Ticket R-2207 · screen', 'Repaired · back to test', ORANGE, V(7.4, FY + 1.5, -8.4), 5, 1.3);
   const lbStore = label('Bin 06-B3 · 41 units', '128 GB · grade A · ready', ORANGE, hiBin.position.clone().add(V(0, 0.25, 0)), 6, 1.6);
   const lbShip = label('Order SO-1182', '64 units · loading', GREEN, V(26, 4.2, 4), 7, 1.4);
-  const lbTruck = label('Inbound · 3 gaylords', 'Manifest matched', ORANGE, V(-30, 4.2, 0), 1, 1.2);
+  const lbTruck = label('Inbound · 3 pallet boxes', 'Manifest matched', ORANGE, V(-30, 4.2, 0), 1, 1.2);
 
   // ---------------------------------------------------------- camera path
   // stage: target, radius, azimuth (0 = from +z, + toward +x), elevation
@@ -1065,7 +1065,7 @@ export default async function create(ctx) {
     scene, camera, duration: D,
     captions: [
       { at: 0, title: 'One floor, every device tracked', body: 'Thousands of phones a day: receive, test, erase, grade, repair, store and ship, all in InPhox.' },
-      { at: 3.6, title: 'Receive lots against the manifest', body: 'Trucks unload gaylords; every IMEI is scanned to the lot, so nothing goes missing.' },
+      { at: 3.6, title: 'Receive lots against the manifest', body: 'Trucks unload pallet boxes of phones; every IMEI is scanned to the lot, so nothing goes missing.' },
       { at: 10.6, title: 'Test dozens of phones at once', body: 'Benches run full diagnostics; pass and fail land on each device record automatically.' },
       { at: 16.6, title: 'Certified erasure for every device', body: 'Each phone is wiped and verified, and its certificate is filed with its history.' },
       { at: 22.1, title: 'Grade with photos, not guesswork', body: 'The photo booth captures every unit; graders set cosmetic grade in one tap.' },
@@ -1094,7 +1094,7 @@ export default async function create(ctx) {
       geos.forEach(g => g.dispose());
       mats.forEach(m => { for (const k of ['map', 'emissiveMap']) if (m[k]) m[k].dispose(); m.dispose(); });
       matCache.forEach(m => m.dispose());
-      palletGeo.dispose(); gaylordGeo.dispose(); pileGeo.dispose(); upG.dispose(); binG.dispose(); toteGeo.dispose(); tireGeo.dispose(); rimGeo.dispose();
+      palletGeo.dispose(); palletBoxGeo.dispose(); pileGeo.dispose(); upG.dispose(); binG.dispose(); toteGeo.dispose(); tireGeo.dispose(); rimGeo.dispose();
       extra.forEach(x => x.dispose());
       scene.environment = null;
     }

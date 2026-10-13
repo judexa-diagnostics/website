@@ -294,6 +294,26 @@ export default async function create(ctx) {
       inner.scale.set(1.8 / size.x, 1.5 / size.y, 4.1 / size.z);
       inner.rotation.y = CAR_YAW;
       g.add(inner);
+      // the scanned model has its wheels baked into the body: cut them out
+      // once (shared geometry) so separate wheels can roll and steer
+      if (!carWheelsCut) {
+        carWheelsCut = true;
+        c.updateMatrixWorld(true); inner.updateMatrixWorld(true);
+        c.traverse(o => {
+          if (!o.isMesh || !o.geometry.index) return;
+          const pos = o.geometry.attributes.position, idx = o.geometry.index.array, keep = [];
+          const mw = new THREE.Matrix4().copy(inner.matrix).multiply(o.matrixWorld); // car-local, before g
+          const pts = new Float32Array(pos.count * 3), v = V(0, 0, 0);
+          for (let i = 0; i < pos.count; i++) { v.fromBufferAttribute(pos, i).applyMatrix4(mw); pts[i * 3] = v.x; pts[i * 3 + 1] = v.y; pts[i * 3 + 2] = v.z; }
+          const inWheel = i => {
+            const x = pts[i * 3], y = pts[i * 3 + 1], z = pts[i * 3 + 2];
+            if (Math.abs(x) < 0.42) return false;
+            return WHEELS.some(([, wz]) => Math.hypot(z - wz, y - 0.25) < 0.285);
+          };
+          for (let t = 0; t < idx.length; t += 3) if (!(inWheel(idx[t]) && inWheel(idx[t + 1]) && inWheel(idx[t + 2]))) keep.push(idx[t], idx[t + 1], idx[t + 2]);
+          o.geometry.setIndex(keep);
+        });
+      }
       // plain badge plate over the grille so no maker's emblem shows
       // (deep enough to swallow the chrome emblem that stands proud of the grille)
       const plate = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.15, 0.12, 2, 0.025), badgeM);
@@ -311,10 +331,36 @@ export default async function create(ctx) {
       const tl = new THREE.Sprite(tail); tl.position.set(x, 0.92, -2.08); tl.scale.setScalar(0.55); g.add(tl);
       const hl = new THREE.Sprite(headL); hl.position.set(x, 0.72, 2.1); hl.scale.setScalar(0.9); g.add(hl);
     });
-    g.userData = { tail, headL };
+    // wheels: steer pivot -> spin group -> tyre, rim and five spokes (so the roll reads)
+    const wheels = WHEELS.map(([x, z]) => {
+      const pivot = new THREE.Group(); pivot.position.set(x, WHEEL_R, z); g.add(pivot);
+      const spin = new THREE.Group(); pivot.add(spin);
+      const tyre = new THREE.Mesh(tyreGeo, tyreM); tyre.castShadow = true; spin.add(tyre);
+      const sx = Math.sign(x);
+      const rim = new THREE.Mesh(rimGeo, rimM); rim.position.x = sx * 0.012; spin.add(rim);
+      for (let k = 0; k < 5; k++) {
+        const sp = new THREE.Mesh(spokeGeo, spokeM); sp.position.x = sx * 0.1;
+        sp.rotation.x = (k / 5) * Math.PI * 2; spin.add(sp);
+      }
+      const hub = new THREE.Mesh(hubGeo, hubM); hub.position.x = sx * 0.104; spin.add(hub);
+      return { pivot, spin, front: z > 0 };
+    });
+    g.userData = { tail, headL, wheels };
     return g;
   }
   const CAR_YAW = 0;
+  let carWheelsCut = false;
+  // measured on the normalised model: tyre radius 0.25 m, axles at z 1.21 / -1.45
+  const WHEEL_R = 0.262, WHEELBASE = 2.66;
+  const WHEELS = [[0.63, 1.21], [-0.63, 1.21], [0.63, -1.45], [-0.63, -1.45]];
+  const tyreGeo = track(new THREE.CylinderGeometry(WHEEL_R, WHEEL_R, 0.19, 32)); tyreGeo.rotateZ(Math.PI / 2);
+  const rimGeo = track(new THREE.CylinderGeometry(0.17, 0.17, 0.18, 28)); rimGeo.rotateZ(Math.PI / 2);
+  const spokeGeo = track(new THREE.BoxGeometry(0.03, 0.15, 0.05)); spokeGeo.translate(0, 0.085, 0);
+  const hubGeo = track(new THREE.CylinderGeometry(0.04, 0.04, 0.02, 16)); hubGeo.rotateZ(Math.PI / 2);
+  const tyreM = M({ color: '#1b1b1c', roughness: 0.85 });
+  const rimM = M({ color: '#2f3134', roughness: 0.5, metalness: 0.5 });
+  const spokeM = M({ color: '#c9cdd2', roughness: 0.25, metalness: 0.85 });
+  const hubM = M({ color: '#2a2b2d', roughness: 0.4, metalness: 0.6 });
   const opCar = makeCar(null); opCar.position.set(-2.8, 0, -0.9); scene.add(opCar);
   const seCar = makeCar('#8a2b22'); seCar.position.set(2.8, 0, -0.9); scene.add(seCar);
   const parked = [['#e4e1da', -8.4, 0], ['#5d6166', 8.4, 0], ['#9aa3a8', -11.2, 0.02]].map(([c, x, r]) => { const k = makeCar(c); k.position.set(x, 0, -0.9); k.rotation.y = r; scene.add(k); return k; });
@@ -322,12 +368,17 @@ export default async function create(ctx) {
   const headSpot = new THREE.SpotLight('#fff1d6', 0, 40, 0.5, 0.6, 1.2);
   headSpot.position.set(0, 0.8, 2.1); opCar.add(headSpot); headSpot.target.position.set(0, 0, 14); opCar.add(headSpot.target);
 
-  // Drive path: forward out of the space, along the aisle, out to the road,
-  // down the street, into the driveway.
+  // Drive path (US rules, keep right): forward out of the space, through the
+  // lot exit, a left turn across the near lane into the far (eastbound) lane,
+  // centred in it (road z 8.5..15.5, centre line z 12, lane centre z 13.75),
+  // then a left turn across the westbound lane into the driveway.
+  const LANE_Z = 13.75;
   const path = new THREE.CatmullRomCurve3([
-    V(-2.8, 0, -0.9), V(-2.8, 0, 2.0), V(-1.2, 0, 4.4), V(5, 0, 6.2), V(8, 0, 10.4), V(12, 0, 12.4),
-    V(30, 0, 12.6), V(70, 0, 12.6), V(110, 0, 12.6), V(130, 0, 12.6), V(137.2, 0, 11.6), V(139, 0, 8.8), V(139, 0, 5.6)
-  ], false, 'catmullrom', 0.3);
+    V(-2.8, 0, -0.9), V(-2.8, 0, 1.8), V(-1.6, 0, 4.0), V(2.0, 0, 5.4), V(5.6, 0, 6.6), V(6.9, 0, 8.6),
+    V(8.0, 0, 11.2), V(10.2, 0, 13.2), V(13.6, 0, LANE_Z), V(30, 0, LANE_Z), V(70, 0, LANE_Z), V(110, 0, LANE_Z),
+    V(128, 0, LANE_Z), V(133.6, 0, 13.4), V(137.0, 0, 11.6), V(138.7, 0, 9.0), V(139, 0, 7.2), V(139, 0, 5.6)
+  ], false, 'centripetal');
+  path.arcLengthDivisions = 6000; path.updateArcLengths(); // fine table: even speed, no jitter
   const pathLen = path.getLength();
   const DRIVE0 = 13.4, DRIVE1 = 24.0;
   function driveU(t) {
@@ -343,13 +394,12 @@ export default async function create(ctx) {
   }
 
   // ---- People ----------------------------------------------------------------
-  // Semi-realistic cast (shared body + photoreal heads): the operator and
-  // the seller are clearly two different people.
-  const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset, heads: ['ponytail', 'beard'] });
+  // Pictogram cast: the operator wears the orange vest, the seller is plain.
+  const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset });
   const clips = kit.clips;
   const CAST = {
-    operator: { head: 'ponytail', look: LOOKS.casualNavy, height: 1.68 },
-    seller: { head: 'beard', look: LOOKS.casualOlive, height: 1.82 }
+    operator: { look: LOOKS.staffOrange, height: 1.68 },
+    seller: { look: LOOKS.casualOlive, height: 1.82 }
   };
   function person(kind) {
     const P = kit.person({ ...CAST[kind], mixer: false });
@@ -359,7 +409,7 @@ export default async function create(ctx) {
     const acts = {};
     for (const k of ['idle', 'walk']) { acts[k] = mixer.clipAction(clips[k]); acts[k].play(); acts[k].setEffectiveWeight(k === 'idle' ? 1 : 0); }
     const B = P.bones;
-    return { holder, root, mixer, acts, B, kind };
+    return { holder, root, mixer, acts, B, kind, P };
   }
   const op = person('operator');
   const se = person('seller');
@@ -389,17 +439,20 @@ export default async function create(ctx) {
     aim(p.B[side + 'ForeArm'], toW(p, -s * 0.3, 0.42 - reach * 0.3, 0.86), w);
     aim(p.B[side + 'Hand'], toW(p, -s * 0.15, 0.2 - reach * 0.1, 1), w);
   }
+  // Seated on the couch, back against the backrest, thighs along the seat,
+  // shins down to the floor, hands resting on the thighs.
   function sitPose(p, w) {
-    aim(p.B.LeftUpLeg, toW(p, 0.1, -0.08, 1), w); aim(p.B.RightUpLeg, toW(p, -0.1, -0.08, 1), w);
-    aim(p.B.LeftLeg, toW(p, 0.02, -1, 0.12), w); aim(p.B.RightLeg, toW(p, -0.02, -1, 0.12), w);
-    aim(p.B.Spine, toW(p, 0, 1, 0.12), w * 0.8);
-    aim(p.B.Neck, toW(p, 0, 1, 0.35), w * 0.8);
-    aim(p.B.Head, toW(p, 0, 0.75, 0.66), w * 0.8);
-    // hands on the laptop keys
-    aim(p.B.LeftArm, toW(p, 0.22, -0.82, 0.5), w); aim(p.B.RightArm, toW(p, -0.22, -0.82, 0.5), w);
-    aim(p.B.LeftForeArm, toW(p, -0.25, -0.1, 1), w); aim(p.B.RightForeArm, toW(p, 0.25, -0.1, 1), w);
+    aim(p.B.LeftUpLeg, toW(p, 0.1, -0.06, 1), w); aim(p.B.RightUpLeg, toW(p, -0.1, -0.06, 1), w);
+    aim(p.B.LeftLeg, toW(p, 0.02, -1, 0.3), w); aim(p.B.RightLeg, toW(p, -0.02, -1, 0.3), w);
+    aim(p.B.LeftFoot, toW(p, 0, -0.35, 1), w); aim(p.B.RightFoot, toW(p, 0, -0.35, 1), w);
+    aim(p.B.Spine, toW(p, 0, 1, -0.16), w * 0.9);
+    aim(p.B.Spine2, toW(p, 0, 1, -0.05), w * 0.8);
+    aim(p.B.Neck, toW(p, 0, 1, 0.2), w * 0.8);
+    aim(p.B.Head, toW(p, 0, 0.8, 0.6), w * 0.8);
+    aim(p.B.LeftArm, toW(p, 0.14, -0.95, 0.28), w); aim(p.B.RightArm, toW(p, -0.14, -0.95, 0.28), w);
+    aim(p.B.LeftForeArm, toW(p, -0.08, -0.42, 1), w); aim(p.B.RightForeArm, toW(p, 0.08, -0.42, 1), w);
   }
-  const handPos = (p, side, out) => { p.B[side + 'Hand'].getWorldPosition(out); return out; };
+  const handPos = (p, side, out) => kit.hand(p.P, side, out);
   const headPos = (p, out) => { p.B.Head.getWorldPosition(out); return out; };
 
   // ---- Phones in the meetup ---------------------------------------------------
@@ -510,6 +563,19 @@ export default async function create(ctx) {
   opScreen.set('home', { st: 'home' }); soldScreen.set('imei', { st: 'imei' }); sellerScreen.set('wait', { st: 'wait' });
 
   const _m4 = new THREE.Matrix4(), _x = new THREE.Vector3(), _y = new THREE.Vector3(), _z = new THREE.Vector3();
+  // Put a phone on a person's palm: screen along face, phone up from upHint.
+  // The hand turns (weight w) so the palm lies against the phone's back; the
+  // phone's centre ends up in out (scene units are metres; phones are 0.01-scaled cm models).
+  const _pd = new THREE.Vector3();
+  function holdPhone(p, side, phone, face, upHint, w, out) {
+    orient(phone, out, face, upHint);
+    _pd.set(0, 1, 0).applyQuaternion(phone.quaternion);
+    kit.orientHand(p.P, side, _pd, face, w);
+    kit.hand(p.P, side, out);
+    out.addScaledVector(face, kit.palmHalf(p.P) + 0.0045).addScaledVector(_pd, 0.03);
+    phone.position.copy(out);
+    return out;
+  }
   function orient(obj, pos, face, upHint) {
     _z.copy(face).normalize();
     _x.crossVectors(upHint, _z).normalize();
@@ -867,15 +933,36 @@ export default async function create(ctx) {
     out.fov = 28; return out;
   };
   const payShot = keysShot([[7.6, V(0.1, 1.45, 4.6), V(0.05, 1.25, 2.6), 30], [11.4, V(-0.4, 1.55, 4.9), V(0.05, 1.2, 2.5), 32]]);
-  const partShot = keysShot([[10.8, V(1.0, 1.9, 6.6), V(0.4, 1.0, 2.0), 36], [14.4, V(4.5, 4.2, 11.0), V(-1.0, 0.8, 1.5), 40]]);
+  const partShot = keysShot([[10.8, V(1.0, 1.9, 6.6), V(0.4, 1.0, 2.0), 36], [14.4, V(-4.0, 5.5, 13.0), V(-1.5, 0.8, 1.0), 40]]);
+  // Heading used by the chase camera: the path direction averaged over the
+  // last ~10 m driven (a low-pass in distance), so the camera swings round a
+  // turn smoothly instead of snapping with the car. Stateless in t.
+  const _sd = V(0, 0, 0);
+  const smoothHeading = (u, out) => {
+    out.set(0, 0, 0);
+    const d = u * pathLen;
+    for (let i = 0; i <= 16; i++) {
+      const di = Math.max(0, d - i * 0.65);
+      path.getTangentAt(Math.min(di / pathLen, 0.9999), _sd);
+      out.addScaledVector(_sd, 17 - i);
+    }
+    return out.setY(0).normalize();
+  };
+  const CRANE = V(-4.0, 5.5, 13.0); // where the lot shot ends, well clear of the car's path
   const carCam = (t, out) => {
     const u = driveU(t);
-    path.getPointAt(u, _h); path.getTangentAt(u, _f);
+    path.getPointAt(u, _h); smoothHeading(u, _f);
     _r.set(-_f.z, 0, _f.x); // right of travel
     const k = smooth(seg(t, DRIVE0 + 1, DRIVE1 - 2.5));
     const side = 2.6 + Math.sin(k * Math.PI) * 2.2, back = 7.5 - Math.sin(k * Math.PI) * 1.5;
     out.p.copy(_h).addScaledVector(_f, -back).addScaledVector(_r, side); out.p.y = 1.6 + Math.sin(k * Math.PI) * 0.5;
     out.l.copy(_h).addScaledVector(_f, 3).setY(0.9);
+    // In the lot the camera stays up where the meetup shot ended and turns to
+    // watch the car pull out; over the next ~18 m driven it eases into the
+    // chase position. The camera never crosses the car, so no whip.
+    const kc = smooth(seg(u * pathLen, 10, 48));
+    out.p.lerpVectors(CRANE, out.p, kc);
+    out.l.lerpVectors(_cp.copy(_h).setY(0.8), out.l, kc);
     out.fov = 40; return out;
   };
   const W = H(WIN);
@@ -921,7 +1008,7 @@ export default async function create(ctx) {
   const ptr = { x: 0, y: 0, sx: 0, sy: 0 };
 
   // ---- Update -------------------------------------------------------------------------
-  const pA = V(0, 0, 0), pB = V(0, 0, 0), up = V(0, 1, 0), _hp = V(0, 0, 0);
+  const pA = V(0, 0, 0), pB = V(0, 0, 0), up = V(0, 1, 0), _hp = V(0, 0, 0), _qs = new THREE.Quaternion(), _qo = new THREE.Quaternion();
   let aspect = ctx.width / ctx.height;
   const opWalk = [OP_STAND.clone(), V(-1.2, 0, 2.0), V(-1.75, 0, 0.3)];
   const seWalk = [SE_STAND.clone(), V(3.0, 0, 2.5), V(3.8, 0, 0.4)];
@@ -932,7 +1019,22 @@ export default async function create(ctx) {
     p.holder.position.set(x, 0, z);
     return Math.atan2(dx, dz);
   }
-  const turnTo = (p, yaw, k) => { const cur = p.holder.rotation.y; let d = yaw - cur; d = Math.atan2(Math.sin(d), Math.cos(d)); p.holder.rotation.y = cur + d * k; };
+  // Turn on the spot toward the path (0.45 s), then walk it; the walk clip
+  // plays at the rate that matches the ground speed so the feet stay planted.
+  const lerpAngle = (a, b, k) => { let d = b - a; d = Math.atan2(Math.sin(d), Math.cos(d)); return a + d * k; };
+  const _wp = V(0, 0, 0);
+  function walkOff(p, pts, t0, t1, face0, t) {
+    const ta = t0 + 0.45;
+    const kf = tt => { const u = seg(tt, ta, t1); return smooth(u) * 0.6 + u * 0.4; };
+    if (t <= t0) return 0;
+    const h0 = walkAlong(p, pts, 0.002);
+    walkAlong(p, pts, kf(t + 0.04)); _wp.copy(p.holder.position);
+    const y = walkAlong(p, pts, kf(t));
+    const speed = _wp.distanceTo(p.holder.position) / 0.04;
+    p.holder.rotation.y = t < ta ? lerpAngle(face0, h0, smooth(seg(t, t0, ta))) : y;
+    p.acts.walk.timeScale = speed > 0.05 ? kit.walkRate(p.P, speed) : 1;
+    return smooth(seg(t, ta - 0.15, ta + 0.15)) * (1 - smooth(seg(t, t1 - 0.2, t1 + 0.05)));
+  }
 
   const C = x => new THREE.Color(x);
   const COL = {
@@ -973,6 +1075,15 @@ export default async function create(ctx) {
     const u = driveU(t);
     path.getPointAt(u, pA); path.getTangentAt(Math.min(u, 0.9999), pB);
     opCar.position.copy(pA); opCar.rotation.y = Math.atan2(pB.x, pB.z);
+    {
+      // wheels roll with the distance driven; the fronts steer with the path's
+      // curvature (bicycle model: steer = atan(wheelbase * dYaw/ds))
+      const dist = u * pathLen;
+      const yawAt = s => { path.getTangentAt(THREE.MathUtils.clamp(s / pathLen, 0, 0.9999), _sd); return Math.atan2(_sd.x, _sd.z); };
+      let dy = yawAt(dist + 0.6) - yawAt(dist - 0.6); dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+      const steer = THREE.MathUtils.clamp(Math.atan(WHEELBASE * dy / 1.2), -0.6, 0.6);
+      for (const w of opCar.userData.wheels) { w.spin.rotation.x = dist / WHEEL_R; w.pivot.rotation.y = w.front ? steer : 0; }
+    }
 
     // ---- people at the meetup
     const meet = t < 14.5;
@@ -981,10 +1092,8 @@ export default async function create(ctx) {
       op.holder.position.copy(OP_STAND); se.holder.position.copy(SE_STAND);
       op.holder.rotation.y = Math.PI / 2; se.holder.rotation.y = -Math.PI / 2;
       // walk off to the cars
-      const wo = seg(t, 11.2, 13.4), ws = seg(t, 11.0, 13.6);
-      let opW = 0, seW = 0;
-      if (t > 11.2) { const y = walkAlong(op, opWalk, smooth(wo) * 0.6 + wo * 0.4); turnTo(op, y, wo < 0.15 ? smooth(wo / 0.15) : 1); opW = env(t, 11.2, 13.6, 0.35, 0.35); }
-      if (t > 11.0) { const y = walkAlong(se, seWalk, smooth(ws) * 0.6 + ws * 0.4); turnTo(se, y, ws < 0.15 ? smooth(ws / 0.15) : 1); seW = env(t, 11.0, 13.8, 0.35, 0.35); }
+      const opW = walkOff(op, opWalk, 11.2, 13.4, Math.PI / 2, t);
+      const seW = walkOff(se, seWalk, 11.0, 13.6, -Math.PI / 2, t);
       op.acts.walk.setEffectiveWeight(opW); op.acts.idle.setEffectiveWeight(1 - opW);
       se.acts.walk.setEffectiveWeight(seW); se.acts.idle.setEffectiveWeight(1 - seW);
       op.mixer.update(dt); se.mixer.update(dt);
@@ -996,22 +1105,26 @@ export default async function create(ctx) {
       const seL = env(t, 8.6, 11.2, 0.5, 0.5);               // seller's own phone shows the payment
       holdPose(op, 'Right', opR, 0); holdPose(op, 'Left', opL, 0);
       holdPose(se, 'Right', seR, 0.7 * smooth(seg(t, 1.0, 2.2)) * (1 - smooth(seg(t, 7.6, 8.3)))); holdPose(se, 'Left', seL, 0.2);
+      // Held phones lie flat on the palm: the hand is turned so the palm sits
+      // against the back of the phone, and the phone rests on it (no overlap).
       // operator's phone in the right hand, screen to the face
       handPos(op, 'Right', _hp); headPos(op, pB);
-      _hp.addScaledVector(toW(op, 0.02, 0.03, 1), 0.07);
-      orient(opPhone, _hp, _e.copy(pB).sub(_hp).add(DOWN5), toW(op, 0, 0.3, 1).normalize());
+      _e.copy(pB).sub(_hp).add(DOWN5).normalize();
+      holdPhone(op, 'Right', opPhone, _e, toW(op, 0, 0.3, 1).normalize(), opR, _hp);
       opPhone.visible = opR > 0.05;
-      // sold phone: seller's right hand -> operator's left hand, screen toward the operator's phone
-      handPos(se, 'Right', pA); pA.addScaledVector(toW(se, 0, 0.03, 1), 0.07);
-      handPos(op, 'Left', pB); pB.addScaledVector(toW(op, 0, 0.03, 1), 0.07);
+      // sold phone: seller's right hand -> operator's left hand. The seller
+      // shows the IMEI screen to the operator; once handed over it faces the operator.
       const hk = smooth(seg(t, 7.7, 8.4));
+      handPos(se, 'Right', pA); _f.copy(toW(se, 0, 0.4, 1)).normalize();
+      holdPhone(se, 'Right', soldPhone, _f, up, seR * (1 - hk), pA); _qs.copy(soldPhone.quaternion);
+      handPos(op, 'Left', pB); headPos(op, _r).sub(pB).normalize();
+      holdPhone(op, 'Left', soldPhone, _r, up, Math.max(opL, hk), pB); _qo.copy(soldPhone.quaternion);
       const sp = _g.copy(pA).lerp(pB, hk); sp.y += Math.sin(hk * Math.PI) * 0.06;
-      const faceSold = hk < 0.5 ? _e.copy(toW(se, 0, 0.4, 1)) : headPos(op, _e).sub(pB);
-      orient(soldPhone, sp, faceSold, up);
+      soldPhone.position.copy(sp); soldPhone.quaternion.copy(_qs).slerp(_qo, hk);
       soldPhone.visible = (seR > 0.15 || hk > 0.01) && (hk < 0.99 || opL > 0.1);
       // seller's own phone (left hand)
-      handPos(se, 'Left', pA); pA.addScaledVector(toW(se, 0, 0.03, 1), 0.07);
-      orient(sePhone, pA, headPos(se, _e).sub(pA), up);
+      handPos(se, 'Left', pA); headPos(se, _e).sub(pA).normalize();
+      holdPhone(se, 'Left', sePhone, _e, up, seL, pA);
       sePhone.visible = seL > 0.08; sePhone.scale.setScalar(0.01 * Math.min(1, seL * 1.6));
       // screens
       if (t < 2.4) opScreen.set('home', { st: 'home' });
@@ -1046,13 +1159,13 @@ export default async function create(ctx) {
     const home = t > 22.5;
     opHome.holder.visible = home;
     if (home) {
-      opHome.holder.position.copy(H(V(-0.42, 0, 0.62))); opHome.holder.rotation.y = Math.PI;
+      opHome.holder.position.copy(H(V(-0.42, 0, 0.75))); opHome.holder.rotation.y = Math.PI;
       opHome.acts.idle.setEffectiveWeight(1); opHome.acts.walk.setEffectiveWeight(0);
       opHome.mixer.update(dt * 0.6);
       sitPose(opHome, 1);
       // seat the hips on the cushion
       opHome.B.Hips.getWorldPosition(_hp);
-      opHome.holder.position.y += (HOUSE.y + 0.5) - _hp.y;
+      opHome.holder.position.y += (HOUSE.y + 0.6) - _hp.y; // pelvis on the cushion, not in it
       opHome.holder.updateMatrixWorld(true);
     }
     // bought phone: comes out of the bag next to the dock, then plugs in
@@ -1104,6 +1217,11 @@ export default async function create(ctx) {
 
     // ---- camera
     const c = cameraAt(t);
+    if (import.meta.env.DEV && window.__soloCam) {
+      // dev-only QC hook: fixed camera, optionally relative to the car
+      const o = window.__soloCam, b0 = o.car ? opCar.position : V(0, 0, 0);
+      c.p.set(...o.p).add(b0); c.l.set(...o.l).add(b0); if (o.fov) c.fov = o.fov;
+    }
     ptr.sx += (ptr.x - ptr.sx) * Math.min(1, dt * 3); ptr.sy += (ptr.y - ptr.sy) * Math.min(1, dt * 3);
     camera.position.copy(c.p);
     camera.lookAt(c.l);
@@ -1162,6 +1280,7 @@ export default async function create(ctx) {
   ];
 
   update(0, 0);
+  if (import.meta.env.DEV) window.__soloCamAt = t => { const c = cameraAt(t); return { p: c.p.toArray(), l: c.l.toArray(), fov: c.fov }; };
   return {
     scene, camera, duration: DURATION, captions,
     update,

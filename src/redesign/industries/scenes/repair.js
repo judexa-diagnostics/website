@@ -46,7 +46,7 @@ const STEPS = ['Diagnosing', 'Repairing', 'Retest', 'Ready'];
 // Bench phone events (seconds into the loop).
 const T = {
   dropAt: 3.0, typeA: 3.2, typeB: 4.5, printA: 4.6, printB: 5.4,
-  pick: 6.0, walkA: 6.3, walkB: 9.0, place: 9.4, plug: 9.9, devA: 10.1, testA: 10.5, testB: 12.6,
+  pick: 6.0, walkA: 6.5, walkB: 8.4, place: 9.4, plug: 9.9, devA: 10.1, testA: 10.5, testB: 12.6,
   openA: 13.4, openB: 14.8, drawerA: 15.0, drawerB: 15.8, bagUp: 16.6, scanA: 16.7, scanHit: 17.6,
   scanB: 18.6, crackOut: 18.6, crackDone: 19.6, newA: 19.6, newB: 20.8, closeA: 21.0, closeB: 22.4,
   retestA: 23.0, retestB: 25.6, ready: 26.6, bubbleA: 27.6, bubbleB: 32.2,
@@ -702,37 +702,41 @@ function makeChar(gltf, clipsSrc, { height, tint, hide = [], retargetFrom = null
     (chans[bone.name] || (chans[bone.name] = { bone }))[k] = tr.createInterpolant();
   }
   const dur = Object.fromEntries(Object.entries(clipsSrc).map(([k, c]) => [k, c.duration]));
-  return { root, model, b, rest, chans: Object.values(chans), dur };
+  return { root, model, b, rest, chans: Object.values(chans), dur, person };
 }
 
-// Waypoint track: [{t, x, z, yaw}]: stand still between waypoints with equal positions.
-function trackPos(track, t) {
-  if (t <= track[0].t) return [track[0].x, track[0].z];
-  for (let i = 0; i < track.length - 1; i++) {
-    const a = track[i], b = track[i + 1];
-    if (t <= b.t) { const k = ss(a.t, b.t, t); return [mix(a.x, b.x, k), mix(a.z, b.z, k)]; }
+// Waypoint track: [{t, x, z, yaw}]. Between two waypoints at different spots
+// the person walks a straight line with a trapezoid speed profile (quick
+// start, steady pace, quick stop), facing the way they walk; standing still
+// they turn to the waypoint's yaw. The walk clip is driven by the distance
+// walked, so the feet stay planted at any pace.
+const ACC = 0.16;
+function profile(u) { // -> [distance fraction, speed fraction]
+  const v = 1 / (1 - ACC);
+  if (u < ACC) return [v * u * u / (2 * ACC), u / ACC];
+  if (u > 1 - ACC) { const r = 1 - u; return [1 - v * r * r / (2 * ACC), r / ACC]; }
+  return [v * (u - ACC / 2), 1];
+}
+const lerpAngle = (a, b, k) => { let d = b - a; d = Math.atan2(Math.sin(d), Math.cos(d)); return a + d * k; };
+function evalTrack(track, t) {
+  let i = 0;
+  while (i < track.length - 2 && t >= track[i + 1].t) i++;
+  const A = track[i], B = track[i + 1];
+  const moving = Math.hypot(B.x - A.x, B.z - A.z) > 1;
+  if (!moving || t < A.t || t >= B.t) {
+    const P = t >= B.t ? B : A;
+    // arriving: turn from the walking direction to the waypoint's yaw
+    let yaw = A.yaw;
+    const prev = track[i - 1];
+    if (!moving && prev && Math.hypot(A.x - prev.x, A.z - prev.z) > 1) yaw = lerpAngle(Math.atan2(A.x - prev.x, A.z - prev.z), A.yaw, ss(A.t, A.t + 0.75, t));
+    return { x: P.x, z: P.z, yaw, speed: 0, dist: 0 };
   }
-  const l = track[track.length - 1]; return [l.x, l.z];
-}
-function trackHoldYaw(track, t) {
-  let y = track[0].yaw;
-  for (const w of track) if (t >= w.t && w.yaw != null) y = w.yaw;
-  return y;
-}
-function rawYaw(track, t) {
-  const [x0, z0] = trackPos(track, t - 0.08), [x1, z1] = trackPos(track, t + 0.08);
-  const sp = Math.hypot(x1 - x0, z1 - z0) / 0.16;
-  if (sp > 25) return Math.atan2(x1 - x0, z1 - z0);
-  return trackHoldYaw(track, t);
-}
-function trackYaw(track, t) {
-  let sx = 0, sz = 0;
-  for (let i = -4; i <= 4; i++) { const y = rawYaw(track, t + i * 0.09); const wgt = 5 - Math.abs(i); sx += Math.sin(y) * wgt; sz += Math.cos(y) * wgt; }
-  return Math.atan2(sx, sz);
-}
-function trackSpeed(track, t) {
-  const [x0, z0] = trackPos(track, t - 0.1), [x1, z1] = trackPos(track, t + 0.1);
-  return Math.hypot(x1 - x0, z1 - z0) / 0.2;
+  const len = Math.hypot(B.x - A.x, B.z - A.z), T0 = B.t - A.t;
+  const [f, sp] = profile(lin(A.t, B.t, t));
+  const head = Math.atan2(B.x - A.x, B.z - A.z);
+  // set off: turn from the standing yaw toward the path over the first steps
+  const yaw = lerpAngle(A.yaw, head, ss(A.t - 0.15, A.t + 0.5, t));
+  return { x: mix(A.x, B.x, f), z: mix(A.z, B.z, f), yaw, speed: sp * len / T0 / (1 - ACC), dist: f * len };
 }
 
 // ---------------------------------------------------------------- layout constants
@@ -741,30 +745,35 @@ const BENCH = { x0: -100, x1: 110, z: -152, d: 72, h: 92 };
 const MAT_Y = BENCH.h + 0.6;
 const PHONE_MAT = new V3(18, MAT_Y + 0.45, -140);
 const TABLET = new V3(-100, COUNTER.h, 94);
-const CUST_OUT = { x: 340, z: 60 };
-const CUST_AT = { x: -175, z: 165 };
-const TECH_COUNTER = { x: -130, z: 46 };
-const TECH_BENCH = { x: 0, z: -98 };
+const CUST_OUT = { x: 230, z: 190 };
+const CUST_AT = { x: -175, z: 148 };
+const TECH_COUNTER = { x: -130, z: 52 };
+const TECH_BENCH = { x: 0, z: -104 };
 
 const TECH_TRACK = [
   { t: 0, ...TECH_COUNTER, yaw: 0.15 },
   { t: T.walkA, ...TECH_COUNTER, yaw: 0.15 },
   { t: T.walkB, ...TECH_BENCH, yaw: Math.PI },
-  { t: T.leaveBench, ...TECH_BENCH, yaw: Math.PI },
-  { t: T.atCounter, ...TECH_COUNTER, yaw: 0.15 },
+  { t: T.leaveBench + 0.2, ...TECH_BENCH, yaw: Math.PI },
+  { t: T.leaveBench + 2.2, ...TECH_COUNTER, yaw: 0.15 },
   { t: DUR, ...TECH_COUNTER, yaw: 0.15 }
 ];
+// The customer waits at the shop entrance (front right) facing in, walks to
+// the counter at a normal pace and back out; while the phone is on the bench
+// they are away (hidden).
+const IN_YAW = -1.63, OUT_YAW = 1.51;
 const CUST_TRACK = [
-  { t: 0, ...CUST_OUT, yaw: -2.2 },
-  { t: 0.2, ...CUST_OUT, yaw: -2.2 },
+  { t: 0, ...CUST_OUT, yaw: IN_YAW },
+  { t: 0.2, ...CUST_OUT, yaw: IN_YAW },
   { t: 2.9, ...CUST_AT, yaw: Math.PI },
   { t: 5.6, ...CUST_AT, yaw: Math.PI },
-  { t: 8.8, ...CUST_OUT, yaw: 0.9 },
-  { t: 28.0, ...CUST_OUT, yaw: -2.2 },
+  { t: 8.8, ...CUST_OUT, yaw: OUT_YAW },
+  { t: 9.3, ...CUST_OUT, yaw: IN_YAW },
+  { t: 28.0, ...CUST_OUT, yaw: IN_YAW },
   { t: 31.6, ...CUST_AT, yaw: Math.PI },
   { t: T.exitA, ...CUST_AT, yaw: Math.PI },
-  { t: 39.8, ...CUST_OUT, yaw: 0.9 },
-  { t: DUR, ...CUST_OUT, yaw: 0.9 }
+  { t: 39.0, ...CUST_OUT, yaw: IN_YAW },
+  { t: DUR, ...CUST_OUT, yaw: IN_YAW }
 ];
 
 // ---------------------------------------------------------------- camera keys
@@ -776,10 +785,10 @@ const CAM = [
   [9.0, [150, 175, 40], [10, 105, -140], 36],
   [11.6, [95, 132, -62], [52, 122, -176], 30],
   [13.2, [92, 130, -66], [50, 120, -176], 30],
-  [14.8, [74, 146, -116], [14, 94, -143], 30],
-  [17.2, [112, 136, -96], [36, 110, -150], 32],
-  [19.4, [72, 146, -118], [10, 95, -142], 30],
-  [22.4, [70, 144, -120], [16, 94, -141], 30],
+  [14.8, [120, 215, -10], [10, 100, -135], 26],
+  [17.2, [140, 205, -20], [36, 106, -130], 27],
+  [19.4, [118, 216, -12], [8, 100, -136], 26],
+  [22.4, [116, 214, -14], [12, 100, -136], 26],
   [24.4, [96, 132, -66], [52, 122, -176], 30],
   [26.8, [92, 130, -64], [50, 121, -176], 30],
   [29.6, [230, 200, 230], [-50, 100, -10], 37],
@@ -815,7 +824,9 @@ export default async function create(ctx) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#1c1814');
   scene.fog = new THREE.Fog('#1c1814', 700, 1500);
-  const camera = new THREE.PerspectiveCamera(36, W / H, 2, 3000);
+  // aspect guard: the stage can report 0x0 while it is laid out
+  const ASP = () => (W > 0 && H > 0 ? W / H : 1.6);
+  const camera = new THREE.PerspectiveCamera(36, ASP(), 2, 3000);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   pmrem.dispose();
@@ -830,7 +841,7 @@ export default async function create(ctx) {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fontsReady);
 
   // ---- characters (load in parallel with building the room)
-  const loads = loadPeople(ctx.loadGLTF, { asset: ctx.asset, heads: ['operator', 'ponytail'] });
+  const loads = loadPeople(ctx.loadGLTF, { asset: ctx.asset });
 
   // ---- lights
   scene.add(new THREE.HemisphereLight('#fff0dc', '#3a2c20', 0.42));
@@ -1066,7 +1077,7 @@ export default async function create(ctx) {
   bubble.renderOrder = 1000; bubble.frustumCulled = false; camera.add(bubble);
 
   // ---- characters
-  // semi-realistic cast: the tech in an InPhox shirt, a walk-in customer
+  // pictogram cast: the tech in the orange staff vest, a walk-in customer in plain white
   const kit = await loads;
   const clips = kit.clips;
   const tech = makeChar(null, clips, { person: kit.person({ head: 'ponytail', look: LOOKS.staffOrange, height: 168, mixer: false }) });
@@ -1074,7 +1085,6 @@ export default async function create(ctx) {
   scene.add(tech.root, cust.root);
   const fingers = [];
   tech.model.traverse(o => { const m = /(Left|Right)Hand(Index|Middle|Ring|Pinky|Thumb)([123])$/.exec(o.name); if (m) fingers.push({ o, side: m[1], f: m[2], j: +m[3] }); });
-  tech.b.LHand.scale.setScalar(0.82); tech.b.RHand.scale.setScalar(0.82);
   const curlQ = new Q(), AX = { X: new V3(1, 0, 0), Y: new V3(0, 1, 0), Z: new V3(0, 0, 1) };
   function curl(amount) {
     for (const fb of fingers) {
@@ -1085,14 +1095,18 @@ export default async function create(ctx) {
   }
   
   // ---- per-frame helpers
-  const tmpP = new V3(), tmpQ = new Q(), tmpE = new THREE.Euler(), fwd = new V3(), right = new V3(), up = new V3(0, 1, 0);
+  const tmpN = new V3(), tmpP = new V3(), tmpQ = new Q(), tmpE = new THREE.Euler(), fwd = new V3(), right = new V3(), up = new V3(0, 1, 0);
   const hips = new V3(), tgtL = new V3(), tgtR = new V3(), pole = new V3(), look = new V3();
 
-  function poseChar(ch, track, t, rate = 1) {
-    const [x, z] = trackPos(track, t), yaw = trackYaw(track, t), sp = trackSpeed(track, t);
+  // stride: scene units walked per walk-clip cycle (feet planted at any pace)
+  const strideOf = ch => kit.walkRate(ch.person, 1) > 0 ? 1 / kit.walkRate(ch.person, 1) * ch.dur.walk : 1;
+  function poseChar(ch, track, t) {
+    const st = evalTrack(track, t);
+    const { x, z, yaw, speed: sp } = st;
     ch.root.position.set(x, 0, z); ch.root.rotation.y = yaw;
-    const wW = clamp01(sp / 50);
-    const tw = (t * rate * Math.max(0.75, sp / 120)) % ch.dur.walk, ti = t % ch.dur.idle;
+    // idle <-> walk crossfade follows the speed ramp (about a quarter second)
+    const wW = ss(0, 55, sp);
+    const tw = ((st.dist / strideOf(ch)) * ch.dur.walk) % ch.dur.walk, ti = t % ch.dur.idle;
     for (const [o, q] of ch.rest) o.quaternion.copy(q);
     for (const c of ch.chans) {
       if (c.idle) _qa.fromArray(c.idle.evaluate(ti)); else _qa.copy(c.bone.quaternion);
@@ -1128,19 +1142,24 @@ export default async function create(ctx) {
 
   // phone poses
   const COUNTER_DROP = new V3(-158, COUNTER.h + 0.45, 108);
-  const COUNTER_HAND = new V3(-150, COUNTER.h + 0.45, 96);
+  const COUNTER_HAND = new V3(-150, COUNTER.h + 0.45, 100);
   const qFlat = new Q();
   const qFlatYaw = a => new Q().setFromEuler(new THREE.Euler(0, a, 0));
   const QMAT = qFlatYaw(0.08), QDROP = qFlatYaw(0.5), QHAND = qFlatYaw(-0.3);
+  // phone lying on the palm: back of the phone on the hand, screen up toward the face
+  // (the hand turns so the palm lies flat under the phone; no overlap)
   const handPhonePose = (ch, side, outP, outQ) => {
-    ch.b[side + 'Hand'].getWorldPosition(outP);
-    outP.y -= 1.5;
+    const S = side === 'R' ? 'Right' : 'Left';
     outQ.setFromEuler(tmpE.set(-0.9, ch.root.rotation.y + Math.PI, 0, 'YXZ'));
+    tmpN.set(0, 1, 0).applyQuaternion(outQ);
+    kit.orientHand(ch.person, S, tmpP.set(0, 0, -1).applyQuaternion(outQ), tmpN, 1);
+    kit.hand(ch.person, S, outP);
+    outP.addScaledVector(tmpN, kit.palmHalf(ch.person) + 0.5).addScaledVector(tmpP, 2.5);
   };
   // hinge open angle
   const hingeAng = t => (ss(T.openA, T.openB, t) - ss(T.closeA, T.closeB, t)) * 1.75;
   const HINGE_LOCAL = new V3(-(PW / 2 - 0.05), 0, 0);
-  const CRACK_ASIDE = new V3(-28, MAT_Y + 0.5, -150), Q_ASIDE = qFlatYaw(0.25);
+  const CRACK_ASIDE = new V3(-13, MAT_Y + 0.5, -146), Q_ASIDE = qFlatYaw(0.25);
   const BAG_IN = new V3(-70, BENCH.h + 9.5, -150), BAG_SCAN = new V3(28, BENCH.h + 13, -128), BAG_DOWN = new V3(-26, MAT_Y + 0.6, -126);
   const Q_BAG_SCAN = new Q().setFromEuler(new THREE.Euler(0.7, 0.25, 0)), Q_BAG_DOWN = qFlatYaw(-0.3), Q_BAG_IN = qFlatYaw(0);
   const SCAN_AIM = new V3(46, BENCH.h + 22, -114), Q_SCAN_AIM = new Q();
@@ -1174,7 +1193,8 @@ export default async function create(ctx) {
   const camP = new V3(), camT = new V3(), par = { x: 0, y: 0, tx: 0, ty: 0 }, hover = { k: 0, target: 0 };
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function applyView() {
-    camera.aspect = W / H;
+    if (!(W > 0 && H > 0)) { camera.aspect = ASP(); camera.updateProjectionMatrix(); return; }
+    camera.aspect = ASP();
     if (small) camera.setViewOffset(W, H, 0, H * 0.07, W, H);
     else camera.setViewOffset(W, H, -W * 0.06, 0, W, H);
     camera.updateProjectionMatrix();
@@ -1197,8 +1217,7 @@ export default async function create(ctx) {
     const ts = poseChar(tech, TECH_TRACK, t);
     curl(1);
     const atBench = ss(T.walkB - 0.6, T.walkB + 0.2, t) * (1 - ss(T.leaveBench - 0.2, T.leaveBench + 0.4, t));
-    const techLean = 0.42 * atBench + 0.12 * ss(2.8, 3.6, t) * (1 - ss(5.8, 6.4, t)) + 0.12 * ss(T.atCounter - 0.4, T.atCounter, t) * (1 - ss(36.5, 38, t));
-    lean(tech, 0.42 * atBench + 0.12 * ss(2.8, 3.6, t) * (1 - ss(5.8, 6.4, t)) + 0.12 * ss(T.atCounter - 0.4, T.atCounter, t) * (1 - ss(36.5, 38, t)));
+    lean(tech, 0.24 * atBench + 0.12 * ss(2.8, 3.6, t) * (1 - ss(5.8, 6.4, t)) + 0.12 * ss(T.atCounter - 0.4, T.atCounter, t) * (1 - ss(36.5, 38, t)));
     lean(cust, 0.1 * (ss(2.6, 3.0, t) * (1 - ss(3.4, 4, t)) + ss(T.custTake - 0.5, T.custTake, t) * (1 - ss(T.custTake + 0.3, T.custTake + 0.8, t)) + ss(T.payA - 0.2, T.payA + 0.2, t) * (1 - ss(T.paid, T.paid + 0.4, t))));
 
     // ---- bench object choreography
@@ -1288,7 +1307,7 @@ export default async function create(ctx) {
       const a = ss(T.bubbleA, T.bubbleA + 0.4, t) * (1 - ss(T.bubbleB - 0.4, T.bubbleB, t));
       bubble.visible = a > 0.01;
       bubble.material.opacity = a;
-      const d = 40, hh = d * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2), hw = hh * (W / H);
+      const d = 40, hh = d * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2), hw = hh * ASP();
       const w = small ? hw * 1.7 : Math.min(hw * 0.75, hh * 1.1);
       const pop = 0.92 + 0.08 * ss(T.bubbleA, T.bubbleA + 0.5, t);
       bubble.scale.set(w * pop, w * pop, 1);
@@ -1300,8 +1319,8 @@ export default async function create(ctx) {
     if (workW > 0.01) {
       // default: hands on the phone sides, small working motion
       const wob = Math.sin(t * 2.3) * 0.8;
-      tgtL.set(PHONE_MAT.x - 7, MAT_Y + 3, PHONE_MAT.z + 6 + wob);
-      tgtR.set(PHONE_MAT.x + 7, MAT_Y + 3, PHONE_MAT.z + 5 - wob);
+      tgtL.set(PHONE_MAT.x - 7.5, MAT_Y + 4, PHONE_MAT.z + 6 + wob);
+      tgtR.set(PHONE_MAT.x + 7.5, MAT_Y + 4, PHONE_MAT.z + 5 - wob);
       // opening / closing: right hand on the display edge
       if (t > T.openA - 0.4 && t < T.drawerA) { placeOnHinge(null, dispP, dispQ); tgtR.copy(new V3(-PW + 1, 0.5, 3).applyQuaternion(dispQ).add(dispP)); }
       if (t > T.closeA - 0.5 && t < T.closeB + 0.2) { placeOnHinge(null, dispP, dispQ); tgtR.copy(new V3(-PW + 1, 0.5, 3).applyQuaternion(dispQ).add(dispP)); }
@@ -1348,7 +1367,7 @@ export default async function create(ctx) {
       if (takeW > 0.01) { armPole(cust, 'R', pole); solveArm(cust, 'R', COUNTER_HAND, pole, takeW); }
       const payW = ss(T.payA - 0.4, T.payA, t) * (1 - ss(T.paid - 0.2, T.paid + 0.3, t));
       if (payW > 0.01) { tgtL.set(-198, COUNTER.h + 6, 104); armPole(cust, 'L', pole); solveArm(cust, 'L', tgtL, pole, payW); }
-      look.set(TABLET.x, COUNTER.h + 15, TABLET.z); lookAt(cust, look, 0.4 * (1 - clamp01(trackSpeed(CUST_TRACK, t) / 40)));
+      look.set(TABLET.x, COUNTER.h + 15, TABLET.z); lookAt(cust, look, 0.4 * (1 - clamp01(evalTrack(CUST_TRACK, t).speed / 40)));
     }
     // re-read the hand after IK so the phone sits in the final hand
     if ((t >= T.pick + 0.3 && t < T.place - 0.4) || (t >= T.leaveBench + 0.4 && t < T.handA - 0.4)) { handPhonePose(tech, 'R', pp, pq); setPose(phone, pp, pq); }
@@ -1400,13 +1419,13 @@ export default async function create(ctx) {
     camP.lerp(camT, hover.k * 0.12);
     if (small) {
       // portrait: widen and pull back so the subject fits across
-      const a = W / H;
+      const a = ASP();
       const f = Math.min(1.75, Math.pow(1.5 / Math.max(0.5, a), 0.55));
       fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov) / 2) * f));
     }
     if (Math.abs(camera.fov - fov) > 1e-3) { camera.fov = fov; camera.updateProjectionMatrix(); }
     camera.position.copy(camP); camera.lookAt(camT);
-    { const vh = 2 * 10 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * 1.3; vignette.scale.set(vh * (W / H), vh, 1); }
+    { const vh = 2 * 10 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * 1.3; vignette.scale.set(vh * ASP(), vh, 1); }
   }
 
   function pointer(e) {
@@ -1417,7 +1436,7 @@ export default async function create(ctx) {
     hover.target = hit.length ? 1 : 0;
   }
 
-  function resize(w, h) { W = w; H = h; small = w < 700; applyView(); }
+  function resize(w, h) { if (w > 0 && h > 0) { W = w; H = h; small = w < 700; } applyView(); }
 
   function dispose() {
     alive = false;

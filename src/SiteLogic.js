@@ -345,7 +345,7 @@ export default class SiteLogic extends DCLogic {
       ui, is, nav,
       menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? '#16130F' : 'transparent', menuBtnFg: s.menu ? '#F6F2EA' : '#16130F',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
-      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${STARTER.name}, ${GROWTH.name} and ${ENTERPRISE.name} plans`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record'],['Careers','careers','Sales intern, or send us your CV']]
+      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${STARTER.name}, ${GROWTH.name} and ${ENTERPRISE.name} plans`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record']]
         .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? '#FBE7CC' : '#FFFFFF' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
