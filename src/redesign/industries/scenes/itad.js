@@ -943,9 +943,14 @@ export default async function create(ctx) {
     carriage.position.y = f.lift;
     const fdx = Math.cos(fa), fdz = -Math.sin(fa);
     inPallets.forEach((p, k) => {
+      p.scale.y = 1;
       if (t < pickT[k] || t >= 36) { p.position.set(DOCK_IN - off - PLOC(k), 1.29, 0); p.rotation.y = 0; p.visible = inTruck.visible; }
       else if (t < dropT[k]) { p.position.set(f.x + fdx * 1.35, FY + f.lift - 0.08 + 0.05, f.z + fdz * 1.35); p.rotation.y = fa; p.visible = true; }
-      else { const S = SLOT(k); p.position.set(S[0], FY, S[1]); p.rotation.y = 0; p.visible = t < 33; }
+      else {
+        // staged pallets are broken down into intake (sink away over 30.5-33 s, no pop)
+        const S = SLOT(k), g = 1 - smooth((t - 30.5 - k * 0.3) / 1.8);
+        p.position.set(S[0], FY, S[1]); p.rotation.y = 0; p.scale.y = Math.max(0.02, g); p.visible = g > 0.02;
+      }
     });
     // inbound label rides on the truck
     lbTruck.anchor.set(DOCK_IN - off - 7, 4.1, 0);

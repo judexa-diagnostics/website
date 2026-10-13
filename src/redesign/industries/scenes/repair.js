@@ -53,6 +53,10 @@ const T = {
   leaveBench: 28.6, atCounter: 31.8, handA: 32.6, handB: 33.6, custTake: 34.2, payA: 34.6, paid: 35.6, exitA: 36.4
 };
 
+// The bag and the old display are cleared off the mat while the camera is on
+// the monitor (out of frame), so nothing visibly vanishes.
+const CLEAR_T = 27.2;
+
 function deskTime(t) {
   // Shop clock on screens: 10:41 at loop start, 10:59 at the end.
   const m = 41 + Math.floor((t / DUR) * 18);
@@ -1251,10 +1255,10 @@ export default async function create(ctx) {
 
     // displays. Before crackOut the cracked display rides the hinge; it is then
     // set aside on the mat. The new display rises from the bag at newA, lands on
-    // the hinge and stays there; from 30 s (camera far away) the aside pieces
-    // are cleared so the loop restarts clean.
+    // the hinge and stays there; at CLEAR_T (camera on the monitor) the aside
+    // pieces are cleared so the loop restarts clean.
     placeOnHinge(null, dispP, dispQ);
-    if (t < T.crackOut || t >= 30) {
+    if (t < T.crackOut || t >= CLEAR_T) {
       if (crack.parent !== hinge) hinge.add(crack);
       crack.position.copy(HINGE_LOCAL); crack.quaternion.identity();
       crack.visible = t < T.crackOut;
@@ -1266,7 +1270,8 @@ export default async function create(ctx) {
       setPose(crack, v1, q1); crack.visible = true;
     }
     if (t < T.newA) {
-      fresh.visible = false;
+      // the new display rides inside the anti-static bag until it is taken out
+      fresh.visible = t >= T.drawerB - 0.4 && t < CLEAR_T; // posed with the bag below
     } else {
       fresh.visible = true;
       const k = ss(T.newA, T.newB, t);
@@ -1275,7 +1280,7 @@ export default async function create(ctx) {
     }
 
     // bag
-    bag.visible = t >= T.drawerB - 0.4 && t < 30;
+    bag.visible = t >= T.drawerB - 0.4 && t < CLEAR_T;
     {
       const k1 = ss(T.drawerB - 0.2, T.bagUp, t), k2 = ss(T.scanB - 0.1, T.scanB + 0.6, t);
       v1.copy(BAG_IN).lerp(BAG_SCAN, k1); v1.y += Math.sin(k1 * Math.PI) * 10; v1.lerp(BAG_DOWN, k2);
@@ -1283,6 +1288,7 @@ export default async function create(ctx) {
       q1.copy(Q_BAG_IN).slerp(Q_BAG_SCAN, k1).slerp(Q_BAG_DOWN, k2);
       setPose(bag, v1, q1);
     }
+    if (t < T.newA && fresh.visible) { fresh.position.copy(bag.position); fresh.quaternion.copy(bag.quaternion); }
     setPose(scanner, SCAN_REST_POS, SCAN_REST_Q);
     // cable: plug follows the phone port when plugged, rests on the mat otherwise
     {

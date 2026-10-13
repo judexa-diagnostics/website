@@ -19,7 +19,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 export const HEADS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
 // accent: the staff vest. Everything else is the same white figure.
-const ORANGE = '#E2601C';
+const ORANGE = '#EB5E12'; // InPhox accent
 export const LOOKS = {
   staffOrange: { accent: ORANGE },
   staffOrangeLong: { accent: ORANGE },
@@ -123,7 +123,8 @@ function buildFigure(B) {
 
 // One merged, skinned geometry per vest colour.
 function figureGeometry(parts, boneIndex, accent) {
-  const white = new THREE.Color(WHITE).convertSRGBToLinear(), acc = accent ? new THREE.Color(accent).convertSRGBToLinear() : white;
+  // THREE.Color already converts hex (sRGB) to the linear working space
+  const white = new THREE.Color(WHITE), acc = accent ? new THREE.Color(accent) : white;
   const geos = parts.map(([g0, weigh, vest]) => {
     const g = g0.clone();
     g.deleteAttribute('uv');

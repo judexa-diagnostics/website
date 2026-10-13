@@ -832,7 +832,13 @@ export default async function create(ctx) {
       else if (t < s0 + r + sc) { p.position.copy(scanPoint); p.rotation.set(-Math.PI / 2, 0, 0); }
       else if (t < s0 + r + sc + dn) { const k = smooth((t - s0 - r - sc) / dn); p.position.lerpVectors(scanPoint, vB, k); p.position.y += Math.sin(k * Math.PI) * 10; p.rotation.set(-Math.PI / 2 * (1 - k), upright * k, 0); }
       else { p.position.copy(vB); p.rotation.set(0, upright, 0); }
-      if (i < 4 && t >= stationIn[i]) { const k = smooth((t - stationIn[i]) / 0.3); p.position.y += k * 12; p.visible = k < 0.98; }
+      if (i < 4 && t >= stationIn[i]) {
+        // carried from the tote to the test stand, where the station phone takes over
+        const k = smooth((t - stationIn[i]) / 0.3);
+        stand.localToWorld(vD.copy(slotWorld(i))); vD.y += 14;
+        p.position.lerp(vD, k); p.position.y += Math.sin(k * Math.PI) * 8;
+        p.visible = t < stationIn[i] + 0.3;
+      }
       if (t > 37.6) p.visible = false;
     }
     // scan beam on the counter
@@ -885,17 +891,20 @@ export default async function create(ctx) {
 
     // --- packing: box unfolds, phones scanned in, flaps, tape, label
     const boxPos = vC.set(300 + 18, 92, 190 + 2);
+    // The box lies flat-packed on the packing table from the start, unfolds
+    // at 26.2, leaves with the courier, and a fresh flat pack slides onto the
+    // table from the shelf end before the loop restarts (nothing pops in).
     let boxA = 1;
-    if (t < 26.2) boxA = 0;
-    else if (t < 34.6) shipBox.position.copy(boxPos);
+    if (t < 34.6) shipBox.position.copy(boxPos);
     else if (t < 35.0) shipBox.position.lerpVectors(boxPos, boxHeld, smooth((t - 34.6) / 0.4));
     else if (t < 38.4) shipBox.position.copy(boxHeld);
-    else boxA = 0;
+    else if (t < 38.9) boxA = 0;
+    else { shipBox.position.copy(boxPos); shipBox.position.x += 70 * (1 - smooth((t - 38.9) / 0.9)); }
     shipBox.visible = boxA > 0;
-    const unfold = smooth((t - 26.2) / 0.6);
-    shipBox.scale.set(1, t < 27 ? Math.max(0.04, unfold) : 1, 1);
+    const unfold = t < 26.2 || t >= 38.9 ? 0 : smooth((t - 26.2) / 0.6);
+    shipBox.scale.set(1, t < 27 || t >= 38.9 ? Math.max(0.04, unfold) : 1, 1);
     shipBox.rotation.y = t >= 34.6 && t < 38.4 ? courier.root.rotation.y + Math.PI / 2 : 0;
-    const open = t < 31.4 ? smooth((t - 26.6) / 0.6) : 1 - smooth((t - 31.4) / 0.7);
+    const open = t >= 38.9 ? 0 : t < 31.4 ? smooth((t - 26.6) / 0.6) : 1 - smooth((t - 31.4) / 0.7);
     flaps.forEach((h, i) => {
       const a = open * (Math.PI * 0.62 + (i % 2) * 0.05);
       const d = h.userData;

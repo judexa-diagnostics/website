@@ -260,110 +260,54 @@ export default async function create(ctx) {
   poles.castShadow = true; scene.add(poles, arms, heads);
 
   // ---- Cars -----------------------------------------------------------------
-  // Re-hue the car's blue body paint to another colour (canvas pass on the map).
-  function repaint(mat, paint) {
-    const img = mat.map && mat.map.image; if (!img) return;
-    const w = img.width, h = img.height, c = document.createElement('canvas'); c.width = w; c.height = h;
-    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-    const d = g.getImageData(0, 0, w, h), px = d.data, tc = new THREE.Color(paint), hsl = {}; tc.getHSL(hsl);
-    const tmpC = new THREE.Color(), o = {};
-    for (let i = 0; i < px.length; i += 4) {
-      const r = px[i], gg = px[i + 1], b = px[i + 2];
-      if (b > r + 18 && b >= gg) {
-        tmpC.setRGB(r / 255, gg / 255, b / 255); tmpC.getHSL(o);
-        const l = THREE.MathUtils.clamp(o.l * (hsl.l / 0.28), 0, 0.95);
-        tmpC.setHSL(hsl.h, hsl.s * Math.min(1, o.s * 1.4), l);
-        px[i] = tmpC.r * 255; px[i + 1] = tmpC.g * 255; px[i + 2] = tmpC.b * 255;
-      }
-    }
-    g.putImageData(d, 0, 0);
-    const t = track(new THREE.CanvasTexture(c)); t.flipY = mat.map.flipY; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
-    mat.map = t; mat.needsUpdate = true;
-  }
-  let carProto = null;
-  try { carProto = (await ctx.loadGLTF('assets/ind-solo/car.glb')).scene; } catch (e) { carProto = null; }
-  const badgeM = M({ color: '#1a1b1d', roughness: 0.35, metalness: 0.6 });
-  function makeCar(paint) {
+  // Cars are plain off-white toys in the pictogram style: a rounded body, a
+  // soft grey glasshouse with a white roof, grey tyres and light hub caps.
+  // Each hub cap has a single darker bar, so the roll direction reads clearly
+  // (no wagon-wheel effect from repeated spokes).
+  const carBodyM = M({ color: '#efede8', roughness: 0.55, metalness: 0 });
+  const carGlassM = M({ color: '#5a636d', roughness: 0.3, metalness: 0.05, envMapIntensity: 0.5 });
+  const carTrimM = M({ color: '#9a9ea3', roughness: 0.6 });
+  const carBodyGeo = track(new RoundedBoxGeometry(1.62, 0.6, 4.0, 4, 0.2));
+  const carCabGeo = track(new RoundedBoxGeometry(1.48, 0.5, 2.15, 4, 0.16));
+  const carRoofGeo = track(new RoundedBoxGeometry(1.5, 0.09, 1.95, 3, 0.04));
+  const carBumperGeo = track(new RoundedBoxGeometry(1.64, 0.14, 0.12, 2, 0.05));
+  function makeCar() {
     const g = new THREE.Group();
-    if (carProto) {
-      const c = carProto.clone(true);
-      c.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; o.material = o.material.clone(); track(o.material); if (paint) repaint(o.material, paint); o.material.envMapIntensity = 1.2; } });
-      const box = new THREE.Box3().setFromObject(c), size = box.getSize(V(0, 0, 0)), ctr = box.getCenter(V(0, 0, 0));
-      const inner = new THREE.Group(); inner.add(c);
-      c.position.set(-ctr.x, -box.min.y, -ctr.z);
-      inner.scale.set(1.8 / size.x, 1.5 / size.y, 4.1 / size.z);
-      inner.rotation.y = CAR_YAW;
-      g.add(inner);
-      // the scanned model has its wheels baked into the body: cut them out
-      // once (shared geometry) so separate wheels can roll and steer
-      if (!carWheelsCut) {
-        carWheelsCut = true;
-        c.updateMatrixWorld(true); inner.updateMatrixWorld(true);
-        c.traverse(o => {
-          if (!o.isMesh || !o.geometry.index) return;
-          const pos = o.geometry.attributes.position, idx = o.geometry.index.array, keep = [];
-          const mw = new THREE.Matrix4().copy(inner.matrix).multiply(o.matrixWorld); // car-local, before g
-          const pts = new Float32Array(pos.count * 3), v = V(0, 0, 0);
-          for (let i = 0; i < pos.count; i++) { v.fromBufferAttribute(pos, i).applyMatrix4(mw); pts[i * 3] = v.x; pts[i * 3 + 1] = v.y; pts[i * 3 + 2] = v.z; }
-          const inWheel = i => {
-            const x = pts[i * 3], y = pts[i * 3 + 1], z = pts[i * 3 + 2];
-            if (Math.abs(x) < 0.42) return false;
-            return WHEELS.some(([, wz]) => Math.hypot(z - wz, y - 0.25) < 0.285);
-          };
-          for (let t = 0; t < idx.length; t += 3) if (!(inWheel(idx[t]) && inWheel(idx[t + 1]) && inWheel(idx[t + 2]))) keep.push(idx[t], idx[t + 1], idx[t + 2]);
-          o.geometry.setIndex(keep);
-        });
-      }
-      // plain badge plate over the grille so no maker's emblem shows
-      // (deep enough to swallow the chrome emblem that stands proud of the grille)
-      const plate = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.15, 0.12, 2, 0.025), badgeM);
-      plate.position.set(0, 0.565, 1.955); g.add(plate);
-    } else {
-      const body = new THREE.Mesh(new RoundedBoxGeometry(1.8, 0.75, 4.1, 3, 0.25), M({ color: paint || '#27416b', roughness: 0.3, metalness: 0.6 }));
-      body.position.y = 0.65; body.castShadow = true; g.add(body);
-      const cab = new THREE.Mesh(new RoundedBoxGeometry(1.6, 0.6, 2.2, 3, 0.25), M({ color: '#151a20', roughness: 0.1, metalness: 0.5 }));
-      cab.position.set(0, 1.25, -0.3); cab.castShadow = true; g.add(cab);
-    }
+    const body = new THREE.Mesh(carBodyGeo, carBodyM); body.position.y = WHEEL_R + 0.27; body.castShadow = body.receiveShadow = true; g.add(body);
+    const cab = new THREE.Mesh(carCabGeo, carGlassM); cab.position.set(0, WHEEL_R + 0.78, -0.3); cab.castShadow = true; g.add(cab);
+    const roof = new THREE.Mesh(carRoofGeo, carBodyM); roof.position.set(0, WHEEL_R + 1.04, -0.32); roof.castShadow = true; g.add(roof);
+    [-2.0, 2.0].forEach(z => { const bp = new THREE.Mesh(carBumperGeo, carTrimM); bp.position.set(0, WHEEL_R + 0.06, z); g.add(bp); });
     // lamps (front = +z)
     const tail = track(new THREE.SpriteMaterial({ map: glowTex, color: '#ff3020', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
     const headL = track(new THREE.SpriteMaterial({ map: glowTex, color: '#fff4dc', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
     [-0.62, 0.62].forEach(x => {
-      const tl = new THREE.Sprite(tail); tl.position.set(x, 0.92, -2.08); tl.scale.setScalar(0.55); g.add(tl);
-      const hl = new THREE.Sprite(headL); hl.position.set(x, 0.72, 2.1); hl.scale.setScalar(0.9); g.add(hl);
+      const tl = new THREE.Sprite(tail); tl.position.set(x, 0.72, -2.04); tl.scale.setScalar(0.55); g.add(tl);
+      const hl = new THREE.Sprite(headL); hl.position.set(x, 0.66, 2.04); hl.scale.setScalar(0.9); g.add(hl);
     });
-    // wheels: steer pivot -> spin group -> tyre, rim and five spokes (so the roll reads)
+    // wheels: steer pivot -> spin group -> tyre + hub cap with one bar
     const wheels = WHEELS.map(([x, z]) => {
       const pivot = new THREE.Group(); pivot.position.set(x, WHEEL_R, z); g.add(pivot);
       const spin = new THREE.Group(); pivot.add(spin);
       const tyre = new THREE.Mesh(tyreGeo, tyreM); tyre.castShadow = true; spin.add(tyre);
       const sx = Math.sign(x);
-      const rim = new THREE.Mesh(rimGeo, rimM); rim.position.x = sx * 0.012; spin.add(rim);
-      for (let k = 0; k < 5; k++) {
-        const sp = new THREE.Mesh(spokeGeo, spokeM); sp.position.x = sx * 0.1;
-        sp.rotation.x = (k / 5) * Math.PI * 2; spin.add(sp);
-      }
-      const hub = new THREE.Mesh(hubGeo, hubM); hub.position.x = sx * 0.104; spin.add(hub);
+      const cap = new THREE.Mesh(rimGeo, rimM); cap.position.x = sx * 0.1; spin.add(cap);
+      const bar = new THREE.Mesh(spokeGeo, spokeM); bar.position.x = sx * 0.116; spin.add(bar);
       return { pivot, spin, front: z > 0 };
     });
     g.userData = { tail, headL, wheels };
     return g;
   }
-  const CAR_YAW = 0;
-  let carWheelsCut = false;
-  // measured on the normalised model: tyre radius 0.25 m, axles at z 1.21 / -1.45
-  const WHEEL_R = 0.262, WHEELBASE = 2.66;
-  const WHEELS = [[0.63, 1.21], [-0.63, 1.21], [0.63, -1.45], [-0.63, -1.45]];
-  const tyreGeo = track(new THREE.CylinderGeometry(WHEEL_R, WHEEL_R, 0.19, 32)); tyreGeo.rotateZ(Math.PI / 2);
-  const rimGeo = track(new THREE.CylinderGeometry(0.17, 0.17, 0.18, 28)); rimGeo.rotateZ(Math.PI / 2);
-  const spokeGeo = track(new THREE.BoxGeometry(0.03, 0.15, 0.05)); spokeGeo.translate(0, 0.085, 0);
-  const hubGeo = track(new THREE.CylinderGeometry(0.04, 0.04, 0.02, 16)); hubGeo.rotateZ(Math.PI / 2);
-  const tyreM = M({ color: '#1b1b1c', roughness: 0.85 });
-  const rimM = M({ color: '#2f3134', roughness: 0.5, metalness: 0.5 });
-  const spokeM = M({ color: '#c9cdd2', roughness: 0.25, metalness: 0.85 });
-  const hubM = M({ color: '#2a2b2d', roughness: 0.4, metalness: 0.6 });
-  const opCar = makeCar(null); opCar.position.set(-2.8, 0, -0.9); scene.add(opCar);
-  const seCar = makeCar('#8a2b22'); seCar.position.set(2.8, 0, -0.9); scene.add(seCar);
-  const parked = [['#e4e1da', -8.4, 0], ['#5d6166', 8.4, 0], ['#9aa3a8', -11.2, 0.02]].map(([c, x, r]) => { const k = makeCar(c); k.position.set(x, 0, -0.9); k.rotation.y = r; scene.add(k); return k; });
+  const WHEEL_R = 0.31, WHEELBASE = 2.6;
+  const WHEELS = [[0.8, 1.3], [-0.8, 1.3], [0.8, -1.3], [-0.8, -1.3]];
+  const tyreGeo = track(new THREE.CylinderGeometry(WHEEL_R, WHEEL_R, 0.2, 32)); tyreGeo.rotateZ(Math.PI / 2);
+  const rimGeo = track(new THREE.CylinderGeometry(0.2, 0.2, 0.02, 28)); rimGeo.rotateZ(Math.PI / 2);
+  const spokeGeo = track(new THREE.BoxGeometry(0.012, 0.18, 0.07)); spokeGeo.translate(0, 0.085, 0);
+  const tyreM = M({ color: '#4a4b4e', roughness: 0.85 });
+  const rimM = M({ color: '#dcdbd6', roughness: 0.4, metalness: 0.2 });
+  const spokeM = M({ color: '#3f4348', roughness: 0.5 });
+  const opCar = makeCar(); opCar.position.set(-2.8, 0, -0.9); scene.add(opCar);
+  const seCar = makeCar(); seCar.position.set(2.8, 0, -0.9); scene.add(seCar);
+  const parked = [['#e4e1da', -8.4, 0], ['#5d6166', 8.4, 0], ['#9aa3a8', -11.2, 0.02]].map(([, x, r]) => { const k = makeCar(); k.position.set(x, 0, -0.9); k.rotation.y = r; scene.add(k); return k; });
   void parked;
   const headSpot = new THREE.SpotLight('#fff1d6', 0, 40, 0.5, 0.6, 1.2);
   headSpot.position.set(0, 0.8, 2.1); opCar.add(headSpot); headSpot.target.position.set(0, 0, 14); opCar.add(headSpot.target);
@@ -442,9 +386,9 @@ export default async function create(ctx) {
   // Seated on the couch, back against the backrest, thighs along the seat,
   // shins down to the floor, hands resting on the thighs.
   function sitPose(p, w) {
-    aim(p.B.LeftUpLeg, toW(p, 0.1, -0.06, 1), w); aim(p.B.RightUpLeg, toW(p, -0.1, -0.06, 1), w);
-    aim(p.B.LeftLeg, toW(p, 0.02, -1, 0.3), w); aim(p.B.RightLeg, toW(p, -0.02, -1, 0.3), w);
-    aim(p.B.LeftFoot, toW(p, 0, -0.35, 1), w); aim(p.B.RightFoot, toW(p, 0, -0.35, 1), w);
+    aim(p.B.LeftUpLeg, toW(p, 0.1, 0.02, 1), w); aim(p.B.RightUpLeg, toW(p, -0.1, 0.02, 1), w);
+    aim(p.B.LeftLeg, toW(p, 0.02, -1, 0.68), w); aim(p.B.RightLeg, toW(p, -0.02, -1, 0.68), w);
+    aim(p.B.LeftFoot, toW(p, 0, -0.1, 1), w); aim(p.B.RightFoot, toW(p, 0, -0.1, 1), w);
     aim(p.B.Spine, toW(p, 0, 1, -0.16), w * 0.9);
     aim(p.B.Spine2, toW(p, 0, 1, -0.05), w * 0.8);
     aim(p.B.Neck, toW(p, 0, 1, 0.2), w * 0.8);
@@ -679,18 +623,11 @@ export default async function create(ctx) {
   });
   const rug = hm(new THREE.PlaneGeometry(2.6, 1.8), M({ map: rugTex, roughness: 1 }), -0.3, 0.006, -0.1); rug.rotation.x = -Math.PI / 2;
 
-  let couch;
-  try {
-    couch = (await ctx.loadGLTF('assets/ind-solo/couch.glb')).scene;
-    couch.traverse(o => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } });
-    const box = new THREE.Box3().setFromObject(couch);
-    couch.position.y = -box.min.y;
-    const cw = new THREE.Group(); cw.add(couch); cw.rotation.y = COUCH_YAW; cw.position.set(-0.3, 0, 0.75); cw.scale.setScalar(1.05); house.add(cw);
-  } catch (e) {
-    const cm = M({ color: '#8d8478', roughness: 0.95 });
-    hm(new RoundedBoxGeometry(2.0, 0.42, 0.9, 3, 0.08), cm, -0.3, 0.25, 0.75);
-    hm(new RoundedBoxGeometry(2.0, 0.5, 0.22, 3, 0.08), cm, -0.3, 0.65, 1.1);
-  }
+  // A simple couch built from code (soft rounded blocks) so the seat, backrest
+  // and arms are known exactly and the seated figure can be checked against them.
+  const couchM = M({ color: '#b7aea2', roughness: 0.95 });
+  const cushM = M({ color: '#c4bcb1', roughness: 0.95 });
+  for (const [w, h, d, x, y, z, m] of COUCH_PARTS) hm(new RoundedBoxGeometry(w, h, d, 3, Math.min(0.06, h / 2.2)), m === 'c' ? cushM : couchM, x, y, z);
   const woodTex = staticTex(256, 256, (g, w, h) => {
     g.fillStyle = '#8a5c3a'; g.fillRect(0, 0, w, h);
     for (let i = 0; i < 80; i++) { g.strokeStyle = `rgba(50,28,12,${0.08 + Math.random() * 0.12})`; g.lineWidth = 1 + Math.random() * 2; g.beginPath(); const y = Math.random() * h; g.moveTo(0, y); g.bezierCurveTo(w * 0.3, y + 6, w * 0.6, y - 6, w, y + 2); g.stroke(); }
@@ -1103,29 +1040,34 @@ export default async function create(ctx) {
       const opL = env(t, 7.7, 10.6, 0.5, 0.6);               // receives the sold phone (left hand)
       const seR = env(t, 1.0, 8.3, 0.8, 0.5) * (1 - smooth(seg(t, 7.6, 8.3)) * 0) ;
       const seL = env(t, 8.6, 11.2, 0.5, 0.5);               // seller's own phone shows the payment
-      holdPose(op, 'Right', opR, 0); holdPose(op, 'Left', opL, 0);
-      holdPose(se, 'Right', seR, 0.7 * smooth(seg(t, 1.0, 2.2)) * (1 - smooth(seg(t, 7.6, 8.3)))); holdPose(se, 'Left', seL, 0.2);
+      // Every phone is in a hand for the whole meetup (low at the side, raised
+      // when used), so nothing pops in or out of view.
+      const hk0 = smooth(seg(t, 7.7, 8.4));
+      const opRh = Math.max(opR, 0.4), opLh = Math.max(opL, 0.4 * hk0);
+      const seRh = Math.max(seR, 0.4) * (1 - hk0), seLh = Math.max(seL, 0.4);
+      holdPose(op, 'Right', opRh, 0); holdPose(op, 'Left', opLh, 0);
+      holdPose(se, 'Right', seRh, 0.7 * smooth(seg(t, 1.0, 2.2)) * (1 - smooth(seg(t, 7.6, 8.3)))); holdPose(se, 'Left', seLh, 0.2);
       // Held phones lie flat on the palm: the hand is turned so the palm sits
       // against the back of the phone, and the phone rests on it (no overlap).
       // operator's phone in the right hand, screen to the face
       handPos(op, 'Right', _hp); headPos(op, pB);
       _e.copy(pB).sub(_hp).add(DOWN5).normalize();
-      holdPhone(op, 'Right', opPhone, _e, toW(op, 0, 0.3, 1).normalize(), opR, _hp);
-      opPhone.visible = opR > 0.05;
+      holdPhone(op, 'Right', opPhone, _e, toW(op, 0, 0.3, 1).normalize(), 1, _hp);
+      opPhone.visible = op.holder.visible;
       // sold phone: seller's right hand -> operator's left hand. The seller
       // shows the IMEI screen to the operator; once handed over it faces the operator.
       const hk = smooth(seg(t, 7.7, 8.4));
       handPos(se, 'Right', pA); _f.copy(toW(se, 0, 0.4, 1)).normalize();
-      holdPhone(se, 'Right', soldPhone, _f, up, seR * (1 - hk), pA); _qs.copy(soldPhone.quaternion);
+      holdPhone(se, 'Right', soldPhone, _f, up, 1 - hk, pA); _qs.copy(soldPhone.quaternion);
       handPos(op, 'Left', pB); headPos(op, _r).sub(pB).normalize();
-      holdPhone(op, 'Left', soldPhone, _r, up, Math.max(opL, hk), pB); _qo.copy(soldPhone.quaternion);
+      holdPhone(op, 'Left', soldPhone, _r, up, hk, pB); _qo.copy(soldPhone.quaternion);
       const sp = _g.copy(pA).lerp(pB, hk); sp.y += Math.sin(hk * Math.PI) * 0.06;
       soldPhone.position.copy(sp); soldPhone.quaternion.copy(_qs).slerp(_qo, hk);
-      soldPhone.visible = (seR > 0.15 || hk > 0.01) && (hk < 0.99 || opL > 0.1);
+      soldPhone.visible = op.holder.visible || hk < 0.5;
       // seller's own phone (left hand)
       handPos(se, 'Left', pA); headPos(se, _e).sub(pA).normalize();
-      holdPhone(se, 'Left', sePhone, _e, up, seL, pA);
-      sePhone.visible = seL > 0.08; sePhone.scale.setScalar(0.01 * Math.min(1, seL * 1.6));
+      holdPhone(se, 'Left', sePhone, _e, up, 1, pA);
+      sePhone.visible = se.holder.visible;
       // screens
       if (t < 2.4) opScreen.set('home', { st: 'home' });
       else if (t < 4.3) { const p = (t - 2.4) * 1.6 % 1; opScreen.set('scan' + Math.round(p * 30), { st: 'scan', p }); }
@@ -1159,13 +1101,16 @@ export default async function create(ctx) {
     const home = t > 22.5;
     opHome.holder.visible = home;
     if (home) {
-      opHome.holder.position.copy(H(V(-0.42, 0, 0.75))); opHome.holder.rotation.y = Math.PI;
+      const S = (import.meta.env.DEV && window.__sit) || SIT;
+      opHome.holder.position.copy(H(V(S.x, 0, S.z))); opHome.holder.rotation.y = Math.PI;
       opHome.acts.idle.setEffectiveWeight(1); opHome.acts.walk.setEffectiveWeight(0);
       opHome.mixer.update(dt * 0.6);
       sitPose(opHome, 1);
-      // seat the hips on the cushion
+      // put the hips exactly at the seat point (pelvis on the cushion top,
+      // back to the backrest); checked against the couch blocks in dev
+      opHome.holder.updateMatrixWorld(true);
       opHome.B.Hips.getWorldPosition(_hp);
-      opHome.holder.position.y += (HOUSE.y + 0.6) - _hp.y; // pelvis on the cushion, not in it
+      opHome.holder.position.add(_g.copy(H(V(S.x, S.y, S.z))).sub(_hp));
       opHome.holder.updateMatrixWorld(true);
     }
     // bought phone: comes out of the bag next to the dock, then plugs in
@@ -1209,11 +1154,18 @@ export default async function create(ctx) {
       if (f.userData.axis === 'x') f.rotation.x = -sgn * ang; else f.rotation.z = sgn * ang;
       if (i < 2) f.position.y = BY + 0.004 * (i === 0 ? 1 : 0); else f.position.y = BY - 0.002;
     });
-    boxLabel.visible = t > 41.7;
+    // the printed label travels from the printer onto the box (no pop-in)
+    boxLabel.visible = t > 41.0;
+    {
+      const lk = smooth(seg(t, 41.0, 41.6));
+      paper.getWorldPosition(_g); box.updateMatrixWorld(true); box.worldToLocal(_g);
+      boxLabel.position.set(0.03, BY + BT + 0.003, 0).lerp(_g, 1 - lk);
+      boxLabel.position.y += Math.sin(lk * Math.PI) * 0.08;
+    }
     const boxMove = smooth(seg(t, 41.9, 42.8));
     box.position.copy(BOX_TABLE).lerp(BOX_DOOR, boxMove); box.position.y += Math.sin(boxMove * Math.PI) * 0.35;
     box.rotation.y = boxMove * 0.4;
-    box.visible = t > 27;
+    box.visible = true; // on the table from the start of the loop, never pops in
 
     // ---- camera
     const c = cameraAt(t);
@@ -1280,6 +1232,29 @@ export default async function create(ctx) {
   ];
 
   update(0, 0);
+  if (import.meta.env.DEV) window.__soloClip = () => {
+    // how far the seated figure's skin goes into the couch blocks, the table or the floor
+    const body = opHome.P.body, v = V(0, 0, 0), n = body.geometry.attributes.position.count;
+    opHome.holder.updateMatrixWorld(true);
+    const res = { minY: 1e9, couch: 0, couchDepth: 0, table: 0, seatGap: 1e9, backGap: 1e9 };
+    const boxes = COUCH_PARTS.map(([w, h, d, x, y, z]) => new THREE.Box3(V(x - w / 2, y - h / 2, z - d / 2).add(HOUSE), V(x + w / 2, y + h / 2, z + d / 2).add(HOUSE)));
+    const tbl = new THREE.Box3(V(TBL.x - 0.6, 0, TBL.z - 0.3).add(HOUSE), V(TBL.x + 0.6, TBL.y, TBL.z + 0.3).add(HOUSE));
+    for (let i = 0; i < n; i += 2) {
+      body.getVertexPosition(i, v); v.applyMatrix4(body.matrixWorld);
+      res.minY = Math.min(res.minY, v.y);
+      const lz = v.z - HOUSE.z, ly = v.y - HOUSE.y;
+      if (lz > SEAT_FRONT && lz < BACK_FRONT && ly > SEAT_TOP - 0.05) res.seatGap = Math.min(res.seatGap, ly - SEAT_TOP);
+      if (ly > SEAT_TOP + 0.05 && ly < 0.96) res.backGap = Math.min(res.backGap, BACK_FRONT - lz);
+      for (const b of boxes) if (b.containsPoint(v)) {
+        res.couch++;
+        const dpt = Math.min(v.x - b.min.x, b.max.x - v.x, v.y - b.min.y, b.max.y - v.y, v.z - b.min.z, b.max.z - v.z);
+        res.couchDepth = Math.max(res.couchDepth, dpt);
+      }
+      if (tbl.containsPoint(v)) res.table++;
+    }
+    for (const k of ['minY', 'couchDepth', 'seatGap', 'backGap']) res[k] = +res[k].toFixed(3);
+    return res;
+  };
   if (import.meta.env.DEV) window.__soloCamAt = t => { const c = cameraAt(t); return { p: c.p.toArray(), l: c.l.toArray(), fov: c.fov }; };
   return {
     scene, camera, duration: DURATION, captions,
@@ -1300,10 +1275,20 @@ export default async function create(ctx) {
         if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(free);
         if (o.isLight && o.shadow && o.shadow.map) o.shadow.map.dispose();
       });
-      walk(scene); kit.dispose(); if (carProto) walk(carProto);
+      walk(scene); kit.dispose();
       disposables.forEach(d => d && d.dispose && (d.isMaterial ? free(d) : d.dispose()));
       envTex.dispose();
     }
   };
 }
 const COUCH_YAW = Math.PI / 2;
+// Couch (house-local, metres): base, two seat cushions, backrest, two arms.
+// Seat top y = 0.46, seat front z = 0.47, backrest front z = 0.99.
+const SEAT_TOP = 0.46, SEAT_FRONT = 0.47, BACK_FRONT = 0.99;
+const SIT = { x: -0.42, y: 0.627, z: 0.86 }; // hips point, house-local (checked: no skin inside the couch, feet on the floor)
+const COUCH_PARTS = [
+  [2.0, 0.3, 0.74, -0.3, 0.17, 0.84, 'b'],
+  [0.86, 0.14, 0.52, -0.74, 0.39, 0.73, 'c'], [0.86, 0.14, 0.52, 0.14, 0.39, 0.73, 'c'],
+  [1.76, 0.5, 0.22, -0.3, 0.71, 1.1, 'b'],
+  [0.2, 0.62, 0.74, -1.3 + 0.0, 0.31, 0.84, 'b'], [0.2, 0.62, 0.74, 0.7, 0.31, 0.84, 'b']
+];
