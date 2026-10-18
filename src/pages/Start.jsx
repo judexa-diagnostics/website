@@ -42,7 +42,7 @@ export default function Start({ v }) {
       <div style={{ padding: "clamp(2rem,5vw,4rem) clamp(1rem,4vw,4rem)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "40rem", width: "100%" }}>
         <div style={{ display: "flex", borderBottom: "1px solid #D9D0C2" }}>
           <a href={st.loginUrl} style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid transparent", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none", marginBottom: "-1px" }}>Sign in</a>
-          <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #EB5E12", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Create account</span>
+          <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #C67139", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Create account</span>
         </div>
         {st.showStep1 ? (
           <form className="fx-form fx-mount" onSubmit={st.next1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(13.75rem,1fr))", gap: "1rem" }}>
@@ -61,7 +61,7 @@ export default function Start({ v }) {
               <input className="fc-9" type="email" value={st.a.email} onChange={st.setA.email} style={{ height: "2.75rem", padding: "0 0.75rem", border: `1px solid ${st.bd.email}`, borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
               <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E" }}><span key={st.e.email} className="fx-err">{st.e.email}</span></span>
             </label>
-            <button className="hv-2 fx-press" type="submit" style={{ gridColumn: "1 / -1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue</button>
+            <button className="hv-2 fx-press" type="submit" style={{ gridColumn: "1 / -1", height: "3rem", background: "#C67139", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue</button>
           </form>
         ) : null}
         {st.showShop ? (
@@ -106,7 +106,7 @@ export default function Start({ v }) {
             </div>
             <div style={{ gridColumn: "1 / -1", display: "flex", gap: "0.625rem" }}>
               <button type="button" onClick={st.backShop} style={{ height: "3rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Back</button>
-              <button className="hv-2 fx-press" type="submit" style={{ flex: "1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to plan</button>
+              <button className="hv-2 fx-press" type="submit" style={{ flex: "1", height: "3rem", background: "#C67139", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to plan</button>
             </div>
           </form>
         ) : null}
@@ -136,7 +136,7 @@ export default function Start({ v }) {
             </button>
             <div style={{ display: "flex", gap: "0.625rem" }}>
               <button onClick={st.back} style={{ height: "3rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Back</button>
-              <PlanButton a={st.act2} className="hv-2" style={{ flex: "1", height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{st.cta2}</span></PlanButton>
+              <PlanButton a={st.act2} className="hv-2" style={{ flex: "1", height: "3rem", background: "#C67139", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{st.cta2}</span></PlanButton>
             </div>
             {st.sErr ? <span role="alert" className="fx-drop" style={{ fontSize: "0.8125rem", color: "#B3261E" }}><span>{st.sErr}</span></span> : null}
           </div>
@@ -154,7 +154,7 @@ export default function Start({ v }) {
               ))}
             </div>
             <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-              <a className="hv-2" href={st.loginUrl} style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", background: "#EB5E12", color: "#16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", textDecoration: "none" }}>Go to sign in</a>
+              <a className="hv-2" href={st.loginUrl} style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", background: "#C67139", color: "#16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", textDecoration: "none" }}>Go to sign in</a>
               <a href="#/home" style={{ height: "3rem", padding: "0 1.25rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none" }}>Back to site</a>
             </div>
           </div>

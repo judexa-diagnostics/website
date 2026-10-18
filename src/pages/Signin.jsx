@@ -17,7 +17,7 @@ export default function Signin({ v }) {
       </div>
       <div style={{ padding: "clamp(2rem,5vw,4rem) clamp(1rem,4vw,4rem)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "40rem", width: "100%" }}>
         <div style={{ display: "flex", borderBottom: "1px solid #D9D0C2" }}>
-          <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #EB5E12", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Sign in</span>
+          <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #C67139", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Sign in</span>
           <a href="#/start" onClick={si.goTrial} style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid transparent", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none", marginBottom: "-1px" }}>Create account</a>
         </div>
 
@@ -26,7 +26,7 @@ export default function Signin({ v }) {
             <span style={{ fontFamily: mono, fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257" }}>Last time you signed in to</span>
             <span style={{ fontFamily: mono, fontSize: "1rem", fontWeight: "600" }}><span>{si.lastHost}</span></span>
             <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-              <button className="hv-2" onClick={si.continueLast} style={{ height: "2.75rem", padding: "0 1.125rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to this shop</button>
+              <button className="hv-2" onClick={si.continueLast} style={{ height: "2.75rem", padding: "0 1.125rem", background: "#C67139", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to this shop</button>
               <button onClick={si.forget} style={{ height: "2.75rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Use another shop</button>
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function Signin({ v }) {
             </span>
             <span role="alert" style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E", minHeight: "1rem" }}><span key={si.err} className="fx-err">{si.err}</span></span>
           </label>
-          <button className="hv-2 fx-press" type="submit" style={{ height: "3rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to sign in</button>
+          <button className="hv-2 fx-press" type="submit" style={{ height: "3rem", background: "#C67139", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}>Continue to sign in</button>
         </form>
 
         <p data-fx="fade" style={{ margin: "0", fontSize: "0.8125rem", lineHeight: "1.6", color: "#3A342D" }}>
