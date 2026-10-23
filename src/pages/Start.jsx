@@ -16,7 +16,7 @@ export default function Start({ v }) {
                 <b>{p.name}</b> <span style={{ color: 'var(--pl-mute)' }}>{p.price}</span>
                 <p>{p.d}. {p.o}</p>
               </div>
-              <PlanButton a={p.act} className="pl-btn" style={{ background: 'transparent', border: '1px solid #16130F' }}><span>{p.cta}</span></PlanButton>
+              <PlanButton a={p.act} className="pl-btn" style={{ background: 'transparent', border: '1px solid #C67139', color: '#C67139' }}><span>{p.cta}</span></PlanButton>
             </div>
           ))}
         </div>
