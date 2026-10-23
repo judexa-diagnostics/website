@@ -1,17 +1,18 @@
 import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
-import { pricing, findPlan, planCard, compareRows, sellsOnline, estimate, cheapestPlan, fitsStations, startRate, PER_CHECK_FLOOR, count, money as usd } from './pricing.js';
-import { SIGNIN_HREF, shopDomain, leadAction, signupAction } from './config.js';
+import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF, OVERAGE_PER_CHECK, money as usd } from './pricing.js';
+import { openSignup } from './hub.js';
+import { SIGNIN_HREF, shopDomain, leadAction, hubUrl } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
-import { textProblem, isEmail, isWebsite } from './formCheck.js';
+import { textProblem, isEmail } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin'];
+const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };
 const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KEY, shop); else localStorage.removeItem(LAST_SHOP_KEY); } catch (e) { /* private window */ } };
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
-const [STARTER, GROWTH, ENTERPRISE] = ['starter','growth','enterprise'].map(findPlan);
+const [FREE, BASICS, GROWTH, MAX] = ['free','basics','growth','max'].map(findPlan);
 const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /inphox/lead receives
 // Layout is sized in rem; converts a design-pixel value (at a 16px root) to
 // actual screen pixels at the current root font size.
@@ -24,10 +25,7 @@ export default class SiteLogic extends DCLogic {
     hSel:{}, hPage:0, tenStage:[0,0,0,0,0,0,0,0,0,0], hQ:'', hStatus:'All statuses', hLoc:'All locations', hNote:'', carts:0,
     xfOn:false, tIdx:0, ind:0, platMore:false, platCat:'All',
     fMod:'All', fQ:'',
-    annual:false, checks:2500, stations:0, estPlan:null,
     c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
-    step:1, a:{name:'',email:'',company:''}, aErr:{}, plan:'growth', trial:true, sSending:false, sErr:'',
-    sh:{street:'',street2:'',city:'',state:'',zip:'',country:'US',phone:'',bemail:'',site:''}, shErr:{}, logo:null, logoRaw:null, logoPreview:'', logoEditing:false, logoErr:'',
     siShop:'', siErr:'', siLast: readLastShop()
   };
   wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef(); heroBarRef = React.createRef();
@@ -345,12 +343,12 @@ export default class SiteLogic extends DCLogic {
       ui, is, nav,
       menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? '#16130F' : 'transparent', menuBtnFg: s.menu ? '#F6F2EA' : '#16130F',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
-      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${STARTER.name}, ${GROWTH.name} and ${ENTERPRISE.name} plans`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record']]
+      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record']]
         .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? '#FBE7CC' : '#FFFFFF' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
       langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? '#FBE7CC' : '#FFFFFF', pick: () => this.setState({ lang:code, langOpen:false }) })),
-      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.goto('start', { step:1, trial:true, menu:false }); },
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); },
       loginUrl: SIGNIN_HREF, // every Sign in link opens "Sign in to your shop"
       hero, heroBarRef: this.heroBarRef, moreRef: this.moreRef, wrapRef: this.wrapRef, trackRef: this.trackRef, xfRef: this.xfRef, testiRef: this.testiRef,
       sb, rail, s1, s2, s3, s4, s5, s6, s7, stageRef: this.stageRef, cr,
@@ -368,13 +366,13 @@ export default class SiteLogic extends DCLogic {
     };
   }
   industries = [
-    ['Refurbishers & ITAD','High volume in, certified stock out.','Run hundreds of devices a day through test, erasure and grading, with a certificate for every IMEI your buyers will ask about.',['Receive lot and scan the manifest','Bulk-diagnose on stations','Certified erasure','Grade and photograph','Route to sale, repair or recycling'],['Diagnostics','Erasure','Grading','Inventory','Sales orders'],ENTERPRISE.name],
-    ['Independent repair shops','Know every part and every device on the bench.','Check in customer devices, log the fault, pull the part with its serial and retest before handing it back. The customer history stays with the device.',['Check in the customer device','Diagnose the fault','Pull the part and log its serial','Repair and retest','Notify the customer and hand back'],['Repair suite','Parts inventory','Retest','Invoices'],STARTER.name],
+    ['Refurbishers & ITAD','High volume in, certified stock out.','Run hundreds of devices a day through test, erasure and grading, with a certificate for every IMEI your buyers will ask about.',['Receive lot and scan the manifest','Bulk-diagnose on stations','Certified erasure','Grade and photograph','Route to sale, repair or recycling'],['Diagnostics','Erasure','Grading','Inventory','Sales orders'],MAX.name],
+    ['Independent repair shops','Know every part and every device on the bench.','Check in customer devices, log the fault, pull the part with its serial and retest before handing it back. The customer history stays with the device.',['Check in the customer device','Diagnose the fault','Pull the part and log its serial','Repair and retest','Notify the customer and hand back'],['Repair suite','Parts inventory','Retest','Invoices'],BASICS.name],
     ['Buy, sell & trade-in shops','Price lots quickly, and pay only for what arrived.','Verify every unit against the manifest on arrival, flag discrepancies automatically, and counter offers using rules instead of gut feel.',['Accept an offer or send a quote','Receive and verify against the manifest','Flag discrepancies to the vendor','Grade','Resell in lots'],['Offers & auto-counter','Diagnostics','Vendor CRM','Auction marketplace'],GROWTH.name],
-    ['Multi-location retail','Every store, every shelf, one count.','Trade-ins at the counter, transfers to a refurb hub and restocking by demand, with staff roles and live stock for every location.',['Take the trade-in at the counter','Transfer to the refurb hub','Restock stores by demand','Sell in store or online'],['Locations & transfers','Roles & permissions','Listings','Data insights'],ENTERPRISE.name],
+    ['Multi-location retail','Every store, every shelf, one count.','Trade-ins at the counter, transfers to a refurb hub and restocking by demand, with staff roles and live stock for every location.',['Take the trade-in at the counter','Transfer to the refurb hub','Restock stores by demand','Sell in store or online'],['Locations & transfers','Roles & permissions','Listings','Data insights'],MAX.name],
     ['Individual operators & online sellers','List what\'s graded, ship what sold.','Graded stock is ready to list the moment it is graded, with marketplace connections set up with you on request. Orders print labels, and returns come back into testing.',['Source devices','Test and grade','List to marketplaces','Pick, pack and label','Handle returns'],['Listings','Shipping & labels','Returns','Exports'],GROWTH.name]
   ];
-  ladder = [['One bench','A single technician testing and repairing.',`${STARTER.name} · ${money(STARTER.price.month)}/mo`],['One store','Counter trade-ins, repairs and retail stock.',`${STARTER.name} → ${GROWTH.name}`],['A few locations','Transfers, staff roles and shared stock.',`${GROWTH.name} · ${money(GROWTH.price.month)}/mo`],['A network','Refurb hubs, many stores and insights.',`${ENTERPRISE.name} · ${money(ENTERPRISE.price.month)}/mo`]];
+  ladder = [['One bench','A single technician testing and repairing.',`${FREE.name} · ${money(FREE.price)}/mo`],['One store','Counter trade-ins, repairs and retail stock.',`${BASICS.name} · ${money(BASICS.price)}/mo`],['A few locations','Transfers, staff roles and shared stock.',`${GROWTH.name} · ${money(GROWTH.price)}/mo`],['A network','Refurb hubs, many stores and insights.',`${MAX.name} · ${money(MAX.price)}/mo`]];
   features = [
     ['Diagnostics','Bulk port diagnostics','Test up to 40 devices per station in parallel'],
     ['Diagnostics','42-point functional test','Screen, touch, cameras, speakers, sensors, charging and more'],
@@ -434,58 +432,19 @@ export default class SiteLogic extends DCLogic {
       rows: frows.map(([m,f,d]) => ({ m, f, d }))
     };
 
-    // Pricing. The site takes no payment: every plan button starts the sign-up flow
-    // (the Start page) with that plan picked, and the plan is paid for in the app.
-    // Enterprise billed monthly is contract only, so it becomes "Talk to us".
-    const interval = s.annual ? 'year' : 'month';
-    const yearly = interval === 'year';
-    // Account, then the shop's details, then the plan (2026-10-05).
-    const choosePlan = code => { this.setState({ plan:code, step: !s.a.email ? 1 : !s.sh.street ? 2 : 3 }); location.hash = '#/start'; };
-    const planAction = p => !sellsOnline(p, interval) ? { href:'#/contact' } : { onClick: () => choosePlan(p.code) };
-    const planCta = p => sellsOnline(p, interval) ? `Start with ${p.name}` : 'Talk to us';
-    const seg = on => on ? ['#16130F','#F6F2EA'] : ['transparent','#16130F'];
-    const [mBg, mFg] = seg(!yearly), [yBg, yFg] = seg(yearly);
-
-    // Estimate your month: every plan at this volume, the chosen one line by line.
-    const best = cheapestPlan(s.checks, s.stations, interval);
-    const sel = (s.estPlan && findPlan(s.estPlan)) || best;
-    const est = estimate(sel, s.checks, interval), bestEst = estimate(best, s.checks, interval);
-    const used = Math.min(s.checks, sel.checksIncluded);
-    const lines = [
-      { n: `${sel.name} plan`, calc: yearly ? `${money(sel.price.year)} a year ÷ 12` : sel.annualCommitment ? 'annual commitment, by contract' : 'billed monthly', cost: money(est.base) },
-      { n: 'Included checks', calc: `${count(used)} of ${count(sel.checksIncluded)} used`, cost: money(0) },
-      ...est.lines.map(l => ({ n: `${l.label} checks over`, calc: `${count(l.checks)} × ${usd(l.rate, 2)}`, cost: usd(l.cost, 2) }))
-    ];
-    let recMsg;
-    if (!fitsStations(sel, s.stations)) recMsg = sel.stations === 0 ? `${sel.name} has no station app. ${best.name} covers ${s.stations} station${s.stations > 1 ? 's' : ''} for ${money(bestEst.total)}/mo.` : `${sel.name} has up to ${sel.stations} stations. ${best.name} covers ${s.stations} for ${money(bestEst.total)}/mo.`;
-    else if (sel !== best) recMsg = `${best.name} covers this volume for ${money(est.total - bestEst.total)}/mo less.`;
-    else if (est.overageChecks) recMsg = `${sel.name} costs least at this volume. Overage is billed in bands down to ${usd(PER_CHECK_FLOOR, 2)} a check, capped by a limit you set.`;
-    else recMsg = `${sel.name} costs least at this volume, with ${count(sel.checksIncluded - s.checks)} included checks to spare.`;
-    const yearSave = sel.price.month * 12 - sel.price.year;
-
+    // Pricing. The site takes no payment and has no sign-up form: every plan button is a link to the
+    // hub's sign-up with the plan's code (Enterprise goes to the sales contact).
+    const planAction = p => p.talkToSales ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
     const pr = {
-      mBg, mFg, yBg, yFg,
-      monthLabel: pricing.intervals[0].label, yearLabel: pricing.intervals[1].label,
-      monthly: () => this.setState({ annual:false }), yearly: () => this.setState({ annual:true }),
-      tiers: pricing.plans.map(p => { const c = planCard(p, interval), hi = !!p.highlight; return {
+      intro: `Start free. Every plan includes device checks; past them, each check is ${usd(OVERAGE_PER_CHECK, 2)}, charged to your card at the end of the month.`,
+      tiers: pricing.plans.map(p => { const c = planCard(p), hi = !!p.highlight; return {
         ...c, top: hi ? '#EB5E12' : 'transparent', bg: hi ? '#FFFFFF' : 'transparent',
-        btnBg: hi ? '#EB5E12' : 'transparent', btnBd: hi ? '#EB5E12' : '#16130F', cta: planCta(p), act: planAction(p) }; }),
-      paymentLine: pricing.paymentLine, footnote: pricing.footnote, faq: pricing.faq,
+        btnBg: hi ? '#EB5E12' : 'transparent', btnBd: hi ? '#EB5E12' : '#16130F', act: planAction(p) }; }),
       planNames: pricing.plans.map(p => p.name),
-      compare: compareRows().map(([l,a,b,c]) => ({l,a,b,c})),
-      checks: s.checks, checksStr: count(s.checks), stations: s.stations,
-      setChecks: e => this.setState({ checks: +e.target.value }),
-      stDown: () => this.setState(st => ({ stations: Math.max(0, st.stations - 1) })), stUp: () => this.setState(st => ({ stations: Math.min(40, st.stations + 1) })),
-      plans: pricing.plans.map(p => { const on = p === sel, x = estimate(p, s.checks, interval), fits = fitsStations(p, s.stations); return {
-        name: p.name, tag: p === best ? 'Lowest cost' : !fits ? 'Too few stations' : '',
-        tagFg: p === best ? '#1E7A4A' : '#B3261E',
-        desc: `${count(p.checksIncluded)} checks included, then ${usd(startRate(p), 2)} falling to ${usd(PER_CHECK_FLOOR, 2)} · ${p.stations == null ? 'unlimited stations' : p.stations === 0 ? 'no station app' : `up to ${p.stations} stations`}`,
-        rate: `${money(x.total)} / mo`,
-        cbBg: on ? '#16130F' : '#FFFFFF', mark: on ? '✓' : '', toggle: () => this.setState({ estPlan: p.code }) }; }),
-      lines, total: money(est.total), rec: recMsg,
-      perCheck: `${usd(est.perCheck, 2)} per check, all in`,
-      yearNote: yearly ? `Annual billing saves ${money(yearSave)} a year on ${sel.name}.` : `Billed annually, ${sel.name} would save ${money(yearSave)} a year.`,
-      estCta: planCta(sel), estAct: planAction(sel)
+      compare: compareRows().map(([l, ...cells]) => ({ l, cells })),
+      packs: pricing.packs.show ? pricing.packs.line : '',
+      faq: pricing.faq,
+      overage: overageLine
     };
 
     const vols = ['Under 100','100–500','500–2,500','2,500–10,000','10,000+'];
@@ -530,99 +489,12 @@ export default class SiteLogic extends DCLogic {
     };
     const rec = this.record.map(([t,e,src,u,l]) => ({ t, e, s:src, u, l }));
 
-    const a = s.a, ae = s.aErr;
-    const setA = k => e => this.setState(st => ({ a: { ...st.a, [k]: e.target.value }, aErr: { ...st.aErr, [k]: '' } }));
-    const chosen = findPlan(s.plan) || GROWTH;
-    const sh = s.sh, she = s.shErr;
-    const setSh = k => e => this.setState(st => ({ sh: { ...st.sh, [k]: e.target.value }, shErr: { ...st.shErr, [k]: '' } }));
-    // Create account: no password and no payment here. The sign-up goes to
-    // the InPhox platform (or phone-intake, while the production build still
-    // points there; see config.js), which emails a confirmation link; once
-    // confirmed, InPhox approves the shop by hand and builds it with the
-    // details asked here (the shop's address, phone, email, website and
-    // logo), so the owner never sees a setup screen in the app.
-    const createAccount = () => {
-      if (s.sSending) return;
-      if (!signupAction) { this.setState({ step:4 }); return; }
-      this.setState({ sSending:true, sErr:'' });
-      const body = new FormData();
-      [['owner_name', a.name], ['company_name', a.company], ['email', a.email], ['plan', chosen.code], ['interval', interval],
-       ['street', sh.street], ['street2', sh.street2], ['city', sh.city], ['state', sh.state], ['zip', sh.zip],
-       ['country', sh.country], ['phone', sh.phone], ['business_email', sh.bemail], ['shop_website', sh.site]]
-        .forEach(([k, val]) => body.append(k, String(val || '').trim()));
-      if (s.logo) body.append('logo', s.logo, s.logo.name);
-      fetch(signupAction, { method:'POST', headers:{ Accept:'application/json' }, body })
-        .then(async res => {
-          if (res.ok) { this.setState({ sSending:false, step:4 }); return; }
-          let data = {}; try { data = await res.json(); } catch (e) { /* not JSON */ }
-          if (res.status === 400 && data.field) {
-            const map = { owner_name:'name', company_name:'company', email:'email' };
-            const f = map[data.field];
-            if (f) { this.setState({ sSending:false, step:1, aErr: { [f]: data.error || 'Check this field.' } }); return; }
-            const shopMap = { street:'street', street2:'street2', city:'city', state:'state', zip:'zip', country:'country',
-                              phone:'phone', business_email:'bemail', shop_website:'site' };
-            if (shopMap[data.field]) { this.setState({ sSending:false, step:2, shErr: { [shopMap[data.field]]: data.error || 'Check this field.' } }); return; }
-            if (data.field === 'logo') { this.setState({ sSending:false, step:2, logoErr: data.error || 'Choose another picture.' }); return; }
-          }
-          if (res.status === 409) { this.setState({ sSending:false, sErr: 'Enterprise is billed annually. Switch to Annual on Pricing, or talk to us about monthly terms.' }); return; }
-          throw new Error('Sign-up not accepted: ' + res.status);
-        })
-        .catch(() => this.setState({ sSending:false, sErr:"That didn't go through. Please try again in a moment." }));
-    };
+    // Create account: sign-up lives at the hub. This page lists the plans and sends each to the hub.
     const st = {
       loginUrl: SIGNIN_HREF,
-      showStep1: s.step === 1, showShop: s.step === 2, showStep2: s.step === 3, showDone: s.step === 4,
-      headline: s.step === 4 ? 'Check your email.' : 'Set up InPhox for your shop.',
-      sub: 'Create an account, tell us about your shop and choose a plan. Nothing is charged here.',
-      steps: [['01','Account'],['02','Your shop'],['03','Plan'],['04','Confirm your email']].map(([n,t],i) => { const cur = s.step === i + 1, dn = s.step > i + 1; return { n, t, fg: cur || dn ? '#F6F2EA' : '#8E857A', s: dn ? 'DONE' : cur ? 'NOW' : '', sc: dn ? '#7FC79F' : '#EB5E12' }; }),
-      a, setA: { name: setA('name'), company: setA('company'), email: setA('email') },
-      e: { name: ae.name || '', company: ae.company || '', email: ae.email || '' },
-      bd: { name: ae.name ? '#B3261E' : '#D9D0C2', company: ae.company ? '#B3261E' : '#D9D0C2', email: ae.email ? '#B3261E' : '#D9D0C2' },
-      next1: e => { e.preventDefault(); const er = {};
-        const pn = textProblem(a.name, 'Your name', true, 'Enter your name.'), pc = textProblem(a.company, 'The shop name', true, 'Enter your company.');
-        if (pn) er.name = pn;
-        if (pc) er.company = pc;
-        if (!isEmail(a.email)) er.email = 'Enter a valid work email.';
-        this.setState(Object.keys(er).length ? { aErr: er } : { aErr:{}, step:2 }); },
-      sh, setSh: Object.fromEntries(Object.keys(sh).map(k => [k, setSh(k)])),
-      she: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] || ''])),
-      shBd: Object.fromEntries(Object.keys(sh).map(k => [k, she[k] ? '#B3261E' : '#D9D0C2'])),
-      bemailHint: a.email ? `Leave empty to use ${a.email.trim()}` : '',
-      logoName: s.logoRaw ? s.logoRaw.name : '', logoErr: s.logoErr,
-      logoRaw: s.logoRaw, logoPreview: s.logoPreview, logoEditing: s.logoEditing && !!s.logoRaw, logoReady: !!s.logo,
-      // A picked picture opens the editor; "Use this logo" hands back the
-      // edited PNG, which is what is sent (2026-10-05).
-      applyLogo: (file, preview) => this.setState({ logo:file, logoPreview:preview, logoEditing:false, logoErr:'' }),
-      editLogo: () => this.setState({ logoEditing:true }),
-      pickLogo: e => { const f = e.target.files && e.target.files[0]; e.target.value = '';
-        if (!f) return;
-        if (!/^image\/(png|jpeg|webp|gif)$/.test(f.type)) { this.setState({ logo:null, logoRaw:null, logoErr:'Choose a PNG, JPG, WEBP or GIF picture.' }); return; }
-        if (f.size > 10 * 1024 * 1024) { this.setState({ logo:null, logoErr:'The picture can be at most 10 MB.' }); return; }
-        this.setState({ logo:null, logoRaw:f, logoPreview:'', logoEditing:true, logoErr:'' }); },
-      clearLogo: () => this.setState({ logo:null, logoRaw:null, logoPreview:'', logoEditing:false, logoErr:'' }),
-      backShop: () => this.setState({ step:1 }),
-      nextShop: e => { e.preventDefault(); const er = {};
-        for (const [k, label, req, empty] of [['street', 'Street address', true], ['street2', 'Suite or unit', false, 'Enter the suite or unit, or leave it empty.'],
-          ['city', 'City', true], ['state', 'State', true], ['zip', 'ZIP code', true, 'Enter the ZIP code.']]) { const p = textProblem(sh[k], label, req, empty); if (p) er[k] = p; }
-        if ((sh.phone.match(/[0-9]/g) || []).length < 7) er.phone = 'Enter the shop phone number.';
-        if (sh.bemail.trim() && !isEmail(sh.bemail)) er.bemail = 'Enter a valid email, or leave it empty.';
-        if (sh.site.trim() && !isWebsite(sh.site)) er.site = 'Enter a valid website, or leave it empty.';
-        this.setState(Object.keys(er).length ? { shErr: er } : { shErr:{}, step:3 }); },
-      plans: pricing.plans.map(p => { const c = planCard(p, interval), on = p === chosen; return { name: p.name, d: `${p.who} · ${c.checks}`, price: c.priceStr + '/mo', bg: on ? '#FBE7CC' : 'transparent', dot: on ? '#16130F' : 'transparent', pick: () => this.setState({ plan:p.code, sErr:'' }) }; }),
-      billing: `Nothing is charged now. You'll add payment (card or monthly USDC invoice) as the last step of setting up your shop, ${yearly ? 'billed annually' : 'billed monthly'}. `,
-      trialBg: s.trial ? '#16130F' : '#FFFFFF', trialMark: s.trial ? '✓' : '', toggleTrial: () => this.setState({ trial: !s.trial }),
-      back: () => this.setState({ step:2, sErr:'' }),
-      // The plan is the last choice of sign-up; no payment happens on this site.
-      cta2: !sellsOnline(chosen, interval) ? 'Talk to us' : s.sSending ? 'Creating your account…' : `Create account on ${chosen.name}`,
-      act2: !sellsOnline(chosen, interval) ? { href:'#/contact' } : { onClick: createAccount },
-      sErr: s.sErr,
-      doneTag: `${chosen.name} plan chosen · pay when you finish setup`,
-      doneTitle: `We sent a confirmation link to ${a.email || 'your email'}.`,
-      doneSteps: [
-        'Open the link to confirm your email (it works for 24 hours)',
-        `We look over ${a.company || 'your shop'} and build it, usually within a day, and email you when it's ready`,
-        'Set your password from that email and sign in: your shop is already set up'
-      ]
+      headline: 'Create your InPhox account.',
+      sub: 'Pick a plan to continue to sign-up. Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
+      plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: planAction(p) }; })
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
     // At most 5 tries a minute, so the box cannot be used to run through names.
@@ -642,7 +514,7 @@ export default class SiteLogic extends DCLogic {
         goShop(r.shop); },
       continueLast: () => goShop(s.siLast),
       forget: () => { saveLastShop(''); this.setState({ siLast: '' }); },
-      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.goto('start', { step:1, trial:true, menu:false }); }
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); }
     };
     return { ind, feat, pr, ct, plat, rec, st, si };
   }

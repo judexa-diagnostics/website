@@ -200,7 +200,7 @@ export default function Home({ v }) {
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.8125rem", color: "#6B6257" }}>02</span>
             <span>
               <span style={{ display: "block", fontSize: "1.0625rem", fontWeight: "600", fontStretch: "100%" }}>Pick a plan</span>
-              <span style={{ fontSize: "0.875rem", color: "#3A342D" }}>Starter, Growth or Enterprise. Move up a plan when you need more checks.</span>
+              <span style={{ fontSize: "0.875rem", color: "#3A342D" }}>Free, Basics, Growth, Max or Enterprise. Move up a plan when you need more checks.</span>
             </span>
             <a href="#/pricing" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#C2470A" }}>Pricing →</a>
           </li>
