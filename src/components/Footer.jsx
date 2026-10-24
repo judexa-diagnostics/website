@@ -35,11 +35,11 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>{"Security & compliance"}</a>
           <a className="fx-ul fx-ul-tight" href="#/careers" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Careers</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Contact</a>
-          <a className="fx-ul fx-ul-tight" href="#/home" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
-          <a className="fx-ul fx-ul-tight" href="#/home" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
+          <a className="fx-ul fx-ul-tight" href="#/privacy" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
+          <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
         </div>
       </div>
-      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid #D9D0C2", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257" }}><span>© 2026 InPhox, Inc.</span><span>{"Language: "}<span>{langName}</span></span></div>
+      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid #D9D0C2", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257" }}><span>© 2026 InPhox LLC</span><span>{"Language: "}<span>{langName}</span></span></div>
     </footer>
   );
 }

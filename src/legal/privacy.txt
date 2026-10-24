@@ -1,0 +1,40 @@
+Version: 2026-10-24
+Title: Privacy Policy
+
+This Privacy Policy explains what personal information InPhox LLC ("InPhox", "we", "us") collects when you use InPhox (the "Service"), how we use it, who we share it with, how long we keep it, and your choices. It is part of our Terms of Service.
+
+Our short version. We do not sell your personal information. We do not share it for advertising. We do not let outside companies use it for their own purposes. We collect what we need to run, secure and improve the Service, and we keep it only as long as we need it.
+
+What you give us. Your name, public handle, email address, mobile number, shipping address, profile picture link, and how you sign in (passkeys, two-step settings, linked sign-ins). If you run a shop: your business name, staff you invite, and the records you put in (inventory, customers, sales, purchases, invoices, repairs). If you contact support: what you tell us.
+
+Device checks. When you check a device we process the identifiers you enter or scan (such as IMEI or serial number) and the results that come back, and we keep the check history for your account. For Activation Lock we only record whether a lock is reported as on. We never collect, store or use anyone's Apple account details.
+
+Payments. Card payments are handled by our payment processor. We never see or store your full card number or security code. We keep the card brand, last four digits, expiry month and year, your billing history, and whether a payment succeeded, failed or was disputed.
+
+What we collect automatically. The devices and browsers you sign in on, your sessions, a security log of sign-ins and account changes, and basic technical data (such as internet address, device type and app version) needed to keep the Service working and safe. We use cookies and similar storage only to sign you in, keep you signed in, remember settings and protect against fraud. We do not use advertising or cross-site tracking cookies.
+
+How we use it. To provide the Service and the features you ask for; to verify your email, phone and address; to bill you; to prevent fraud, abuse, scraping and security incidents; to provide support; to send you service messages (receipts, security alerts, changes to these policies); to measure and improve the Service; to enforce our Terms; and to meet legal duties.
+
+What sellers see. A seller you deal with sees your public handle and that you are verified. They see your name, phone and address only for an order with them.
+
+Sellers' customer data. When a shop uses InPhox to record its own customers, the shop decides what it collects and is responsible for it; we process that data on the shop's behalf to provide the Service. Customers of a shop should contact the shop about their records.
+
+Who we share it with. Service providers that run parts of the Service for us (cloud hosting, payment processing, email and text delivery, address checking, device data sources), only for that work and under contracts that bind them to protect it; sellers, as described above; authorities or others when the law requires it or when we believe in good faith it is needed to protect the rights, property or safety of InPhox, our users or the public, including to investigate fraud or stolen goods; and a buyer or successor if InPhox is merged, sold or reorganised, under this policy. Aggregated or de-identified information that does not identify you may be used and shared for any lawful purpose.
+
+Staff access. InPhox support staff can see your account to help you, to fix a problem or to stop fraud. Every look is logged and kept.
+
+How long we keep it. Sign-in links and one-time codes: removed 7 days after they can no longer be used. Records of finished email or phone changes: 30 days. Ended sessions: about 13 months (400 days). The security log and the record of what you agreed to: kept for the life of your account and as long afterwards as we need them for security, disputes and legal duties. Earlier versions of your phone and address are kept while orders that used them need them. Billing, tax and transaction records: as long as the law requires, usually up to 7 years. When you delete your account we delete or de-identify the rest of your personal information within 30 days, except what we must keep for the reasons above. Backups are overwritten on a rolling schedule. A shop keeps its own records of sales with you, as the law requires.
+
+Security. We use encryption in transit, hashed credentials, access logging, least-privilege access and regular security reviews. No system is perfectly secure, and we cannot guarantee that information will never be accessed, lost or changed without permission. If a breach affects your personal information, we will tell you as the law requires.
+
+Your choices and rights. You can see and change your details in My InPhox, download everything we keep about you from Data export, and delete your account. Depending on where you live (for example California), you may have the right to know what we collect and why, to get a copy, to correct it, to delete it, and to opt out of its sale or sharing for advertising (we do neither). To use a right, email support@inphox.net from your account email. We will verify your request and answer within the time the law allows. We will not treat you differently for using your rights. You may use an authorised agent, who must show us your written permission.
+
+Children. The Service is not for anyone under 16 and we do not knowingly collect their information. If you think a child gave us information, tell us and we will delete it.
+
+Where data is kept. We store and process information in the United States. If you use the Service from elsewhere, you agree to your information being transferred to and processed in the United States.
+
+When you agree. We record the version you agreed to, the time, and a scrambled (hashed) form of your internet address. We do not keep the address itself for this.
+
+Changes. We may change this policy. When we do, we change the Version line above and ask you to agree again the next time you sign in.
+
+Contact: InPhox LLC, support@inphox.net
