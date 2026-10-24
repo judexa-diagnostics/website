@@ -3,6 +3,7 @@
 // through Vite's SSR loader, once without the billing env vars and once with them.
 
 import { test, describe, before, after } from 'node:test';
+import { signupOpen } from '../src/config.js';
 import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -213,7 +214,9 @@ describe('rendered', () => {
     const html = r.render({ page: 'pricing' });
     const cards = html.match(/<article.*?<\/article>/gs);
     const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn"/)).map(m => m[1] || m[2]);
-    assert.deepEqual(hrefs, ['https://home.inphox.net/signup?plan=free', 'https://home.inphox.net/signup?plan=basics', 'https://home.inphox.net/signup?plan=growth', 'https://home.inphox.net/signup?plan=max', '#/contact']);
+    // Until the hub's sign-up is public (src/config.js signupOpen), every plan button goes to Contact.
+    const hub = ['free', 'basics', 'growth', 'max'].map(c => (signupOpen ? `https://home.inphox.net/signup?plan=${c}` : '#/contact'));
+    assert.deepEqual(hrefs, [...hub, '#/contact']);
   });
 
   test('pricing: the packs placeholder line shows, with no pack price table', () => {
@@ -241,6 +244,10 @@ describe('rendered', () => {
   test('Start: lists the plans with hub links, no sign-up form on this site', () => {
     const html = text(r.render({ page: 'start' }));
     assert.ok(!html.includes('<form') && !html.includes('type="password"') && !html.includes('type="email"'));
+    if (!signupOpen) {   // closed: no hub sign-up link anywhere, plan buttons go to Contact
+      assert.ok(!planLinks(html).some(h => h.includes('/signup')) && planLinks(html).includes('#/contact'), 'closed: Contact');
+      return;
+    }
     for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(planLinks(html).includes(`https://home.inphox.net/signup?plan=${code}`), code);
   });
 

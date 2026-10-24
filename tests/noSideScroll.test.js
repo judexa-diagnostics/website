@@ -25,3 +25,11 @@ test('every page has a plain address that redirects to its #/ page', () => {
     assert.ok(v.redirects.some((r) => r.source === `/${p}` && r.destination === `/#/${p}`), `/${p} has no redirect`);
   }
 });
+
+// Plan buttons go to Contact until the hub's sign-up is public (the hub answers 401 behind its password today).
+test('plan buttons go to Contact while sign-up is closed (the default)', async () => {
+  const { signupOpen } = await import('../src/config.js');
+  assert.equal(signupOpen, false, 'with no setting, sign-up must read as closed');
+  const logic = readFileSync(join(root, 'src/SiteLogic.js'), 'utf8');
+  assert.match(logic, /const planAction = p => p\.talkToSales \|\| !signupOpen \? \{ href: SALES_HREF \}/);
+});

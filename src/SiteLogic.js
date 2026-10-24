@@ -2,7 +2,7 @@ import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF, OVERAGE_PER_CHECK, money as usd } from './pricing.js';
 import { openSignup } from './hub.js';
-import { SIGNIN_HREF, shopDomain, leadAction, hubUrl } from './config.js';
+import { SIGNIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 import { textProblem, isEmail } from './formCheck.js';
 
@@ -434,7 +434,7 @@ export default class SiteLogic extends DCLogic {
 
     // Pricing. The site takes no payment and has no sign-up form: every plan button is a link to the
     // hub's sign-up with the plan's code (Enterprise goes to the sales contact).
-    const planAction = p => p.talkToSales ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
+    const planAction = p => p.talkToSales || !signupOpen ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
     const pr = {
       intro: `Start free. Every plan includes device checks; past them, each check is ${usd(OVERAGE_PER_CHECK, 2)}, charged to your card at the end of the month.`,
       tiers: pricing.plans.map(p => { const c = planCard(p), hi = !!p.highlight; return {
