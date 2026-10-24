@@ -30,9 +30,12 @@ export const shopDomain = (read('VITE_SHOP_DOMAIN') || DEFAULT_SHOP_DOMAIN).repl
 /** Every Sign in link and button opens the site's own "Sign in to your shop" page. */
 export const SIGNIN_HREF = '#/signin';
 
-/** Where the Start page sends a new sign-up (no payment): the platform emails a confirmation link,
- *  then the shop is created and the owner pays inside the app. Null: the Start page stays client-side. */
-export const signupAction = platformUrl ? `${platformUrl}/inphox/signup` : viaPhoneIntake ? `${billingBaseUrl}/billing/signup` : null;
-
 /** Endpoint the Contact form posts to, or null (platform turned off): the form stays client-side only. */
 export const leadAction = platformUrl ? `${platformUrl}/inphox/lead` : viaPhoneIntake ? `${billingBaseUrl}/billing/lead` : null;
+
+/** Sign-up on the hub is open to the public. Until it is (VITE_SIGNUP_OPEN=1, or flip the default), every plan button goes
+ *  to Contact: the hub is still behind a password, and a browser password box is a dead end for a visitor. */
+export const signupOpen = ['1', 'on', 'true', 'yes'].includes(read('VITE_SIGNUP_OPEN').toLowerCase());
+
+/** The InPhox hub, where every plan button sends people to sign up (home.inphox.net/signup?plan=<code>). */
+export const hubUrl = (read('VITE_HUB_URL') || 'https://home.inphox.net').replace(/\/+$/, '');

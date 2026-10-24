@@ -1,184 +1,70 @@
-import { LazyMotion, MotionConfig, domMax, m } from 'motion/react';
 import PlanButton from '../components/PlanButton.jsx';
-import { FxScope, Tween, spot } from '../redesign/fx/index.jsx';
-
-const mono = "'JetBrains Mono',monospace";
+import '../plans.css';
 
 export default function Pricing({ v }) {
-  const { pr, ui } = v;
-  const monthOn = pr.mBg === "#16130F";
-  // Sliding billing pill: the button keeps its colours from the logic; only the
-  // dark fill is drawn by a shared layout element so it slides between them.
-  const pill = <m.span layoutId="bill-pill" transition={{ type: "spring", stiffness: 480, damping: 38 }} style={{ position: "absolute", inset: 0, background: "#16130F" }} />;
+  const { pr } = v;
   return (
-    <LazyMotion features={domMax} strict>
-    <MotionConfig reducedMotion="user">
-    <FxScope>
-      <section style={{ padding: "clamp(3rem,6vw,4.5rem) clamp(1rem,3vw,2.5rem) 1.75rem", display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", alignItems: "end" }}>
-        <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(2rem,3.4vw,3.125rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em" }}>Pricing</h1>
-        <div data-fx="" style={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: "1.25rem", flexWrap: "wrap" }}>
-          <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "35rem" }}>
-            Three plans, priced by the device checks you run. Checks past your included amount get cheaper the more you run, down to $0.35 each.
-          </p>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flex: "none" }}>
-            <span style={{ fontFamily: mono, fontSize: "0.6875rem", color: "#6B6257" }}>Billing</span>
-            <div style={{ display: "flex", border: "1px solid #16130F", borderRadius: "2px", overflow: "hidden" }}>
-              <button onClick={pr.monthly} style={{ position: "relative", height: "2.25rem", padding: "0 0.875rem", border: "0", background: "transparent", color: pr.mFg, fontSize: "0.8125rem", fontWeight: "600", cursor: "pointer", transition: "color 250ms ease" }}>{monthOn ? pill : null}<span style={{ position: "relative" }}>{pr.monthLabel}</span></button>
-              <button onClick={pr.yearly} style={{ position: "relative", height: "2.25rem", padding: "0 0.875rem", border: "0", borderLeft: "1px solid #16130F", background: "transparent", color: pr.yFg, fontSize: "0.8125rem", fontWeight: "600", cursor: "pointer", transition: "color 250ms ease" }}>{!monthOn && pr.yBg === "#16130F" ? pill : null}<span style={{ position: "relative" }}>{pr.yearLabel}</span></button>
-            </div>
-          </div>
-        </div>
+    <div className="pl">
+      <section className="pl-wrap pl-head">
+        <h1>Plans</h1>
+        <p>{pr.intro}</p>
       </section>
 
-      <section style={{ padding: "0 clamp(1rem,3vw,2.5rem)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,17.5rem),1fr))", borderTop: "2px solid #16130F", borderBottom: "1px solid #D9D0C2" }}>
-          {pr.tiers.map((t, j) => (
-            <div key={j} data-fx="" data-fx-gap="110" className="fx-spot" onPointerMove={spot} style={{ padding: "1.5rem 1.5rem 1.75rem", borderRight: "1px solid #D9D0C2", background: t.bg, display: "flex", flexDirection: "column", gap: "1rem", boxShadow: `inset 0 0.1875rem 0 ${t.top}` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "0.5rem" }}>
-                <span style={{ fontSize: "1.375rem", fontWeight: "650", fontStretch: "104%" }}><span>{t.name}</span></span>
-                <span style={{ fontFamily: mono, fontSize: "0.65625rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#C2470A" }}><span>{t.tag}</span></span>
+      <section className="pl-wrap" aria-label="Plans">
+        <div className="pl-grid">
+          {pr.tiers.map(t => (
+            <article key={t.code} className="pl-card" aria-labelledby={'pl-' + t.code} style={{ background: t.bg, boxShadow: `inset 0 0.1875rem 0 ${t.top}` }}>
+              <div className="pl-top">
+                <h2 id={'pl-' + t.code} className="pl-name" style={{ margin: 0 }}>{t.name}</h2>
+                {t.tag ? <span className="pl-tag">{t.tag}</span> : null}
               </div>
-              <span style={{ fontSize: "0.875rem", color: "#3A342D", minHeight: "1.25rem" }}><span>{t.who}</span></span>
-              <div style={{ display: "flex", alignItems: "baseline", gap: "0.375rem" }}>
-                <span style={{ fontFamily: mono, fontSize: "2.25rem", fontWeight: "600", letterSpacing: "-.02em" }}><Tween value={t.priceStr} fromZero /></span>
-                <span style={{ fontSize: "0.875rem", color: "#6B6257" }}>/ month</span>
-              </div>
-              <span style={{ fontFamily: mono, fontSize: "0.6875rem", color: "#6B6257", marginTop: "-0.625rem" }}><span>{t.billed}</span></span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                <span style={{ fontSize: "0.9375rem", fontWeight: "600" }}><span>{t.checks}</span></span>
-                <span style={{ fontSize: "0.8125rem", lineHeight: "1.45", color: "#3A342D" }}><span>{t.overage}</span></span>
-              </div>
-              <PlanButton a={t.act} className="hv-10" style={{ height: "2.75rem", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer", background: t.btnBg, color: "#16130F", border: `1px solid ${t.btnBd}` }}><span>{t.cta}</span></PlanButton>
-              <div style={{ display: "flex", flexDirection: "column", borderTop: "1px solid #D9D0C2" }}>
-                {t.items.map((i, k) => (
-                  <span key={k} style={{ padding: "0.5625rem 0", borderBottom: "1px solid #EDE7DC", fontSize: "0.875rem", display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontWeight: i.strong ? "600" : "400" }}>{i.x}</span>
-                    {i.sub ? <span style={{ fontSize: "0.78125rem", lineHeight: "1.45", color: "#6B6257" }}>{i.sub}</span> : null}
-                  </span>
-                ))}
-              </div>
-            </div>
+              <span className="pl-who">{t.who}</span>
+              <div className="pl-price"><b>{t.priceStr}</b>{t.per ? <span>{t.per}</span> : null}</div>
+              <p className="pl-checks">{t.checks}</p>
+              <p className="pl-over">{t.overage}</p>
+              {t.cardNote ? <p className="pl-note">{t.cardNote}</p> : null}
+              <PlanButton a={t.act} className="pl-btn" style={{ background: t.btnBg, border: `1px solid ${t.btnBd}` }}><span>{t.cta}</span></PlanButton>
+              <ul className="pl-limits">{t.limits.map(x => <li key={x}>{x}</li>)}</ul>
+              <ul className="pl-list">
+                {t.items.map(i => <li key={i.x} className={i.strong ? 'strong' : ''}>{i.x}</li>)}
+              </ul>
+            </article>
           ))}
         </div>
-        <div data-fx="fade" style={{ display: "flex", flexDirection: "column", gap: "0.375rem", paddingTop: "1rem", fontSize: "0.8125rem", lineHeight: "1.55", color: "#3A342D", maxWidth: "47.5rem" }}>
-          <span><span>{pr.paymentLine}</span></span>
-          <span><span>{pr.footnote}</span></span>
-        </div>
+        {pr.packs ? <p className="pl-packs">{pr.packs}</p> : null}
       </section>
 
-      <section style={{ padding: "clamp(3rem,6vw,4.5rem) clamp(1rem,3vw,2.5rem) 0" }}>
-        <div style={{ fontFamily: mono, fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", marginBottom: "0.75rem" }}>Compare plans</div>
-        <div style={{ overflowX: "auto" }}>
-          <div style={{ minWidth: "40rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr 1fr", gap: "0.75rem", height: "2.5rem", alignItems: "center", borderBottom: "1px solid #16130F", fontSize: "0.875rem", fontWeight: "600" }}>
-              <span />
-              {pr.planNames.map((n, j) => <span key={j}>{n}</span>)}
-            </div>
-            {pr.compare.map((c, j) => (
-              <div key={j} data-fx="" data-fx-gap="40" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr 1fr", gap: "0.75rem", padding: "0.625rem 0", borderBottom: "1px solid #EDE7DC", fontSize: "0.875rem", alignItems: "baseline" }}>
-                <span style={{ color: "#3A342D" }}><span>{c.l}</span></span>
-                <span style={{ fontFamily: mono, fontSize: "0.78125rem" }}><span>{c.a}</span></span>
-                <span style={{ fontFamily: mono, fontSize: "0.78125rem" }}><span>{c.b}</span></span>
-                <span style={{ fontFamily: mono, fontSize: "0.78125rem" }}><span>{c.c}</span></span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section style={{ padding: "clamp(3rem,6vw,4.5rem) clamp(1rem,3vw,2.5rem) 0" }}>
-        <div style={{ fontFamily: mono, fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", marginBottom: "0.75rem" }}>Questions</div>
-        <div style={{ borderTop: "1px solid #16130F" }}>
-          {pr.faq.map((f, j) => (
-            <div key={j} data-fx="" style={{ display: "grid", gridTemplateColumns: ui.c48, gap: "0.5rem clamp(1rem,4vw,3rem)", padding: "1rem 0", borderBottom: "1px solid #D9D0C2" }}>
-              <span style={{ fontSize: "1rem", fontWeight: "600", lineHeight: "1.4" }}><span>{f.q}</span></span>
-              <p style={{ margin: "0", fontSize: "0.9375rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "45rem" }}><span>{f.a}</span></p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section style={{ padding: "clamp(4rem,8vw,6.5rem) clamp(1rem,3vw,2.5rem) clamp(3rem,6vw,4.5rem)" }}>
-        <div data-fx="" style={{ display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", paddingBottom: "1.25rem", borderBottom: "2px solid #16130F", alignItems: "end" }}>
-          <div style={{ fontFamily: mono, fontSize: "0.6875rem", letterSpacing: ".02em", color: "#C2470A" }}>Estimate your month</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-            <h2 style={{ margin: "0", fontSize: "clamp(1.625rem,2.5vw,2.25rem)", lineHeight: "1.08", fontWeight: "600", fontStretch: "102%", textWrap: "balance" }}>See what a month costs at your volume.</h2>
-            <p style={{ margin: "0", fontSize: "0.9375rem", lineHeight: "1.6", color: "#3A342D", maxWidth: "37.5rem" }}>
-              Set your device checks and stations. Every plan is priced at your volume, and the one you pick is broken down line by line, band by band.
-            </p>
-          </div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: ui.c75, gap: "clamp(1.5rem,4vw,3rem)", paddingTop: "1.5rem", alignItems: "start" }}>
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(15rem,1fr))", gap: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #D9D0C2" }}>
-              <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <span style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem", fontWeight: "600" }}>
-                  <span>Device checks per month</span>
-                  <span style={{ fontFamily: mono }}><Tween value={pr.checksStr} duration={220} align="end" /></span>
-                </span>
-                <input type="range" min="50" max="30000" step="50" value={pr.checks} onChange={pr.setChecks} style={{ width: "100%", accentColor: "#EB5E12" }} />
-                <span style={{ display: "flex", justifyContent: "space-between", fontFamily: mono, fontSize: "0.6875rem", color: "#6B6257" }}><span>50</span><span>30,000</span></span>
-              </label>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <span style={{ fontSize: "0.875rem", fontWeight: "600" }}>Double Puff stations</span>
-                <div style={{ display: "flex", alignItems: "center", border: "1px solid #16130F", borderRadius: "2px", width: "max-content" }}>
-                  <button className="hv-0 fx-press" onClick={pr.stDown} aria-label="Fewer stations" style={{ width: "2.75rem", height: "2.5rem", border: "0", background: "transparent", fontSize: "1.125rem", cursor: "pointer", color: "#16130F" }}>−</button>
-                  <span style={{ width: "3.5rem", textAlign: "center", fontFamily: mono, fontSize: "0.9375rem", borderLeft: "1px solid #D9D0C2", borderRight: "1px solid #D9D0C2", lineHeight: "2.5rem", overflow: "hidden" }}><span key={pr.stations} className="fx-pop">{pr.stations}</span></span>
-                  <button className="hv-0 fx-press" onClick={pr.stUp} aria-label="More stations" style={{ width: "2.75rem", height: "2.5rem", border: "0", background: "transparent", fontSize: "1.125rem", cursor: "pointer", color: "#16130F" }}>+</button>
-                </div>
-              </div>
-            </div>
-            {pr.plans.map((p, j) => (
-              <button key={j} className="hv-1" onClick={p.toggle} style={{ width: "100%", display: "grid", gridTemplateColumns: "1.5rem minmax(0,1fr) auto", gap: "0.875rem", alignItems: "start", padding: "0.875rem 0", border: "0", borderBottom: "1px solid #EDE7DC", background: "transparent", textAlign: "left", cursor: "pointer", color: "#16130F" }}>
-                <span style={{ width: "1.125rem", height: "1.125rem", marginTop: "2px", border: "1px solid #16130F", borderRadius: "2px", background: p.cbBg, color: "#FFFFFF", fontSize: "0.6875rem", display: "flex", alignItems: "center", justifyContent: "center", transition: "background-color 220ms ease" }}><span key={p.mark} className={p.mark ? "fx-pop" : undefined}>{p.mark}</span></span>
-                <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
-                    <span style={{ fontSize: "0.9375rem", fontWeight: "600" }}><span>{p.name}</span></span>
-                    {p.tag ? <span style={{ fontFamily: mono, fontSize: "0.65625rem", letterSpacing: ".06em", textTransform: "uppercase", color: p.tagFg }}>{p.tag}</span> : null}
-                  </span>
-                  <span style={{ fontSize: "0.8125rem", color: "#3A342D" }}><span>{p.desc}</span></span>
-                </span>
-                <span style={{ fontFamily: mono, fontSize: "0.78125rem", textAlign: "right", whiteSpace: "nowrap" }}><Tween value={p.rate} duration={300} align="end" /></span>
-              </button>
-            ))}
-          </div>
-          <div style={{ position: "sticky", top: "5.5rem", background: "#FFFFFF", border: "1px solid #16130F", borderRadius: "0.25rem", boxShadow: "0 1rem 2rem -1.5rem rgba(22,19,15,.3)" }}>
-            <div style={{ padding: "0.875rem 1.125rem", borderBottom: "1px solid #D9D0C2", fontFamily: mono, fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257" }}>Your estimate</div>
-            <div style={{ padding: "0.375rem 1.125rem 0" }}>
-              {pr.lines.map((l, j) => (
-                <div key={l.n} className="fx-mount" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", padding: "0.5rem 0", borderBottom: "1px solid #EDE7DC", fontSize: "0.84375rem" }}>
-                  <span>
-                    <span>{l.n}</span>
-                    <span style={{ display: "block", fontFamily: mono, fontSize: "0.6875rem", color: "#6B6257" }}><span>{l.calc}</span></span>
-                  </span>
-                  <span style={{ fontFamily: mono, whiteSpace: "nowrap" }}><Tween value={l.cost} duration={380} align="end" /></span>
-                </div>
+      <section className="pl-wrap pl-section">
+        <div className="pl-label">Compare plans</div>
+        <div className="pl-scroll" tabIndex={0} role="region" aria-label="Compare plans, scrolls sideways on a small screen">
+          <table>
+            <thead>
+              <tr><th scope="col"><span className="sr-only" style={{ position: 'absolute', left: '-9999px' }}>Feature</span></th>{pr.planNames.map(n => <th scope="col" key={n}>{n}</th>)}</tr>
+            </thead>
+            <tbody>
+              {pr.compare.map(c => (
+                <tr key={c.l}><th scope="row">{c.l}</th>{c.cells.map((x, j) => <td key={j}>{x}</td>)}</tr>
               ))}
-            </div>
-            <div style={{ padding: "0.875rem 1.125rem 0.25rem", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <span style={{ fontSize: "0.875rem", fontWeight: "600" }}>Per month</span>
-              <span style={{ fontFamily: mono, fontSize: "1.75rem", fontWeight: "600" }}><Tween value={pr.total} duration={480} align="end" /></span>
-            </div>
-            <div style={{ padding: "0 1.125rem 0.75rem", textAlign: "right", fontFamily: mono, fontSize: "0.6875rem", color: "#6B6257" }}><span>{pr.perCheck}</span></div>
-            <div style={{ margin: "0 1.125rem", padding: "0.625rem 0.75rem", background: "#FBE7CC", fontSize: "0.8125rem", lineHeight: "1.45", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-              <span>{pr.rec}</span>
-              <span style={{ color: "#3A342D" }}>{pr.yearNote}</span>
-            </div>
-            <div style={{ padding: "1rem 1.125rem 1.125rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <PlanButton a={pr.estAct} className="hv-2 fx-press" style={{ height: "2.75rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer" }}><span>{pr.estCta}</span></PlanButton>
-              <a className="hv-3" href="#/contact" style={{ height: "2.75rem", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", color: "#16130F", textDecoration: "none" }}>Talk to sales</a>
-              <span style={{ fontSize: "0.75rem", lineHeight: "1.45", color: "#6B6257", textAlign: "center" }}>Nothing is charged here. You pay inside InPhox when you finish setting up your shop.</span>
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section data-fx="" style={{ margin: "0 clamp(1rem,3vw,2.5rem) clamp(3.5rem,7vw,5.5rem)", padding: "1.5rem 0", borderTop: "1px solid #16130F", borderBottom: "1px solid #16130F", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-        <span style={{ fontSize: "clamp(1.125rem,1.6vw,1.375rem)", fontWeight: "600", fontStretch: "100%" }}>Want Enterprise billed monthly, or terms of your own?</span>
-        <a className="hv-8 fx-press" href="#/contact" style={{ height: "2.75rem", padding: "0 1.125rem", display: "inline-flex", alignItems: "center", background: "#16130F", color: "#F6F2EA", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", textDecoration: "none" }}>Get a custom quote</a>
+      <section className="pl-wrap pl-section">
+        <div className="pl-label">Questions</div>
+        <div className="pl-faq">
+          {pr.faq.map(f => (
+            <div key={f.q}><h3>{f.q}</h3><p>{f.a}</p></div>
+          ))}
+        </div>
       </section>
-    </FxScope>
-    </MotionConfig>
-    </LazyMotion>
+
+      <section className="pl-wrap">
+        <div className="pl-sales">
+          <span>Need more than Max, or terms of your own?</span>
+          <a href="#/contact">Talk to sales</a>
+        </div>
+      </section>
+    </div>
   );
 }

@@ -1,0 +1,44 @@
+{
+  "redirects": [
+    {
+      "source": "/industries",
+      "destination": "/#/industries",
+      "permanent": false
+    },
+    {
+      "source": "/features",
+      "destination": "/#/features",
+      "permanent": false
+    },
+    {
+      "source": "/pricing",
+      "destination": "/#/pricing",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "/#/contact",
+      "permanent": false
+    },
+    {
+      "source": "/platform",
+      "destination": "/#/platform",
+      "permanent": false
+    },
+    {
+      "source": "/careers",
+      "destination": "/#/careers",
+      "permanent": false
+    },
+    {
+      "source": "/start",
+      "destination": "/#/start",
+      "permanent": false
+    },
+    {
+      "source": "/signin",
+      "destination": "/#/signin",
+      "permanent": false
+    }
+  ]
+}

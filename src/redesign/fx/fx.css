@@ -44,7 +44,7 @@
 @keyframes fx-shake { 0%,100% { transform: none; } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 
 /* Route change: Layout keys <main> by page, so each page fades in fresh. */
-.fx-page { animation: fx-fade 360ms ease backwards; }
+.fx-page { animation: fx-fade 360ms ease backwards; overflow-x: clip; }
 
 /* Mounted-in pieces: step forms, success cards, menus, error messages. */
 .fx-mount { animation: fx-rise 520ms var(--fx-ease) backwards; }
