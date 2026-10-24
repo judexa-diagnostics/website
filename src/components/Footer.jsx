@@ -39,7 +39,7 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "#16130F", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
         </div>
       </div>
-      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid #D9D0C2", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257" }}><span>© 2026 InPhox, Inc.</span><span>{"Language: "}<span>{langName}</span></span></div>
+      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid #D9D0C2", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257" }}><span>© 2026 InPhox LLC</span><span>{"Language: "}<span>{langName}</span></span></div>
     </footer>
   );
 }
