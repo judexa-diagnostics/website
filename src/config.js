@@ -27,7 +27,7 @@ const viaPhoneIntake = !platformUrl && platformSetting.toLowerCase() !== 'off' &
 /** The domain shops live under: Sign in sends people to https://<shop>.<shopDomain>/web/login. */
 export const shopDomain = (read('VITE_SHOP_DOMAIN') || DEFAULT_SHOP_DOMAIN).replace(/^\.+|\.+$/g, '').toLowerCase();
 
-/** Every Sign in link and button opens the site's own "Sign in to your shop" page. */
+/** The site's own "Sign in to your shop" page (each shop's address, then that shop's sign-in). */
 export const SIGNIN_HREF = '#/signin';
 
 /** Endpoint the Contact form posts to, or null (platform turned off): the form stays client-side only. */
@@ -39,3 +39,7 @@ export const signupOpen = ['1', 'on', 'true', 'yes'].includes(read('VITE_SIGNUP_
 
 /** The InPhox hub, where every plan button sends people to sign up (home.inphox.net/signup?plan=<code>). */
 export const hubUrl = (read('VITE_HUB_URL') || 'https://home.inphox.net').replace(/\/+$/, '');
+
+/** Where every Sign in link goes. Once the hub is public (signupOpen), people sign in at the InPhox hub
+ *  (home.inphox.net/login), which then opens their shop; until then, the site's own "Sign in to your shop" page. */
+export const LOGIN_HREF = signupOpen ? `${hubUrl}/login` : SIGNIN_HREF;

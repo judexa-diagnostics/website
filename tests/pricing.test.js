@@ -270,12 +270,13 @@ describe('rendered', () => {
     } finally { globalThis.location = realLocation; }
   });
 
-  test('every Sign in link opens Sign in to your shop', () => {
+  test('every Sign in link goes to the hub sign-in once public, else to Sign in to your shop', () => {
     const html = r.render({ page: 'start', menu: true });
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
-    for (const h of hrefs) assert.equal(h, '#/signin');
+    for (const h of hrefs) assert.equal(h, signupOpen ? 'https://home.inphox.net/login' : '#/signin');
     assert.ok(!html.includes('intake.inphox.net'));
+    assert.ok(!html.includes('/web/login'), 'no direct Odoo sign-in page on the site');
   });
 
   test('Sign in to your shop: asks for the shop name on inphox.net; remembers the last one', () => {
@@ -342,6 +343,28 @@ describe('rendered, platform configured', () => {
     }
     const html = r.render({ page: 'contact', cSendErr: "That didn't go through. Please try again in a moment." });
     assert.ok(text(html).includes("That didn't go through. Please try again in a moment."));
+  });
+});
+
+describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () => {
+  let r;
+  before(async () => (r = await renderWith('VITE_SIGNUP_OPEN=1\nVITE_PLATFORM_URL=off\n')));
+  after(() => r.close());
+
+  test('every Sign in link opens the InPhox hub sign-in, never a shop\'s own Odoo page', () => {
+    const html = r.render({ page: 'start', menu: true });
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
+    assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
+    for (const h of hrefs) assert.equal(h, 'https://home.inphox.net/login');
+    assert.ok(!html.includes('/web/login') && !html.includes('intake.inphox.net'));
+  });
+
+  test('plan buttons and Start go to the hub sign-up with the plan code; Enterprise still goes to sales', () => {
+    for (const page of ['pricing', 'start']) {
+      const links = planLinks(r.render({ page }));
+      for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(links.includes(`https://home.inphox.net/signup?plan=${code}`), `${page} ${code}`);
+      assert.ok(links.includes('#/contact'), `${page} enterprise -> sales`);
+    }
   });
 });
 
