@@ -2,7 +2,7 @@ import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF, OVERAGE_PER_CHECK, money as usd } from './pricing.js';
 import { openSignup } from './hub.js';
-import { SIGNIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
+import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 import { textProblem, isEmail } from './formCheck.js';
 
@@ -348,8 +348,8 @@ export default class SiteLogic extends DCLogic {
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
       langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? '#FBE7CC' : '#FFFFFF', pick: () => this.setState({ lang:code, langOpen:false }) })),
-      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); },
-      loginUrl: SIGNIN_HREF, // every Sign in link opens "Sign in to your shop"
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); if (!signupOpen) { this.goto('contact', { menu:false }); return; } this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); },
+      loginUrl: LOGIN_HREF, // the hub's sign-in once it is public, else "Sign in to your shop"
       hero, heroBarRef: this.heroBarRef, moreRef: this.moreRef, wrapRef: this.wrapRef, trackRef: this.trackRef, xfRef: this.xfRef, testiRef: this.testiRef,
       sb, rail, s1, s2, s3, s4, s5, s6, s7, stageRef: this.stageRef, cr,
       toggleMode: () => this.setMode(anim ? 'slides' : 'anim'),
@@ -491,7 +491,7 @@ export default class SiteLogic extends DCLogic {
 
     // Create account: sign-up lives at the hub. This page lists the plans and sends each to the hub.
     const st = {
-      loginUrl: SIGNIN_HREF,
+      loginUrl: LOGIN_HREF,
       headline: 'Create your InPhox account.',
       sub: 'Pick a plan to continue to sign-up. Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
       plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: planAction(p) }; })
@@ -514,7 +514,7 @@ export default class SiteLogic extends DCLogic {
         goShop(r.shop); },
       continueLast: () => goShop(s.siLast),
       forget: () => { saveLastShop(''); this.setState({ siLast: '' }); },
-      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); }
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); if (!signupOpen) { this.goto('contact', { menu:false }); return; } this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); }
     };
     return { ind, feat, pr, ct, plat, rec, st, si };
   }
