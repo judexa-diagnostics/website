@@ -39,6 +39,16 @@
       "source": "/signin",
       "destination": "/#/signin",
       "permanent": false
+    },
+    {
+      "source": "/terms",
+      "destination": "/#/terms",
+      "permanent": false
+    },
+    {
+      "source": "/privacy",
+      "destination": "/#/privacy",
+      "permanent": false
     }
   ]
 }

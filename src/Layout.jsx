@@ -11,6 +11,7 @@ import Careers from './pages/Careers.jsx';
 import Start from './pages/Start.jsx';
 import Signin from './pages/Signin.jsx';
 import SignupBusy from './pages/SignupBusy.jsx';
+import Legal from './pages/Legal.jsx';
 import Footer from './components/Footer.jsx';
 import PromoBar from './components/PromoBar.jsx';
 
@@ -32,6 +33,8 @@ export default function Layout({ v }) {
         {is.start ? <Start v={v} /> : null}
         {is.signin ? <Signin v={v} /> : null}
         {is['signup-busy'] ? <SignupBusy /> : null}
+        {is.terms ? <Legal doc="terms" /> : null}
+        {is.privacy ? <Legal doc="privacy" /> : null}
       </main>
       <Footer v={v} />
       {promo.show ? <PromoBar v={v} /> : null}
