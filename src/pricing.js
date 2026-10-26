@@ -29,13 +29,48 @@ export function signupUrl(code, hub = DEFAULT_HUB_URL) {
 
 /**
  * Feature ladder: each plan has everything of the plan before it. `adds` is what a plan
- * adds over the previous one, in the words a shop owner uses.
+ * adds over the previous one, in the words a shop owner uses. `flags` are the plan
+ * flags each line stands for: the template's central_sync --website checks them against
+ * the plan truth, so a feature can not be shown on the wrong plan.
  */
 const ADDS = {
-  free: ['Device scanning and lookups', 'Stock list, receipts and CSV export', 'Card invoicing and crypto payments'],
-  basics: ['Employees', 'Customer records', 'Shipping integration', 'Price-list import', 'Editable locations and shelves', 'Event log', 'Listing'],
-  growth: ['Driver’s licence scan', 'CAPSS compliance file', 'Deep and OEM checks', 'The assistant', 'Phone Intake', 'Double Puff station app', 'Secure erasure', 'Automated diagnostics', 'Accounting and export', 'Label printing'],
-  max: ['Repairs included', 'Reverse logistics', 'Workflow automations', 'Custom roles', 'API access', 'Warehouse management', 'Compliance automation']
+  free: [
+    { label: 'Device scanning and lookups', flags: ['scanner', 'basic_lookup'] },
+    { label: 'Stock list, receipts and CSV export', flags: ['stock_list', 'receipts', 'csv_export', 'export'] },
+    { label: 'Card invoicing and crypto payments', flags: ['payments'] }
+  ],
+  basics: [
+    { label: 'Employees', flags: ['employees'] },
+    { label: 'Customer records', flags: ['customers'] },
+    { label: 'Shipping integration', flags: ['shipping'] },
+    { label: 'Price-list import', flags: ['pricelist_import'] },
+    { label: 'Editable locations and shelves', flags: ['locations_edit'] },
+    { label: 'Event log', flags: ['event_log'] },
+    { label: 'Device lock checks', flags: ['lock_checks'] }
+  ],
+  growth: [
+    { label: 'CRM: leads and pipeline', flags: ['crm'] },
+    { label: 'Driver’s licence scan', flags: ['id_scan'] },
+    { label: 'CAPSS compliance file', flags: ['capss'] },
+    { label: 'Deep and OEM checks', flags: ['deep_checks'] },
+    { label: 'The assistant', flags: ['ai'] },
+    { label: 'Phone Intake', flags: ['intake'] },
+    { label: 'Double Puff station app', flags: ['double_puff'] },
+    { label: 'Secure erasure', flags: ['secure_erasure'] },
+    { label: 'Automated diagnostics', flags: ['automated_diagnostics'] },
+    { label: 'Accounting and export', flags: ['accounting', 'accounting_export'] },
+    { label: 'Label printing', flags: ['label_printing'] }
+  ],
+  max: [
+    { label: 'Repairs included', flags: ['repairs', 'repairs_pro'] },
+    { label: 'Listing', flags: ['listing'] },
+    { label: 'Reverse logistics', flags: ['reverse_logistics'] },
+    { label: 'Workflow automations', flags: ['workflow_automations'] },
+    { label: 'Custom roles', flags: ['rbac'] },
+    { label: 'API access', flags: ['api_access'] },
+    { label: 'Warehouse management', flags: ['warehouse'] },
+    { label: 'Compliance automation', flags: ['capss_automation'] }
+  ]
 };
 
 export const pricing = {
@@ -67,7 +102,7 @@ export const pricing = {
       code: 'enterprise', name: 'Enterprise', hubCode: false, who: 'Multi-site operators and wholesalers',
       price: null, checksIncluded: null, locations: null, staff: null,
       customOverage: true, talkToSales: true,
-      adds: ['Checks and price set in your contract']
+      adds: [{ label: 'Checks and price set in your contract', flags: [] }]
     }
   ],
   customOverageLine: 'Custom overage pricing available. Talk to us.',
@@ -117,7 +152,7 @@ export function planCard(plan) {
   const items = [];
   if (prev && !plan.talkToSales) items.push({ x: `Everything in ${prev.name}, plus`, strong: true });
   if (plan.talkToSales) items.push({ x: 'Everything in Max, plus', strong: true });
-  for (const x of plan.adds) items.push({ x });
+  for (const a of plan.adds) items.push({ x: a.label });
   const card = {
     code: plan.code, name: plan.name, who: plan.who,
     tag: plan.highlight ? 'Most shops start here' : '',
@@ -150,9 +185,9 @@ export function compareRows() {
   ];
   P.forEach((plan, i) => {
     if (plan.talkToSales) return;
-    for (const x of plan.adds) {
-      if (x === 'Repairs included') continue;
-      rows.push([x, ...P.map((p, j) => (j >= i ? 'Included' : '—'))]);
+    for (const a of plan.adds) {
+      if (a.label === 'Repairs included') continue;
+      rows.push([a.label, ...P.map((p, j) => (j >= i ? 'Included' : '—'))]);
     }
   });
   return rows;
