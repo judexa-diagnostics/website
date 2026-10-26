@@ -9,14 +9,14 @@ export default function Start({ v }) {
       <section className="pl-start">
         <h1>{st.headline}</h1>
         <p className="pl-note" style={{ fontSize: '1rem' }}>{st.sub}</p>
-        <div style={{ borderTop: '1px solid #16130F' }}>
+        <div style={{ borderTop: '1px solid var(--pmm-text)' }}>
           {st.plans.map(p => (
             <div className="pl-row" key={p.name}>
               <div>
-                <b>{p.name}</b> <span style={{ color: 'var(--pl-mute)' }}>{p.price}</span>
+                <b>{p.name}</b> <span style={{ color: 'var(--pmm-text-3)' }}>{p.price}</span>
                 <p>{p.d}. {p.o}</p>
               </div>
-              <PlanButton a={p.act} className="pl-btn" style={{ background: 'transparent', border: '1px solid #16130F' }}><span>{p.cta}</span></PlanButton>
+              <PlanButton a={p.act} className="pl-btn ix-btn"><span>{p.cta}</span></PlanButton>
             </div>
           ))}
         </div>

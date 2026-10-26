@@ -212,7 +212,7 @@ describe('rendered', () => {
   test('pricing: Free, Basics, Growth and Max buttons are links to the hub with their code; Enterprise goes to sales', () => {
     const html = r.render({ page: 'pricing' });
     const cards = html.match(/<article.*?<\/article>/gs);
-    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn"/)).map(m => m[1] || m[2]);
+    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn[^"]*"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn[^"]*"/)).map(m => m[1] || m[2]);
     assert.deepEqual(hrefs, ['https://home.inphox.net/signup?plan=free', 'https://home.inphox.net/signup?plan=basics', 'https://home.inphox.net/signup?plan=growth', 'https://home.inphox.net/signup?plan=max', '#/contact']);
   });
 

@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 const IndustriesStage = lazy(() => import('../redesign/industries/IndustriesStage.jsx'));
 
 export default function Industries({ v }) {
-  const { goTrial, ind, ui } = v;
+  const { goTrial, startLabel, ind, ui } = v;
   return (
     <>
       <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) 2rem", display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", borderBottom: "2px solid #16130F" }}>
@@ -40,7 +40,7 @@ export default function Industries({ v }) {
                   <h2 style={{ margin: "0", fontSize: "clamp(1.625rem,2.5vw,2.25rem)", lineHeight: "1.08", fontWeight: "600", fontStretch: "102%", letterSpacing: "-.01em", textWrap: "balance" }}><span>{p.h}</span></h2>
                   <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D", textWrap: "pretty" }}><span>{p.b}</span></p>
                   <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexWrap: "wrap", marginTop: "0.375rem" }}>
-                    <button className="hv-2" onClick={goTrial} style={{ height: "2.5rem", padding: "0 1rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer" }}>Join now</button>
+                    <button type="button" className="ix-btn is-primary is-sm" onClick={goTrial}>{startLabel}</button>
                     <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem", color: "#3A342D" }}>{"Usually starts on "}<strong><span>{p.plan}</span></strong></span>
                   </div>
                 </div>

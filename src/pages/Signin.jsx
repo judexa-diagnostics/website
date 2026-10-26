@@ -18,7 +18,7 @@ export default function Signin({ v }) {
       <div style={{ padding: "clamp(2rem,5vw,4rem) clamp(1rem,4vw,4rem)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "40rem", width: "100%" }}>
         <div style={{ display: "flex", borderBottom: "1px solid #D9D0C2" }}>
           <span aria-current="page" style={{ height: "2.75rem", padding: "0 0.25rem", marginRight: "1.5rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid #EB5E12", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", marginBottom: "-1px" }}>Sign in</span>
-          <a href="#/start" onClick={si.goTrial} style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid transparent", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none", marginBottom: "-1px" }}>Create account</a>
+          <a href="#/start" onClick={si.goTrial} style={{ height: "2.75rem", padding: "0 0.25rem", display: "inline-flex", alignItems: "center", borderBottom: "2px solid transparent", fontSize: "0.9375rem", fontWeight: "600", color: "#16130F", textDecoration: "none", marginBottom: "-1px" }}>{si.startLabel}</a>
         </div>
 
         {si.last ? (
@@ -49,7 +49,7 @@ export default function Signin({ v }) {
         <p data-fx="fade" style={{ margin: "0", fontSize: "0.8125rem", lineHeight: "1.6", color: "#3A342D" }}>
           Can't find your shop's address? It's in the "Your InPhox shop is ready" email.{" "}
           <a href="#/contact" style={{ color: "#16130F", fontWeight: "600" }}>Contact us</a> if you still can't find it.
-          {" "}New to InPhox? <a href="#/start" onClick={si.goTrial} style={{ color: "#16130F", fontWeight: "600" }}>Create an account</a>.
+          {" "}New to InPhox? <a href="#/start" onClick={si.goTrial} style={{ color: "#16130F", fontWeight: "600" }}>{si.startLabel}</a>.
         </p>
       </div>
     </section>
