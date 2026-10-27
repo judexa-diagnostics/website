@@ -8,18 +8,28 @@ import { START_FREE } from '../pricing.js';
 
 // The hero copy, held in a phone that flies in from the left and rests
 // turned slightly toward the console. Hover tilts it a little; it always
-// springs back to the resting pose.
+// springs back to the resting pose. Below the wide breakpoint there is no
+// console beside it, so it rests facing you, centred.
 //
 // Easter egg: swipe up from the home bar (touch or mouse drag, or focus the
 // bar and press ArrowUp) and the app closes like a real phone, revealing a
 // home screen. The InPhox icon reopens the app; "Box it" opens a mini game,
 // which the same swipe closes again.
 const REST_Y = 16, REST_X = 4, TILT = 9;
+const NARROW = '(max-width: 979px)';
 const CLOSE_SPRING = { type: 'spring', stiffness: 320, damping: 32, mass: 0.8 };
 const OPEN_SPRING = { type: 'spring', stiffness: 260, damping: 26, mass: 0.8 };
 
 export default function HeroPhone({ goTrial, startLabel = START_FREE }) {
   const reduce = useReducedMotion();
+  const [narrow, setNarrow] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.(NARROW).matches);
+  useEffect(() => {
+    const mq = window.matchMedia?.(NARROW);
+    if (!mq) return undefined;
+    const on = () => setNarrow(mq.matches);
+    on(); mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
   const px = useMotionValue(0), py = useMotionValue(0);
   const spring = { stiffness: 170, damping: 18, mass: 0.6 };
   const rx = useSpring(useTransform(py, v => -v * TILT), spring);
@@ -137,7 +147,7 @@ export default function HeroPhone({ goTrial, startLabel = START_FREE }) {
           className="hp-fly"
           initial={reduce ? false : { x: '-115vw', rotateY: 62, rotateZ: -9, rotateX: 10 }}
           // while the game is open the phone turns to face you (truer drags)
-          animate={mode === 'game' ? { x: 0, rotateY: 0, rotateZ: 0, rotateX: 0 } : { x: 0, rotateY: REST_Y, rotateZ: 0, rotateX: REST_X }}
+          animate={mode === 'game' || narrow ? { x: 0, rotateY: 0, rotateZ: 0, rotateX: 0 } : { x: 0, rotateY: REST_Y, rotateZ: 0, rotateX: REST_X }}
           transition={flown ? { type: 'spring', stiffness: 140, damping: 20 } : { type: 'spring', stiffness: 46, damping: 13, mass: 1.1, delay: 0.15 }}
           onAnimationComplete={() => setFlown(true)}
         >
