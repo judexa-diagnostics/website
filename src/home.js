@@ -1,6 +1,6 @@
 // What the home page says, as plain data (no React, no DOM), so `npm test` reads it directly.
 // Every claim here is one the site already makes elsewhere (Features list, pricing.js); nothing new.
-import { pricing, findPlan, money, OVERAGE_PER_CHECK } from './pricing.js';
+import { pricing, findPlan, money } from './pricing.js';
 
 /**
  * Quotes from real customers, with their OK to publish. Empty until Sri confirms some: the
@@ -16,7 +16,7 @@ export function proofFacts() {
     { k: 'Up to 40', d: 'devices tested at once on one station', tag: 'New' },
     { k: 'Every IMEI', d: 'tracked from the moment it is plugged in until it ships' },
     { k: 'A certificate', d: 'for every erased device, ready to attach to the invoice' },
-    { k: `${pricing.plans.length} plans`, d: `from ${money(free.price)} a month, then ${money(OVERAGE_PER_CHECK, 2)} a check past what's included` }
+    { k: `${pricing.plans.length} plans`, d: `from ${money(free.price)} a month, prepaid and overage plans available` }
   ];
 }
 

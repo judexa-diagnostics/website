@@ -177,13 +177,14 @@ export function planCard(plan) {
 
 /**
  * The home page's trust line under the hero buttons, built from the Free plan so it cannot drift:
- * "Free plan: 25 device checks a month · $0.50 a check after that · card needed, nothing charged".
+ * "Free plan: 25 device checks a month · prepaid and overage plans available · card needed, nothing charged".
+ * No rate here: the site names no overage rate (Chris 10-26, see usageLine).
  */
 export function trustLine() {
   const free = findPlan('free');
   return [
     `${free.name} plan: ${count(free.checksIncluded)} device checks a month`,
-    `${money(OVERAGE_PER_CHECK, 2)} a check after that`,
+    'prepaid and overage plans available',
     'card needed, nothing charged'
   ];
 }

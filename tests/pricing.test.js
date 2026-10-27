@@ -197,6 +197,14 @@ describe('rendered', () => {
     }
   });
 
+  // Chris 10-26: the site names no overage rate. Only the Terms state it (the legal text binds the price).
+  test('no page but the Terms names the overage rate', () => {
+    for (const page of PAGES.filter(p => p !== 'terms')) {
+      const html = text(r.render({ page }));
+      assert.ok(!html.includes('$0.50') && !/a check after that|a check past/.test(html), page);
+    }
+  });
+
   test('pricing: five plans, each price with the prepaid and overage line beside it, no rate anywhere', () => {
     const html = text(r.render({ page: 'pricing' }));
     for (const s of ['>Free<', '>Basics<', '>Growth<', '>Max<', '>Enterprise<', '$0', '$30', '$150', '$500', 'Talk to sales']) assert.ok(html.includes(s), s);

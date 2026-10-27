@@ -16,9 +16,9 @@ describe('home data', async () => {
   const H = await import('../src/home.js');
   const free = P.findPlan('free');
 
-  test('the trust line is built from the Free plan and the overage rate', () => {
+  test('the trust line is built from the Free plan and names no overage rate', () => {
     assert.deepEqual(P.trustLine(), [
-      `Free plan: ${free.checksIncluded} device checks a month`, `$${P.OVERAGE_PER_CHECK.toFixed(2)} a check after that`, 'card needed, nothing charged'
+      `Free plan: ${free.checksIncluded} device checks a month`, 'prepaid and overage plans available', 'card needed, nothing charged'
     ]);
     assert.equal(P.trustLine()[0], 'Free plan: 25 device checks a month');
   });
@@ -32,7 +32,8 @@ describe('home data', async () => {
   test('proof facts quote pricing.js, not typed-in numbers', () => {
     const last = H.proofFacts().at(-1);
     assert.equal(last.k, `${P.pricing.plans.length} plans`);
-    assert.match(last.d, /from \$0 a month, then \$0\.50 a check/);
+    assert.match(last.d, /from \$0 a month, prepaid and overage plans available/);
+    assert.ok(!last.d.includes(`$${P.OVERAGE_PER_CHECK.toFixed(2)}`), 'the site names no overage rate');
   });
 
   test('no unsourced testimonials anywhere in src/', () => {
