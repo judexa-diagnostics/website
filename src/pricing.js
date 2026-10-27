@@ -29,13 +29,48 @@ export function signupUrl(code, hub = DEFAULT_HUB_URL) {
 
 /**
  * Feature ladder: each plan has everything of the plan before it. `adds` is what a plan
- * adds over the previous one, in the words a shop owner uses.
+ * adds over the previous one, in the words a shop owner uses. `flags` are the plan
+ * flags each line stands for: the template's central_sync --website checks them against
+ * the plan truth, so a feature can not be shown on the wrong plan.
  */
 const ADDS = {
-  free: ['Device scanning and lookups', 'Stock list, receipts and CSV export', 'Card invoicing and crypto payments'],
-  basics: ['Employees', 'Customer records', 'Shipping integration', 'Price-list import', 'Editable locations and shelves', 'Event log', 'Listing'],
-  growth: ['Driver’s licence scan', 'CAPSS compliance file', 'Deep and OEM checks', 'The assistant', 'Phone Intake', 'Double Puff station app', 'Secure erasure', 'Automated diagnostics', 'Accounting and export', 'Label printing'],
-  max: ['Repairs included', 'Reverse logistics', 'Workflow automations', 'Custom roles', 'API access', 'Warehouse management', 'Compliance automation']
+  free: [
+    { label: 'Device scanning and lookups', flags: ['scanner', 'basic_lookup'] },
+    { label: 'Stock list, receipts and CSV export', flags: ['stock_list', 'receipts', 'csv_export', 'export'] },
+    { label: 'Card invoicing and crypto payments', flags: ['payments'] }
+  ],
+  basics: [
+    { label: 'Employees', flags: ['employees'] },
+    { label: 'Customer records', flags: ['customers'] },
+    { label: 'Shipping integration', flags: ['shipping'] },
+    { label: 'Price-list import', flags: ['pricelist_import'] },
+    { label: 'Editable locations and shelves', flags: ['locations_edit'] },
+    { label: 'Event log', flags: ['event_log'] },
+    { label: 'Device lock checks', flags: ['lock_checks'] }
+  ],
+  growth: [
+    { label: 'CRM: leads and pipeline', flags: ['crm'] },
+    { label: 'Driver’s licence scan', flags: ['id_scan'] },
+    { label: 'CAPSS compliance file', flags: ['capss'] },
+    { label: 'Deep and OEM checks', flags: ['deep_checks'] },
+    { label: 'The assistant', flags: ['ai'] },
+    { label: 'Phone Intake', flags: ['intake'] },
+    { label: 'Double Puff station app', flags: ['double_puff'] },
+    { label: 'Secure erasure', flags: ['secure_erasure'] },
+    { label: 'Automated diagnostics', flags: ['automated_diagnostics'] },
+    { label: 'Accounting and export', flags: ['accounting', 'accounting_export'] },
+    { label: 'Label printing', flags: ['label_printing'] }
+  ],
+  max: [
+    { label: 'Repairs included', flags: ['repairs', 'repairs_pro'] },
+    { label: 'Listing', flags: ['listing'] },
+    { label: 'Reverse logistics', flags: ['reverse_logistics'] },
+    { label: 'Workflow automations', flags: ['workflow_automations'] },
+    { label: 'Custom roles', flags: ['rbac'] },
+    { label: 'API access', flags: ['api_access'] },
+    { label: 'Warehouse management', flags: ['warehouse'] },
+    { label: 'Compliance automation', flags: ['capss_automation'] }
+  ]
 };
 
 export const pricing = {
@@ -67,18 +102,19 @@ export const pricing = {
       code: 'enterprise', name: 'Enterprise', hubCode: false, who: 'Multi-site operators and wholesalers',
       price: null, checksIncluded: null, locations: null, staff: null,
       customOverage: true, talkToSales: true,
-      adds: ['Checks and price set in your contract']
+      adds: [{ label: 'Checks and price set in your contract', flags: [] }]
     }
   ],
-  customOverageLine: 'Custom overage pricing available. Talk to us.',
+  // Chris 10-26: the site names no overage rate, only this line (the rate stays in OVERAGE_PER_CHECK for central_sync).
+  usageLine: 'Prepaid and overage plans available.',
   // Prepaid check packs: the price table stays out until Chris sets Free and per-plan prices.
   // Set `show: true` and add `rows` to switch it on; the page needs no redesign.
-  packs: { show: true, line: 'Prepaid check packs are coming. Prices to follow.', rows: [] },
+  packs: { show: false, line: '', rows: [] },
   busy: { title: 'Sign-up is busy, try again in a minute.', retry: 'Back to plans' },
   faq: [
     {
       q: 'What happens when I go over my included checks?',
-      a: `Checks keep working. Each one past your plan’s included amount costs $${OVERAGE_PER_CHECK.toFixed(2)}, charged to your card at the end of the month, up to the spending limit you set; at the limit, new checks pause until you raise it.`
+      a: 'Checks keep working, up to the spending limit you set; at the limit, new checks pause until you raise it. Prepaid and overage plans are available.'
     },
     {
       q: 'What counts as a device check?',
@@ -86,7 +122,7 @@ export const pricing = {
     },
     {
       q: 'Is Free really free?',
-      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card so that checks past 25 can be billed at the end of the month, and we place a $1 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
+      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $1 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
     },
     {
       q: 'Where do I pay?',
@@ -102,12 +138,9 @@ export const money = (n, digits = 0) =>
   '$' + n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 export const count = n => n.toLocaleString('en-US');
 
-/** The one overage sentence shown next to every price. */
-export function overageLine(plan) {
-  const rate = money(OVERAGE_PER_CHECK, 2);
-  if (plan.talkToSales) return pricing.customOverageLine;
-  const base = `Past ${count(plan.checksIncluded)} checks: ${rate} each, charged to your card at month end.`;
-  return plan.customOverage ? `${base} ${pricing.customOverageLine}` : base;
+/** The one usage sentence shown next to every price: no rate on the site. */
+export function overageLine() {
+  return pricing.usageLine;
 }
 
 /** Everything one plan card prints. `adds` lists only what this plan adds over the one before. */
@@ -117,7 +150,7 @@ export function planCard(plan) {
   const items = [];
   if (prev && !plan.talkToSales) items.push({ x: `Everything in ${prev.name}, plus`, strong: true });
   if (plan.talkToSales) items.push({ x: 'Everything in Max, plus', strong: true });
-  for (const x of plan.adds) items.push({ x });
+  for (const a of plan.adds) items.push({ x: a.label });
   const card = {
     code: plan.code, name: plan.name, who: plan.who,
     tag: plan.highlight ? 'Most shops start here' : '',
@@ -139,20 +172,18 @@ export function planCard(plan) {
 /** Rows for the "Compare plans" table: [label, value per plan]. */
 export function compareRows() {
   const P = pricing.plans;
-  const rate = money(OVERAGE_PER_CHECK, 2);
   const rows = [
     ['Price a month', ...P.map(p => (p.price == null ? 'Talk to sales' : money(p.price)))],
     ['Device checks included a month', ...P.map(p => (p.checksIncluded == null ? 'By contract' : count(p.checksIncluded)))],
-    ['Each check past that', ...P.map(p => (p.talkToSales ? 'Custom, talk to us' : p.customOverage ? `${rate}, custom available` : rate))],
     ['Staff', ...P.map(p => (p.staff === 0 ? 'Owner only' : p.staff == null ? 'Unlimited' : count(p.staff)))],
     ['Locations', ...P.map(p => (p.locations == null ? 'Unlimited' : count(p.locations)))],
     ['Repairs', ...P.map(p => (p.repairsAddon ? `Add-on, ${money(p.repairsAddon)} a month` : p.customOverage ? 'Included' : '—'))]
   ];
   P.forEach((plan, i) => {
     if (plan.talkToSales) return;
-    for (const x of plan.adds) {
-      if (x === 'Repairs included') continue;
-      rows.push([x, ...P.map((p, j) => (j >= i ? 'Included' : '—'))]);
+    for (const a of plan.adds) {
+      if (a.label === 'Repairs included') continue;
+      rows.push([a.label, ...P.map((p, j) => (j >= i ? 'Included' : '—'))]);
     }
   });
   return rows;

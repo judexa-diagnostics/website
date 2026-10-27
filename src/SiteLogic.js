@@ -1,6 +1,6 @@
 import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
-import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF, OVERAGE_PER_CHECK, money as usd } from './pricing.js';
+import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF } from './pricing.js';
 import { openSignup } from './hub.js';
 import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
@@ -436,7 +436,7 @@ export default class SiteLogic extends DCLogic {
     // hub's sign-up with the plan's code (Enterprise goes to the sales contact).
     const planAction = p => p.talkToSales || !signupOpen ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
     const pr = {
-      intro: `Start free. Every plan includes device checks; past them, each check is ${usd(OVERAGE_PER_CHECK, 2)}, charged to your card at the end of the month.`,
+      intro: 'Start free. Every plan includes device checks. Prepaid and overage plans available.',
       tiers: pricing.plans.map(p => { const c = planCard(p), hi = !!p.highlight; return {
         ...c, top: hi ? '#EB5E12' : 'transparent', bg: hi ? '#FFFFFF' : 'transparent',
         btnBg: hi ? '#EB5E12' : 'transparent', btnBd: hi ? '#EB5E12' : '#16130F', act: planAction(p) }; }),
