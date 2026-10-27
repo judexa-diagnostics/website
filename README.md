@@ -18,6 +18,8 @@ npm test           # tests (Node's built-in runner, no extra dependencies)
 - `src/pages/*.jsx`, `src/components/*.jsx`: the views.
 - `src/pricing.js`: plans, prices, included checks, limits, the flat $0.50 overage and the pricing copy (FAQ, packs placeholder line). Every plan number on the site comes from here, so a price change is one edit in this file; `npm test` checks the numbers against what billing sells, so update `tests/pricing.test.js` with it. The same file writes the plans into `index.html`'s `<noscript>` at build time.
 - `src/config.js`: the env vars below, with safe defaults.
+- `src/tokens.css`: the apps' base template tokens (`--pmm-*`, `--pm-sem-*`, Satoshi), copied from the hub's `inphox-tokens.css` (light only), plus the one button style `.ix-btn` / `.ix-btn.is-primary`. New UI reads these names instead of writing colours; `npm test` fails on a raw hex in the home page, the header, menu, footer or plan cards.
+- `src/home.js`, `src/home.css`: the home page's facts, steps and styles. Every sign-up button says `START_FREE` ("Start free", in `pricing.js`). Testimonials show only from `VERIFIED_QUOTES` in `home.js`, which is empty until real customers agree to be quoted.
 
 ## Configuration
 

@@ -608,7 +608,7 @@ function Reports() {
             <g key={d} className="hc-rep-bar" style={{ animationDelay: `${i * 60}ms` }}>
               <title>{`${d}: ${v} units`}</title>
               <rect x={x - 3} y="0" width={bw + 6} height={H} fill="transparent" />
-              <path d={`M${x},${H} V${y + top} Q${x},${y} ${x + top},${y} H${x + bw - top} Q${x + bw},${y} ${x + bw},${y + top} V${H} Z`} fill={d === 'Tue' ? '#EB5E12' : '#E3B48E'} />
+              <path d={`M${x},${H} V${y + top} Q${x},${y} ${x + top},${y} H${x + bw - top} Q${x + bw},${y} ${x + bw},${y + top} V${H} Z`} fill={d === 'Tue' ? 'var(--pmm-brand)' : '#E3B48E'} />
               <text x={x + bw / 2} y={H + 12} textAnchor="middle" className="hc-rep-x">{d[0]}</text>
               {d === 'Tue' && <text x={x + bw / 2} y={y - 3} textAnchor="middle" className="hc-rep-val">97</text>}
             </g>

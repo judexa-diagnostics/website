@@ -1,4 +1,4 @@
-import PlanButton from '../components/PlanButton.jsx';
+import PlanCard from '../components/PlanCard.jsx';
 import '../plans.css';
 
 export default function Pricing({ v }) {
@@ -12,24 +12,7 @@ export default function Pricing({ v }) {
 
       <section className="pl-wrap" aria-label="Plans">
         <div className="pl-grid">
-          {pr.tiers.map(t => (
-            <article key={t.code} className="pl-card" aria-labelledby={'pl-' + t.code} style={{ background: t.bg, boxShadow: `inset 0 0.1875rem 0 ${t.top}` }}>
-              <div className="pl-top">
-                <h2 id={'pl-' + t.code} className="pl-name" style={{ margin: 0 }}>{t.name}</h2>
-                {t.tag ? <span className="pl-tag">{t.tag}</span> : null}
-              </div>
-              <span className="pl-who">{t.who}</span>
-              <div className="pl-price"><b>{t.priceStr}</b>{t.per ? <span>{t.per}</span> : null}</div>
-              <p className="pl-checks">{t.checks}</p>
-              <p className="pl-over">{t.overage}</p>
-              {t.cardNote ? <p className="pl-note">{t.cardNote}</p> : null}
-              <PlanButton a={t.act} className="pl-btn" style={{ background: t.btnBg, border: `1px solid ${t.btnBd}` }}><span>{t.cta}</span></PlanButton>
-              <ul className="pl-limits">{t.limits.map(x => <li key={x}>{x}</li>)}</ul>
-              <ul className="pl-list">
-                {t.items.map(i => <li key={i.x} className={i.strong ? 'strong' : ''}>{i.x}</li>)}
-              </ul>
-            </article>
-          ))}
+          {pr.tiers.map(t => <PlanCard key={t.code} t={t} />)}
         </div>
         {pr.packs ? <p className="pl-packs">{pr.packs}</p> : null}
       </section>
@@ -62,7 +45,7 @@ export default function Pricing({ v }) {
       <section className="pl-wrap">
         <div className="pl-sales">
           <span>Need more than Max, or terms of your own?</span>
-          <a href="#/contact">Talk to sales</a>
+          <a className="ix-btn" href="#/contact">Talk to sales</a>
         </div>
       </section>
     </div>

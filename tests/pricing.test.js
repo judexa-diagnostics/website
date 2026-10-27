@@ -197,6 +197,14 @@ describe('rendered', () => {
     }
   });
 
+  // Chris 10-26: the site names no overage rate. Only the Terms state it (the legal text binds the price).
+  test('no page but the Terms names the overage rate', () => {
+    for (const page of PAGES.filter(p => p !== 'terms')) {
+      const html = text(r.render({ page }));
+      assert.ok(!html.includes('$0.50') && !/a check after that|a check past/.test(html), page);
+    }
+  });
+
   test('pricing: five plans, each price with the prepaid and overage line beside it, no rate anywhere', () => {
     const html = text(r.render({ page: 'pricing' }));
     for (const s of ['>Free<', '>Basics<', '>Growth<', '>Max<', '>Enterprise<', '$0', '$30', '$150', '$500', 'Talk to sales']) assert.ok(html.includes(s), s);
@@ -211,7 +219,7 @@ describe('rendered', () => {
   test('pricing: Free, Basics, Growth and Max buttons are links to the hub with their code; Enterprise goes to sales', () => {
     const html = r.render({ page: 'pricing' });
     const cards = html.match(/<article.*?<\/article>/gs);
-    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn"/)).map(m => m[1] || m[2]);
+    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn[^"]*"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn[^"]*"/)).map(m => m[1] || m[2]);
     // Until the hub's sign-up is public (src/config.js signupOpen), every plan button goes to Contact.
     const hub = ['free', 'basics', 'growth', 'max'].map(c => (signupOpen ? `https://home.inphox.net/signup?plan=${c}` : '#/contact'));
     assert.deepEqual(hrefs, [...hub, '#/contact']);

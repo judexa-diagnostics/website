@@ -278,8 +278,8 @@
 }
 /* per-step call to action, under the copy (Story.jsx StepCta) */
 .sx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.25rem;margin-top:1.25rem}
-.sx-cta-go{font:600 .9375rem 'Archivo',system-ui,sans-serif;height:2.75rem;padding:0 1.5rem;background:#EB5E12;color:#16130F;border:0;border-radius:2px;cursor:pointer;transition:background .2s,transform .2s}
-.sx-cta-go:hover{background:#FF7A33}
+.sx-cta-go{font:700 .9375rem var(--pmm-font-sans);height:2.75rem;padding:0 1.5rem;background:var(--pmm-brand-fill);color:#fff;border:0;border-radius:var(--pmm-radius);cursor:pointer;transition:background .2s,transform .2s}
+.sx-cta-go:hover{background:var(--pmm-brand)}
 .sx-cta-go:active{transform:translateY(1px)}
 .sx-cta-link{font:500 .875rem 'Archivo',system-ui,sans-serif;color:#F6F2EA;text-decoration:underline;text-decoration-color:#6B6257;text-underline-offset:.25em;transition:text-decoration-color .2s}
 .sx-cta-link:hover{text-decoration-color:#EB5E12}

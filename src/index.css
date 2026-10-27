@@ -3,15 +3,12 @@ html{scroll-behavior:auto}
    default (16px), so the layout is unchanged. On bigger screens it grows with
    the viewport (1vw = 16px at 1600px), capped at 1.5x (24px at 2400px+). */
 html{font-size:clamp(100%, 1vw, 150%)}
-/* Brand tokens match the shop app: Satoshi face and product copper #C67139
-   (see pm_product_manager inventory_share.css / pm_brand_variables). The
-   marketing 3D scenes keep their own Archivo display styling. */
-body{margin:0;background:#F6F2EA;font-family:'Satoshi','Archivo',sans-serif;color:#16130F;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--pmm-bg);font-family:var(--pmm-font-sans);color:var(--pmm-text);-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}
-a{color:#C67139;text-underline-offset:2px}
-a:hover{color:#16130F}
+a{color:var(--pmm-brand-fill);text-underline-offset:2px}
+a:hover{color:var(--pmm-text)}
 button,input,select,textarea{font-family:inherit}
-::selection{background:#FBE7CC}
+::selection{background:var(--pmm-brand-soft)}
 
 /* Full-page sizing the Claude Design runtime applied to its mount point. */
 html,body{height:100%;margin:0}

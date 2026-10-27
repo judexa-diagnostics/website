@@ -1,6 +1,6 @@
 /* Station bench scene, on white. Scene geometry is in container units (cqw)
    so the whole bench scales with its width; 1cqw = 16 viewBox units.
-   Type scale (one family, Archivo): 11 / 12 / 13 / 15px equivalents. */
+   Type scale (one family, the template's Satoshi): 11 / 12 / 13 / 15px equivalents. */
 
 .st-root, .st-root *, .st-root *::before, .st-root *::after { box-sizing: border-box; }
 .st-root {
@@ -9,7 +9,7 @@
   --rule: #E6E0D6;
   --line: #CFC8BC;
   --soft: #F6F3EE;
-  --orange: #EB5E12;
+  --orange: var(--pmm-brand);
   --green: #1E7A4A;
   --red: #B3261E;
   --amber: #B7791F;
@@ -17,7 +17,7 @@
   color: var(--ink);
   padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
-  font-family: 'Archivo', system-ui, sans-serif;
+  font-family: var(--pmm-font-sans);
 }
 .st-tab { font-variant-numeric: tabular-nums; }
 
@@ -31,7 +31,6 @@
   margin: 0 auto;
 }
 .st-h-l { display: flex; gap: 0.875rem; align-items: baseline; }
-.st-num { font-size: 0.8125rem; font-weight: 600; color: var(--orange); flex: none; font-variant-numeric: tabular-nums; }
 .st-head h2 {
   margin: 0;
   font-size: clamp(1.75rem, 3vw, 2.75rem);
@@ -44,15 +43,6 @@
 .st-h-r { display: flex; flex-direction: column; gap: 1.25rem; }
 .st-h-r p { margin: 0; font-size: 0.9375rem; line-height: 1.6; color: var(--muted); max-width: 34rem; }
 .st-ctas { display: flex; gap: 0.625rem; flex-wrap: wrap; }
-.st-cta {
-  height: 2.75rem; padding: 0 1.25rem; display: inline-flex; align-items: center;
-  background: var(--orange); color: #fff; border: 1px solid var(--orange); border-radius: 2px;
-  font: 600 0.9375rem 'Archivo', sans-serif; cursor: pointer; text-decoration: none;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-}
-.st-cta:hover { background: #D4520D; border-color: #D4520D; }
-.st-cta-o { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
-.st-cta-o:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
 
 /* ---------- scene ---------- */
 .st-scroll { margin: clamp(1.5rem, 3vw, 2.5rem) auto 0; max-width: 120rem; }
@@ -119,7 +109,7 @@
 .st-phones { position: absolute; inset: 0; pointer-events: none; }
 .st-phone {
   position: absolute; display: block; padding: 0; margin: 0; border: 0; background: none;
-  pointer-events: auto; cursor: pointer; color: inherit; font-family: 'Archivo', sans-serif;
+  pointer-events: auto; cursor: pointer; color: inherit; font-family: var(--pmm-font-sans);
   transform-origin: 50% 100%;
   transition: left 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   -webkit-tap-highlight-color: transparent;
@@ -335,7 +325,7 @@
 .st-pop-acts { display: flex; gap: 0.375rem; margin-top: 0.5rem; flex-wrap: wrap; }
 .st-pop-acts button {
   flex: 1; height: 2rem; padding: 0 0.6rem; border: 1px solid var(--rule); border-radius: 4px; background: #fff;
-  font: 600 0.75rem 'Archivo', sans-serif; color: var(--ink); cursor: pointer; white-space: nowrap;
+  font: 600 0.75rem var(--pmm-font-sans); color: var(--ink); cursor: pointer; white-space: nowrap;
   transition: background 0.15s, border-color 0.15s;
 }
 .st-pop-acts button:hover:not(:disabled) { border-color: var(--orange); background: #FFF6F0; }
@@ -352,7 +342,7 @@
 .st-add {
   margin-left: auto; display: inline-flex; align-items: center; gap: 0.5rem; height: 2.25rem; padding: 0 0.875rem;
   background: #fff; color: var(--ink); border: 1px solid var(--rule); border-radius: 4px;
-  font: 600 0.8125rem 'Archivo', sans-serif; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  font: 600 0.8125rem var(--pmm-font-sans); cursor: pointer; transition: border-color 0.2s, background 0.2s;
 }
 .st-add:hover { border-color: var(--orange); background: #FFF6F0; }
 .st-add span { color: var(--orange); font-size: 1rem; line-height: 1; }

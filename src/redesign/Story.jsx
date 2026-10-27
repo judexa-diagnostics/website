@@ -6,6 +6,7 @@ import './story/story.css';
 import { createWorld, DEVICES, seg, clamp } from './story/world.js';
 import { LOCATIONS } from './story/earth.js';
 import { LANES } from './story/textures.js';
+import { START_FREE } from '../pricing.js';
 
 const SCENES = [
   { name: 'Arrive', title: 'A lot lands on the line.', body: 'Three hundred phones in totes, from a trade-in run, a wholesale lot or a stack of returns. One gets picked. Nothing is known about it yet.' },
@@ -365,7 +366,7 @@ export default function Story({ goTrial = defaultTrial } = {}) {
 function StepCta({ goTrial, link }) {
   return (
     <div className="sx-cta">
-      <button type="button" className="sx-cta-go" onClick={() => goTrial()}>Join now</button>
+      <button type="button" className="sx-cta-go" onClick={() => goTrial()}>{START_FREE}</button>
       <a className="sx-cta-link" href={link[1]}>{link[0]}</a>
     </div>
   );
