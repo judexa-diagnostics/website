@@ -105,15 +105,16 @@ export const pricing = {
       adds: [{ label: 'Checks and price set in your contract', flags: [] }]
     }
   ],
-  customOverageLine: 'Custom overage pricing available. Talk to us.',
+  // Chris 10-26: the site names no overage rate, only this line (the rate stays in OVERAGE_PER_CHECK for central_sync).
+  usageLine: 'Prepaid and overage plans available.',
   // Prepaid check packs: the price table stays out until Chris sets Free and per-plan prices.
   // Set `show: true` and add `rows` to switch it on; the page needs no redesign.
-  packs: { show: true, line: 'Prepaid check packs are coming. Prices to follow.', rows: [] },
+  packs: { show: false, line: '', rows: [] },
   busy: { title: 'Sign-up is busy, try again in a minute.', retry: 'Back to plans' },
   faq: [
     {
       q: 'What happens when I go over my included checks?',
-      a: `Checks keep working. Each one past your plan’s included amount costs $${OVERAGE_PER_CHECK.toFixed(2)}, charged to your card at the end of the month, up to the spending limit you set; at the limit, new checks pause until you raise it.`
+      a: 'Checks keep working, up to the spending limit you set; at the limit, new checks pause until you raise it. Prepaid and overage plans are available.'
     },
     {
       q: 'What counts as a device check?',
@@ -121,7 +122,7 @@ export const pricing = {
     },
     {
       q: 'Is Free really free?',
-      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card so that checks past 25 can be billed at the end of the month, and we place a $1 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
+      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $1 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
     },
     {
       q: 'Where do I pay?',
@@ -137,12 +138,9 @@ export const money = (n, digits = 0) =>
   '$' + n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 export const count = n => n.toLocaleString('en-US');
 
-/** The one overage sentence shown next to every price. */
-export function overageLine(plan) {
-  const rate = money(OVERAGE_PER_CHECK, 2);
-  if (plan.talkToSales) return pricing.customOverageLine;
-  const base = `Past ${count(plan.checksIncluded)} checks: ${rate} each, charged to your card at month end.`;
-  return plan.customOverage ? `${base} ${pricing.customOverageLine}` : base;
+/** The one usage sentence shown next to every price: no rate on the site. */
+export function overageLine() {
+  return pricing.usageLine;
 }
 
 /** Everything one plan card prints. `adds` lists only what this plan adds over the one before. */
@@ -174,11 +172,9 @@ export function planCard(plan) {
 /** Rows for the "Compare plans" table: [label, value per plan]. */
 export function compareRows() {
   const P = pricing.plans;
-  const rate = money(OVERAGE_PER_CHECK, 2);
   const rows = [
     ['Price a month', ...P.map(p => (p.price == null ? 'Talk to sales' : money(p.price)))],
     ['Device checks included a month', ...P.map(p => (p.checksIncluded == null ? 'By contract' : count(p.checksIncluded)))],
-    ['Each check past that', ...P.map(p => (p.talkToSales ? 'Custom, talk to us' : p.customOverage ? `${rate}, custom available` : rate))],
     ['Staff', ...P.map(p => (p.staff === 0 ? 'Owner only' : p.staff == null ? 'Unlimited' : count(p.staff)))],
     ['Locations', ...P.map(p => (p.locations == null ? 'Unlimited' : count(p.locations)))],
     ['Repairs', ...P.map(p => (p.repairsAddon ? `Add-on, ${money(p.repairsAddon)} a month` : p.customOverage ? 'Included' : '—'))]

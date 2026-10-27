@@ -37,20 +37,18 @@ describe('plan data', async () => {
     ]);
   });
 
-  test('overage is $0.50 a check on every plan, as one flat rate (no bands, no floor)', () => {
+  test('the rate stays $0.50 for central_sync, one flat rate (no bands, no floor)', () => {
     assert.equal(P.OVERAGE_PER_CHECK, 0.5);
     for (const p of pricing.plans) {
       assert.equal(p.overageTiers, undefined, p.code);
       assert.equal(p.overageRate, undefined, p.code);
-      if (!p.talkToSales) assert.ok(P.overageLine(p).includes('$0.50 each, charged to your card at month end'), p.code);
     }
-    assert.ok(P.overageLine(plan('free')).startsWith('Past 25 checks: $0.50 each'));
-    assert.ok(P.overageLine(plan('growth')).startsWith('Past 1,000 checks: $0.50 each'));
   });
 
-  test('Max and Enterprise say custom overage pricing is available; the others do not', () => {
-    const CUSTOM = 'Custom overage pricing available. Talk to us.';
-    for (const p of pricing.plans) assert.equal(P.overageLine(p).includes(CUSTOM), ['max', 'enterprise'].includes(p.code), p.code);
+  test('every plan shows only "Prepaid and overage plans available." (Chris 10-26: no rate on the site)', () => {
+    for (const p of pricing.plans) assert.equal(P.overageLine(p), 'Prepaid and overage plans available.', p.code);
+    for (const row of P.compareRows()) assert.ok(!/past that|\$0\.50/i.test(row.join(' ')), row[0]);
+    for (const f of pricing.faq) assert.doesNotMatch(f.a, /\$0\.50|billed at the end of the month/, f.q);
   });
 
   test('no graduated-band wording or code is left anywhere in src/ or the README', () => {
@@ -88,7 +86,7 @@ describe('plan data', async () => {
     const f = pricing.faq[0];
     assert.match(f.q, /go over/);
     assert.equal(f.a.split(/(?<=\.)\s+/).length, 2);
-    assert.ok(f.a.includes('$0.50') && f.a.includes('spending limit'));
+    assert.ok(f.a.includes('Prepaid and overage plans are available') && f.a.includes('spending limit') && !f.a.includes('$0.50'));
   });
 
   test('each plan has everything of the plan before it; the compare table is built from the plan data', () => {
@@ -199,14 +197,14 @@ describe('rendered', () => {
     }
   });
 
-  test('pricing: five plans, each price with its overage sentence beside it (no fine print)', () => {
+  test('pricing: five plans, each price with the prepaid and overage line beside it, no rate anywhere', () => {
     const html = text(r.render({ page: 'pricing' }));
     for (const s of ['>Free<', '>Basics<', '>Growth<', '>Max<', '>Enterprise<', '$0', '$30', '$150', '$500', 'Talk to sales']) assert.ok(html.includes(s), s);
     const cards = html.match(/<article.*?<\/article>/gs);
     assert.equal(cards.length, 5);
-    for (const card of cards) assert.match(card, /class="pl-over">[^<]*(\$0\.50 each, charged to your card at month end|Custom overage pricing available\. Talk to us\.)/);
+    for (const card of cards) assert.match(card, /class="pl-over">Prepaid and overage plans available\.</);
     assert.ok(cards[0].includes('Prepaid cards are not accepted'));
-    assert.ok(cards[3].includes('Custom overage pricing available. Talk to us.'));
+    assert.ok(!html.includes('$0.50') && !html.includes('Custom overage'), 'no rate on the pricing page');
     assert.ok(!html.includes('/ year') && !html.includes('Annual'), 'no annual billing');
   });
 
@@ -219,9 +217,9 @@ describe('rendered', () => {
     assert.deepEqual(hrefs, [...hub, '#/contact']);
   });
 
-  test('pricing: the packs placeholder line shows, with no pack price table', () => {
+  test('pricing: no packs line ("coming") and no pack price table; the plan line says prepaid is available', () => {
     const html = text(r.render({ page: 'pricing' }));
-    assert.ok(html.includes('Prepaid check packs are coming. Prices to follow.'));
+    assert.ok(!html.includes('Prepaid check packs are coming') && !html.includes('pl-packs'));
     assert.ok(!/120 checks|1,000 checks \$/.test(html));
   });
 
