@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, LazyMotion, MotionConfig, domMax, m, useReducedMotion } from 'motion/react';
 import './station.css';
+import { START_FREE } from '../pricing.js';
 
 /* ------------------------------------------------------------------ *
  * Bench scene geometry (SVG viewBox units). HTML overlays use the same
@@ -560,14 +561,13 @@ function Bench({ goTrial }) {
   const head = (
     <div className="st-head">
       <div className="st-h-l">
-        <span className="st-num">03</span>
         <h2>Plug in ten or more of your phones and judge the results yourself.</h2>
       </div>
       <div className="st-h-r">
         <p>Every plan includes intake, device checks and inventory. Growth and up add the station app on your own bench.</p>
         <div className="st-ctas">
-          <button type="button" className="hv-2 st-cta" onClick={goTrial}>Get started</button>
-          <a className="hv-7 st-cta st-cta-o" href="#/contact">Book a walkthrough</a>
+          <button type="button" className="ix-btn is-primary" onClick={goTrial}>{START_FREE}</button>
+          <a className="ix-btn" href="#/contact">Talk to sales</a>
         </div>
       </div>
     </div>

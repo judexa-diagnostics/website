@@ -1,6 +1,6 @@
 import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
-import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, SALES_HREF } from './pricing.js';
+import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, trustLine, teaserPlans, SALES_HREF, START_FREE } from './pricing.js';
 import { openSignup } from './hub.js';
 import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
@@ -21,15 +21,15 @@ const sc = px => px * (parseFloat(getComputedStyle(document.documentElement).fon
 export default class SiteLogic extends DCLogic {
   state = {
     page:'home', menu:false, langOpen:false, lang:'EN', w:1440,
-    scene:0, phase:10, mode:'anim', promoFixed:false, promoX:false,
+    scene:0, phase:10, mode:'anim', walk:false,
     hSel:{}, hPage:0, tenStage:[0,0,0,0,0,0,0,0,0,0], hQ:'', hStatus:'All statuses', hLoc:'All locations', hNote:'', carts:0,
-    xfOn:false, tIdx:0, ind:0, platMore:false, platCat:'All',
+    xfOn:false, ind:0, platMore:false, platCat:'All',
     fMod:'All', fQ:'',
     c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
     siShop:'', siErr:'', siLast: readLastShop()
   };
-  wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef(); heroBarRef = React.createRef();
-  moreRef = React.createRef(); xfRef = React.createRef(); testiRef = React.createRef();
+  wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef();
+  moreRef = React.createRef(); xfRef = React.createRef(); walkRef = React.createRef();
   timers = [];
 
   inv = [
@@ -77,13 +77,9 @@ export default class SiteLogic extends DCLogic {
     ['Offers negotiated over DMs, texts and email','One queue, with your floor prices enforced'],
     ['Separate tools for repair, shipping and listings','One record from intake to ship-out']
   ];
-  testimonials = [
-    ['We used to copy test results into a sheet at the end of every shift. Now the grade is on the device record before the tech puts the phone down.','Miles','Operations lead · Northgate Wireless · 3 locations'],
-    ['Buyers ask for erasure proof on every lot. We attach the certificates to the invoice, and that ends the conversation.','Amin','Owner · Ortega Mobile Wholesale'],
-    ['The auto-counter stopped us from saying yes to bad offers at eleven at night.','Brian','Co-founder · Second Signal Phones'],
-    ['I can see which kiosk has the 256 GB units before a customer walks across the mall to ask.','Lucas','General manager · CellPoint Kiosks · 6 locations'],
-    ['Repairs used to vanish somewhere between the bench and the shelf. Now every move is a scan.','Andre','Repair manager · FixFirst Electronics']
-  ];
+  // Testimonials: none. The five quotes that were here had no source (one named the console mock's
+  // made-up tenant), so they are off the site. TODO(Sri): put only verified quotes in src/home.js
+  // VERIFIED_QUOTES, with the customer's OK; the home page shows the section only when it is not empty.
 
   componentDidMount() {
     this.onHash = () => { this.stopTen(); this.setState({ page: this.readPage(), menu:false, langOpen:false }); window.scrollTo(0,0); };
@@ -159,11 +155,7 @@ export default class SiteLogic extends DCLogic {
   handleScroll() {
     const s = this.state, vh = window.innerHeight;
     if (s.page === 'home') {
-      const hb = this.heroBarRef.current, mr = this.moreRef.current;
-      if (hb && mr) {
-        const f = hb.getBoundingClientRect().bottom < sc(64) && mr.getBoundingClientRect().top > vh - sc(40);
-        if (f !== s.promoFixed) this.setState({ promoFixed:f });
-      }
+      const mr = this.moreRef.current;
       const w = this.wrapRef.current;
       if (w && s.mode === 'anim') {
         const r = w.getBoundingClientRect(), total = r.height - (vh - sc(64));
@@ -209,10 +201,10 @@ export default class SiteLogic extends DCLogic {
       c75: wide ? 'minmax(0,7fr) minmax(0,5fr)' : 'minmax(0,1fr)',
       c57: wide ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)',
       c39: wide ? '16.25rem minmax(0,1fr)' : 'minmax(0,1fr)',
-      ruleR: wide ? '1px solid #D9D0C2' : '0'
+      ruleR: wide ? '1px solid var(--pmm-border-soft)' : '0'
     };
     const is = {}; PAGES.forEach(p => is[p] = s.page === p);
-    const nav = { pricing: s.page === 'pricing' ? '#EB5E12' : 'transparent' };
+    const nav = { pricing: s.page === 'pricing' ? 'var(--pmm-brand)' : 'transparent' };
     const langs = [['EN','English'],['ES','Español'],['FR','Français']];
 
     // hero product
@@ -256,7 +248,7 @@ export default class SiteLogic extends DCLogic {
       slideFlex: anim ? '0 0 100vw' : '0 0 min(70rem, 88vw)',
       slidePad: anim ? '1.5rem clamp(1rem,3vw,2.5rem)' : 'clamp(1rem,2.5vw,2rem)',
       slideBorder: anim ? '0' : '1px solid #D9D0C2', slideBg: anim ? 'transparent' : '#FFFFFF',
-      footPad: anim && s.promoFixed && !s.promoX ? '4.125rem' : '0.625rem',
+      footPad: '0.625rem',
       num: '0' + (s.scene + 1), isSlides: !anim,
       foot: anim ? (s.scene < 6 ? 'Keep scrolling for the next step' : 'End of walkthrough · scroll on') : 'Slideshow · swipe or use the arrows',
       hint: anim ? 'Each scroll plays one complete step.' : 'Swipe through the steps at your own pace.',
@@ -331,37 +323,39 @@ export default class SiteLogic extends DCLogic {
       tr: c.go ? `left 800ms ${ease}, top 800ms ${ease}, width 800ms ${ease}, height 800ms ${ease}, opacity 300ms ease 560ms` : 'none',
       isPhone: c.kind === 'phone', isBox: c.kind === 'box', isPlane: c.kind === 'plane',
       rad: Math.max(3, Math.round(CR.w * .17)) + 'px', pad: Math.max(2, Math.round(CR.w * .05)) + 'px', rad2: Math.max(2, Math.round(CR.w * .12)) + 'px', rot: 'rotate(' + c.ang + 'deg)' } : { on:false };
-    const xf = this.xfRows.map(([b,a], i) => ({ b, a, bFg: s.xfOn ? '#8E857A' : '#3A342D', strike: s.xfOn ? '#B3261E' : 'transparent', o: s.xfOn ? 1 : 0, t: s.xfOn ? 'none' : 'translateX(-0.5rem)', d: (i * 180) + 'ms', d2: (i * 180 + 250) + 'ms' }));
-    const scrollTesti = dir => { const el = this.testiRef.current; if (!el) return; const f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + sc(28) : sc(400); el.scrollBy({ left: dir * w, behavior:'smooth' }); };
-    const testi = {
-      items: this.testimonials.map(([q,n,r]) => ({q,n,r})), pos: `${String(s.tIdx + 1).padStart(2,'0')} / ${String(this.testimonials.length).padStart(2,'0')}`,
-      prev: () => scrollTesti(-1), next: () => scrollTesti(1),
-      onScroll: e => { const el = e.currentTarget, f = el.querySelector('figure'); const w = f ? f.getBoundingClientRect().width + sc(28) : sc(400); const i = Math.min(this.testimonials.length - 1, Math.round(el.scrollLeft / w)); if (i !== this.state.tIdx) this.setState({ tIdx:i }); }
-    };
+    const xf = this.xfRows.map(([b,a], i) => ({ b, a, on: s.xfOn, d: (i * 180) + 'ms', d2: (i * 180 + 250) + 'ms' }));
 
     return {
       ui, is, nav,
-      menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? '#16130F' : 'transparent', menuBtnFg: s.menu ? '#F6F2EA' : '#16130F',
+      menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? 'var(--pmm-text)' : 'transparent', menuBtnFg: s.menu ? 'var(--pmm-bg)' : 'var(--pmm-text)',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
       menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record']]
-        .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? '#FBE7CC' : '#FFFFFF' })),
+        .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
-      langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? '#FBE7CC' : '#FFFFFF', pick: () => this.setState({ lang:code, langOpen:false }) })),
+      langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)', pick: () => this.setState({ lang:code, langOpen:false }) })),
       goTrial: e => { if (e && e.preventDefault) e.preventDefault(); if (!signupOpen) { this.goto('contact', { menu:false }); return; } this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); },
+      startLabel: START_FREE, // the one label of every goTrial button
       loginUrl: LOGIN_HREF, // the hub's sign-in once it is public, else "Sign in to your shop"
-      hero, heroBarRef: this.heroBarRef, moreRef: this.moreRef, wrapRef: this.wrapRef, trackRef: this.trackRef, xfRef: this.xfRef, testiRef: this.testiRef,
+      hero, moreRef: this.moreRef, wrapRef: this.wrapRef, trackRef: this.trackRef, xfRef: this.xfRef, walkRef: this.walkRef,
       sb, rail, s1, s2, s3, s4, s5, s6, s7, stageRef: this.stageRef, cr,
       toggleMode: () => this.setMode(anim ? 'slides' : 'anim'),
-      caps: this.caps, xf, testi,
+      caps: this.caps, xf,
+      // Home page: the trust line and the plan cards come from pricing.js, like the Plans page.
+      home: {
+        trust: trustLine(),
+        plans: teaserPlans().map(p => this.planTile(p)),
+        walk: s.walk,
+        openWalk: () => this.setState({ walk:true }, () => { const el = this.walkRef.current; if (el && el.scrollIntoView) el.scrollIntoView({ behavior:'smooth', block:'start' }); }),
+        closeWalk: () => this.setState({ walk:false }, () => { const el = document.getElementById('how'); if (el && el.scrollIntoView) el.scrollIntoView({ block:'start' }); })
+      },
       tenPhones: this.tenRes.map(([t,c], k) => { const st = s.tenStage[k]; return {
         t, c, scr: st >= 2 ? '#F6F2EA' : '#0B0907', bd: st >= 1 ? '#B9AE9E' : '#6B6257',
         cableS: st >= 1 ? 1 : .25, cable: st >= 1 ? '#B9AE9E' : '#6B6257',
         bootO: st >= 2 && st < 4 ? 1 : 0, logoS: st >= 2 ? 1 : .6, barO: st >= 3 ? 1 : 0,
         barW: st >= 3 ? '100%' : '0%', barTr: st >= 3 ? 'width 1400ms linear' : 'none', resO: st >= 4 ? 1 : 0 }; }),
       tenSum: (() => { const d = s.tenStage.filter(x => x >= 4).length, pass = this.tenRes.filter((r, k) => s.tenStage[k] >= 4 && r[0] === 'PASS').length, run = s.tenStage.filter(x => x >= 1 && x < 4).length; return d === 10 ? `10 of 10 complete · ${pass} passed · ${10 - pass} flagged` : `${d} of 10 complete · ${run} testing`; })(),
-      ledger: [['10/01','iPh 13 128 blk','B','shelf 4?',0],['10/01','S22 Ultra 256','A-','bin C-12',0],['10/01','iPh 12 64 blue','B','sold??',1],['10/02','Pixel 7 obsid.','A','Elm st',0],['10/02','iPh 14 Pro 256','?','repair — Mike',1],['10/02','iPh 11 64 wht','B','kiosk / WH?',0],['10/03','S23 lavender','A','—',1]].map(([d,m,g,l,x]) => ({ d, m, g, l, fg: x ? '#8E857A' : '#3A342D', dec: x ? 'line-through' : 'none' })),
-      promo: { show: s.page === 'home' && s.promoFixed && !s.promoX && (this.props.showPromo ?? true), dismiss: () => this.setState({ promoX:true }) },
+      ledger: [['10/01','iPh 13 128 blk','B','shelf 4?',0],['10/01','S22 Ultra 256','A-','bin C-12',0],['10/01','iPh 12 64 blue','B','sold??',1],['10/02','Pixel 7 obsid.','A','Elm st',0],['10/02','iPh 14 Pro 256','?','repair — Mike',1],['10/02','iPh 11 64 wht','B','kiosk / WH?',0],['10/03','S23 lavender','A','—',1]].map(([d,m,g,l,x]) => ({ d, m, g, l, struck: !!x })),
       ...this.pageVals(s, ui)
     };
   }
@@ -409,6 +403,14 @@ export default class SiteLogic extends DCLogic {
   integrations = [['Diagnostics','Devices','BUILT IN'],['Erasure certificates','Devices','BUILT IN'],['Grading','Devices','BUILT IN'],['Repairs & parts','Devices','BUILT IN'],['Inventory & locations','Stock','BUILT IN'],['Transfers','Stock','BUILT IN'],['Offers','Sales','BUILT IN'],['Sales orders & invoices','Sales','BUILT IN'],['Customer portal','Sales','BUILT IN'],['Reports','Stock','BUILT IN'],['CSV & PDF export','Connections','BUILT IN'],['Payments','Connections','ON REQUEST'],['Shipping labels','Connections','ON REQUEST'],['Marketplaces','Connections','ON REQUEST'],['Accounting','Connections','ON REQUEST']];
   record = [['Oct 2 · 08:14','Received in lot L-0418','Manifest scan','D. Chen','WH-A · Dock 2'],['08:31','Connected · port 17','Station B-04','D. Chen','WH-A'],['08:33','Functional test 41/42 · rear camera','InPhox Diagnostics','—','Station B-04'],['08:34','Erasure certified · NIST 800-88','InPhox Diagnostics','—','Station B-04'],['09:02','Repair RT-2207 · rear camera replaced','Repair suite','M. Ortiz','Bench R-2'],['09:24','Retest 42/42 · graded A-','InPhox Diagnostics','M. Ortiz','Bench R-2'],['09:30','Shelved','Handheld scan','Sam P.','C-14-03'],['Oct 3 · 10:02','Offer accepted at $869','Offers','—','—'],['14:47','Sold · label printed','Sales order SO-10422','Sam P.','Dock 1']];
 
+  // One plan card's values (Plans page and home page): pricing.js planCard() plus where its button goes.
+  // The site takes no payment and has no sign-up form: a plan button is a link to the hub's sign-up
+  // with the plan's code; Enterprise goes to the sales contact.
+  planTile(p) {
+    // Until the hub's sign-up is public (config.js signupOpen), every plan button goes to Contact.
+    const planAction = p => p.talkToSales || !signupOpen ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
+    return { ...planCard(p), hi: !!p.highlight, act: planAction(p) };
+  }
   pickChips(list, cur, on, multi) {
     return list.map(t => { const sel = multi ? !!cur[t] : cur === t; return { t, bg: sel ? '#16130F' : '#FFFFFF', fg: sel ? '#F6F2EA' : '#16130F', bd: sel ? '#16130F' : '#D9D0C2', pick: () => on(t) }; });
   }
@@ -432,14 +434,10 @@ export default class SiteLogic extends DCLogic {
       rows: frows.map(([m,f,d]) => ({ m, f, d }))
     };
 
-    // Pricing. The site takes no payment and has no sign-up form: every plan button is a link to the
-    // hub's sign-up with the plan's code (Enterprise goes to the sales contact).
-    const planAction = p => p.talkToSales || !signupOpen ? { href: SALES_HREF } : { href: signupUrl(p.code, hubUrl), hub: true };
+    // Pricing: every plan card comes from planTile() (see there).
     const pr = {
       intro: 'Start free. Every plan includes device checks. Prepaid and overage plans available.',
-      tiers: pricing.plans.map(p => { const c = planCard(p), hi = !!p.highlight; return {
-        ...c, top: hi ? '#EB5E12' : 'transparent', bg: hi ? '#FFFFFF' : 'transparent',
-        btnBg: hi ? '#EB5E12' : 'transparent', btnBd: hi ? '#EB5E12' : '#16130F', act: planAction(p) }; }),
+      tiers: pricing.plans.map(p => this.planTile(p)),
       planNames: pricing.plans.map(p => p.name),
       compare: compareRows().map(([l, ...cells]) => ({ l, cells })),
       packs: pricing.packs.show ? pricing.packs.line : '',
@@ -494,7 +492,7 @@ export default class SiteLogic extends DCLogic {
       loginUrl: LOGIN_HREF,
       headline: 'Create your InPhox account.',
       sub: 'Pick a plan to continue to sign-up. Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
-      plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: planAction(p) }; })
+      plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: this.planTile(p).act }; })
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
     // At most 5 tries a minute, so the box cannot be used to run through names.
@@ -514,7 +512,8 @@ export default class SiteLogic extends DCLogic {
         goShop(r.shop); },
       continueLast: () => goShop(s.siLast),
       forget: () => { saveLastShop(''); this.setState({ siLast: '' }); },
-      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); if (!signupOpen) { this.goto('contact', { menu:false }); return; } this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); }
+      goTrial: e => { if (e && e.preventDefault) e.preventDefault(); if (!signupOpen) { this.goto('contact', { menu:false }); return; } this.setState({ menu:false }); openSignup(signupUrl('free', hubUrl)); },
+      startLabel: START_FREE
     };
     return { ind, feat, pr, ct, plat, rec, st, si };
   }

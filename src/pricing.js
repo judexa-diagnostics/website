@@ -17,6 +17,12 @@ export const DEFAULT_HUB_URL = 'https://home.inphox.net';
 /** The page a plan button opens when the hub does not answer. */
 export const BUSY_HREF = '#/signup-busy';
 
+/**
+ * The one label for every button that starts the sign-up (the Free plan at the hub). Header, menu,
+ * hero, closing block, walkthrough, station, industries and the Free plan card all print this.
+ */
+export const START_FREE = 'Start free';
+
 /** Where "Talk to sales" goes. */
 export const SALES_HREF = '#/contact';
 
@@ -163,10 +169,32 @@ export function planCard(plan) {
       plan.locations == null ? 'Unlimited locations' : plan.locations === 1 ? '1 location' : `Up to ${count(plan.locations)} locations`
     ],
     cardNote: plan.cardNote || '',
-    cta: plan.talkToSales ? 'Talk to sales' : plan.price === 0 ? 'Start free' : `Start with ${plan.name}`,
+    cta: plan.talkToSales ? 'Talk to sales' : plan.price === 0 ? START_FREE : `Start with ${plan.name}`,
     items
   };
   return card;
+}
+
+/**
+ * The home page's trust line under the hero buttons, built from the Free plan so it cannot drift:
+ * "Free plan: 25 device checks a month · $0.50 a check after that · card needed, nothing charged".
+ */
+export function trustLine() {
+  const free = findPlan('free');
+  return [
+    `${free.name} plan: ${count(free.checksIncluded)} device checks a month`,
+    `${money(OVERAGE_PER_CHECK, 2)} a check after that`,
+    'card needed, nothing charged'
+  ];
+}
+
+/**
+ * The plans the home page shows as cards: the self-serve plans up to the highlighted one
+ * (Free, Basics, Growth). The same objects and the same planCard() as the Plans page.
+ */
+export function teaserPlans() {
+  const end = pricing.plans.findIndex(p => p.highlight);
+  return pricing.plans.slice(0, end + 1);
 }
 
 /** Rows for the "Compare plans" table: [label, value per plan]. */

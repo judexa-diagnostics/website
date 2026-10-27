@@ -27,17 +27,28 @@ test('the sign-in and start-free affordances do not use the marketing orange', (
   }
 });
 
+// The redesign moved the brand into src/tokens.css (the shop's pmm tokens), so a
+// page or stylesheet may reach the copper either literally or through those tokens.
+const TOKENS = read('src/tokens.css');
+const tokenValue = (name) => (TOKENS.match(new RegExp(`${name}:\\s*([^;]+);`)) || [])[1] || '';
+const usesCopper = (src) => src.includes(SHOP_COPPER)
+  || (/var\(--pmm-brand(-fill)?\)|\bix-btn\b/.test(src) && tokenValue('--pmm-brand').trim() === SHOP_COPPER);
+
+test('the brand tokens are the shop copper and the Satoshi face', () => {
+  assert.equal(tokenValue('--pmm-brand').trim(), SHOP_COPPER, '--pmm-brand is not the shop copper');
+  assert.match(tokenValue('--pmm-font-sans'), /^\s*"Satoshi"/, '--pmm-font-sans does not start with Satoshi');
+});
+
 test('the sign-in and start-free affordances use the shop product copper', () => {
   for (const p of AFFORDANCE_PAGES) {
-    const css = read(p);
-    assert.ok(css.includes(SHOP_COPPER), `${p} does not use the shop copper ${SHOP_COPPER}`);
+    assert.ok(usesCopper(read(p)), `${p} does not use the shop copper ${SHOP_COPPER}`);
   }
 });
 
 test('the global brand tokens match the shop: Satoshi face and copper links', () => {
   const css = read('src/index.css');
-  assert.match(css, /font-family:\s*'Satoshi'/i, 'body font is not Satoshi');
-  assert.ok(css.includes(SHOP_COPPER), `index.css does not use the shop copper ${SHOP_COPPER}`);
+  assert.match(css, /font-family:\s*('Satoshi'|var\(--pmm-font-sans\))/i, 'body font is not Satoshi');
+  assert.ok(usesCopper(css), `index.css does not use the shop copper ${SHOP_COPPER}`);
   assert.ok(!MARKETING_LINK_ORANGE.test(css), 'index.css link token still uses the marketing orange #C2470A');
 });
 

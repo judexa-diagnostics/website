@@ -211,7 +211,7 @@ describe('rendered', () => {
   test('pricing: Free, Basics, Growth and Max buttons are links to the hub with their code; Enterprise goes to sales', () => {
     const html = r.render({ page: 'pricing' });
     const cards = html.match(/<article.*?<\/article>/gs);
-    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn"/)).map(m => m[1] || m[2]);
+    const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn[^"]*"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn[^"]*"/)).map(m => m[1] || m[2]);
     // Until the hub's sign-up is public (src/config.js signupOpen), every plan button goes to Contact.
     const hub = ['free', 'basics', 'growth', 'max'].map(c => (signupOpen ? `https://home.inphox.net/signup?plan=${c}` : '#/contact'));
     assert.deepEqual(hrefs, [...hub, '#/contact']);

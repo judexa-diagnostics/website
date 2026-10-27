@@ -13,10 +13,9 @@ import Signin from './pages/Signin.jsx';
 import SignupBusy from './pages/SignupBusy.jsx';
 import Legal from './pages/Legal.jsx';
 import Footer from './components/Footer.jsx';
-import PromoBar from './components/PromoBar.jsx';
 
 export default function Layout({ v }) {
-  const { is, menuOpen, promo } = v;
+  const { is, menuOpen } = v;
   const page = Object.keys(is).find(k => is[k]) || 'home';
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -37,7 +36,6 @@ export default function Layout({ v }) {
         {is.privacy ? <Legal doc="privacy" /> : null}
       </main>
       <Footer v={v} />
-      {promo.show ? <PromoBar v={v} /> : null}
     </div>
   );
 }

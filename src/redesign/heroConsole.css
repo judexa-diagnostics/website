@@ -1,11 +1,11 @@
 /* HeroConsole: interactive inventory mock in the homepage hero. All classes hc-. */
 .hc-root{min-width:0;position:relative;z-index:1;display:flex;flex-direction:column;gap:.625rem;
   --hc-bg:#F6F2EA;--hc-panel:#EDE6DA;--hc-rule:#D9D0C2;--hc-row:#EDE7DC;--hc-ink:#16130F;--hc-m1:#3A342D;--hc-m2:#6B6257;--hc-m3:#8E857A;
-  --hc-or:#EB5E12;--hc-or2:#C2470A;--hc-gr:#1E7A4A;--hc-red:#B3261E;--hc-cream:#FBE7CC;--hc-cream2:#FDF4E7;--hc-chip:#E3B48E;
+  --hc-or:var(--pmm-brand);--hc-or2:var(--pmm-brand-fill);--hc-gr:#1E7A4A;--hc-red:#B3261E;--hc-cream:#FBE7CC;--hc-cream2:#FDF4E7;--hc-chip:#E3B48E;
   --hc-mono:'JetBrains Mono',ui-monospace,monospace;--hc-ease:cubic-bezier(.2,.8,.2,1)}
 .hc-wrap{position:relative;min-width:0}
-.hc-frame{position:relative;background:#FFFFFF;border:1px solid var(--hc-ink);border-radius:.25rem;overflow:hidden;
-  box-shadow:0 .5rem 1.5rem rgba(22,19,15,.12),0 1.5rem 3rem -1.5rem rgba(22,19,15,.18);zoom:.86;color:var(--hc-ink);font-family:'Archivo',system-ui,sans-serif}
+.hc-frame{position:relative;background:var(--pmm-surface);border:1px solid var(--pmm-border-soft);border-radius:var(--pmm-radius-card);overflow:hidden;
+  box-shadow:0 .5rem 1.5rem rgba(22,19,15,.12),0 1.5rem 3rem -1.5rem rgba(22,19,15,.18);zoom:.86;color:var(--hc-ink);font-family:var(--pmm-font-sans)}
 .hc-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
 .hc-inner{min-width:47.5rem;position:relative}
 .hc-root button{font-family:inherit}

@@ -1,7 +1,7 @@
 import { FxScope } from '../redesign/fx/index.jsx';
 
 export default function Contact({ v }) {
-  const { ct, goTrial, ui } = v;
+  const { ct, goTrial, startLabel, ui } = v;
   return (
     <FxScope>
     <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) clamp(3.5rem,7vw,6rem)", display: "grid", gridTemplateColumns: ui.c57, gap: "clamp(2rem,5vw,5rem)", alignItems: "start" }}>
@@ -33,7 +33,7 @@ export default function Contact({ v }) {
             {"We'll email "}<span>{ct.email}</span>{" with a few times for a walkthrough. Meanwhile, you can create your account and connect a station."}
           </span>
           <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap", marginTop: "0.375rem" }}>
-            <button onClick={goTrial} style={{ height: "2.75rem", padding: "0 1.125rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer" }}>Join now</button>
+            <button type="button" className="ix-btn is-primary" onClick={goTrial}>{startLabel}</button>
             <button onClick={ct.reset} style={{ height: "2.75rem", padding: "0 1.125rem", background: "transparent", color: "#16130F", border: "1px solid #16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", cursor: "pointer" }}>Send another request</button>
           </div>
         </div>
