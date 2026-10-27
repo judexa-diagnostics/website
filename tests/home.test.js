@@ -68,15 +68,17 @@ describe('home rendered', () => {
   });
   after(async () => { await server.close(); rmSync(server.__envDir, { recursive: true, force: true }); });
 
-  test('hero: a real H1 in the page, Start free first, See plans second, the trust line under them', () => {
+  test('hero: the phone holds a real H1, Start free first, See plans second, the trust line under it', () => {
     const html = render({ page: 'home' });
     const main = html.slice(html.indexOf('<main'));
-    assert.match(main, /<h1 id="hm-h1" class="hm-h1">The all-in-one platform for used electronics/);
-    const firstButton = main.match(/<button[^>]*>([^<]*)<\/button>/)[1];
-    assert.equal(firstButton, 'Start free');
+    assert.match(main, /<h1 class="hp-h1">The all-in-one platform for used electronics/);
+    assert.equal((main.match(/<h1[ >]/g) || []).length, 1, 'one H1 on the page');
+    // Chris 10-27: the phone and its easter eggs (swipe up: home screen, Box it game) stay on the home page.
+    assert.match(main, /hp-phone/);
+    assert.match(main, /class="hp-home/);
     const hero = main.slice(0, main.indexOf('hm-proof'));
-    assert.ok(hero.indexOf('Start free') < hero.indexOf('See plans') && hero.indexOf('See plans') < hero.indexOf('Free plan: 25 device checks a month'));
-    assert.doesNotMatch(main, /hp-phone|hp-h1/); // the tilted phone picture is not on the page
+    assert.match(hero, /class="hv-2 hp-join"[^>]*>Start free</);
+    assert.ok(hero.indexOf('>Start free<') < hero.indexOf('>See plans<') && hero.indexOf('>See plans<') < hero.indexOf('Free plan: 25 device checks a month'));
   });
 
   test('order: hero, proof, how it works, after the sale, station, plans, close', () => {
@@ -86,11 +88,11 @@ describe('home rendered', () => {
     assert.deepEqual(order, [...order].sort((a, b) => a - b));
   });
 
-  test('the 3D walkthrough is opt-in: not on the page until asked for', () => {
+  test('the 3D walkthrough plays in the browser; the server page (and animation off) shows the stills', () => {
     const html = render({ page: 'home' });
-    assert.ok(html.includes('Watch the full walkthrough'));
+    assert.ok(html.includes('Play the walkthrough'));
     assert.ok(!html.includes('sx-root'));
-    assert.ok(render({ page: 'home', walk: true }).includes('Close the walkthrough'));
+    assert.ok(render({ page: 'home', walk: true }).includes('Turn the animation off'));
   });
 
   test('plan cards: Free, Basics and Growth from pricing.js, linking to the hub (Contact while sign-up is closed), then Compare all plans', async () => {

@@ -1,5 +1,6 @@
 import { Fragment, Suspense, lazy } from 'react';
 import HeroConsole from '../redesign/HeroConsole.jsx';
+import HeroPhone from '../redesign/HeroPhone.jsx';
 import Station from '../redesign/Station.jsx';
 import PlanCard from '../components/PlanCard.jsx';
 import { FxScope } from '../redesign/fx/index.jsx';
@@ -9,21 +10,16 @@ const Story = lazy(() => import('../redesign/Story.jsx'));
 
 // Home: hero with one call to action, proof, a short feature story, plan cards, then the close.
 // Every colour, radius and font is a template token (tokens.css, home.css). The 3D walkthrough
-// only loads when someone asks for it.
+// plays on its own; turned off (or with reduced motion) the stills show instead.
 export default function Home({ v }) {
   const { caps, goTrial, startLabel, home, ledger, moreRef, walkRef, xf, xfRef } = v;
   const proof = proofFacts();
   return (
     <div className="hm">
-      <section className="hm-hero" aria-labelledby="hm-h1">
+      <section className="hm-hero" aria-label="InPhox">
         <div className="hm-hero-copy">
-          <span className="hm-kicker">Device operations platform</span>
-          <h1 id="hm-h1" className="hm-h1">The all-in-one platform for used electronics. <span>Literally.</span></h1>
-          <p className="hm-sub">Diagnose, erase, grade, repair, store and sell from one system. Every device is tracked by IMEI from the moment it's plugged in until it ships.</p>
-          <div className="hm-ctas">
-            <button type="button" className="ix-btn is-primary hm-cta" onClick={goTrial}>{startLabel}</button>
-            <a className="ix-btn hm-cta" href="#/pricing">See plans</a>
-          </div>
+          {/* The hero copy lives in the phone (swipe up from its home bar for the home screen and the Box it game). */}
+          <HeroPhone goTrial={goTrial} startLabel={startLabel} />
           <p className="hm-trust">{home.trust.map((x, i) => <Fragment key={x}>{i ? <span aria-hidden="true"> · </span> : null}<span>{x}</span></Fragment>)}</p>
         </div>
         <div className="hm-console">
@@ -45,31 +41,20 @@ export default function Home({ v }) {
           <span className="hm-kicker">How it works</span>
           <h2 id="hm-how">From the bench to the buyer, one record per device.</h2>
         </div>
-        <ol className="hm-how">
-          {HOW_STEPS.map(s => (
-            <li key={s.n} className="hm-card hm-step">
-              <img src={s.img} alt={s.alt} loading="lazy" width="960" height="600" />
-              <div className="hm-step-body">
-                <span className="hm-num">{s.n}</span>
-                <h3>{s.t}</h3>
-                <p>{s.d}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
         <div className="hm-row">
           {home.walk
-            ? <button type="button" className="ix-btn" onClick={home.closeWalk}>Close the walkthrough</button>
-            : <button type="button" className="ix-btn" onClick={home.openWalk}>Watch the full walkthrough</button>}
-          <span className="hm-note">Seven steps in 3D, about two minutes.</span>
+            ? <button type="button" className="ix-btn" onClick={home.closeWalk}>Turn the animation off</button>
+            : <button type="button" className="ix-btn" onClick={home.openWalk}>Play the walkthrough</button>}
+          <span className="hm-note">{home.walk ? 'Scroll through the seven steps in 3D.' : 'Seven steps in 3D, about two minutes.'}</span>
         </div>
       </section>
+      {/* The walkthrough plays on its own; with the animation off (or reduced motion) the stills stand in. */}
       <div ref={walkRef}>
         {home.walk ? (
-          <Suspense fallback={<div className="hm-walk-wait">Loading the walkthrough…</div>}>
+          <Suspense fallback={<HowStills />}>
             <Story goTrial={goTrial} />
           </Suspense>
-        ) : null}
+        ) : <section className="hm-wrap" aria-label="The walkthrough as stills"><HowStills /></section>}
       </div>
 
       <section className="hm-wrap hm-sec" aria-labelledby="hm-after">
@@ -167,5 +152,22 @@ export default function Home({ v }) {
         </ol>
       </section>
     </div>
+  );
+}
+
+function HowStills() {
+  return (
+    <ol className="hm-how">
+      {HOW_STEPS.map(s => (
+        <li key={s.n} className="hm-card hm-step">
+          <img src={s.img} alt={s.alt} loading="lazy" width="960" height="600" />
+          <div className="hm-step-body">
+            <span className="hm-num">{s.n}</span>
+            <h3>{s.t}</h3>
+            <p>{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }

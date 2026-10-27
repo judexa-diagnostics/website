@@ -1,0 +1,63 @@
+.hp-stage{position:relative;z-index:2;display:flex;justify-content:center;perspective:1400px;padding:.5rem 0 1.5rem;min-width:0}
+.hp-fly{transform-style:preserve-3d;will-change:transform;width:min(21.5rem,100%)}
+.hp-tilt{transform-style:preserve-3d}
+.hp-phone{position:relative;border-radius:2.9rem;padding:.6rem;background:linear-gradient(145deg,#3a342d,#16130F 38%,#0b0907);
+  box-shadow:inset 0 0 0 1.5px #57504a,inset 0 0 0 3px #0b0907,1.5rem 2rem 3rem -1rem rgba(22,19,15,.45),.4rem .6rem 1.2rem rgba(22,19,15,.22)}
+.hp-btn{position:absolute;width:3px;background:#2b2621;border-radius:2px}
+.hp-btn-a{left:-3px;top:18%;height:2rem}.hp-btn-b{left:-3px;top:28%;height:3.2rem}.hp-btn-c{right:-3px;top:24%;height:4.4rem}
+.hp-screen{position:relative;overflow:hidden;border-radius:2.35rem;background:#F6F2EA;min-height:min(40rem,calc(100vh - 9rem));aspect-ratio:9/18.4;display:flex;flex-direction:column;color:#16130F}
+.hp-island{position:absolute;top:.6rem;left:50%;transform:translateX(-50%);width:5.6rem;height:1.55rem;border-radius:1rem;background:#0b0907;z-index:8}
+.hp-status{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.6rem 0 1.75rem;height:2.4rem;font-size:.8rem;font-weight:650;font-variant-numeric:tabular-nums}
+.hp-bars{display:flex;align-items:flex-end;gap:2px}
+.hp-bars i{width:3px;background:#16130F;border-radius:1px}
+.hp-bars i:nth-child(1){height:4px}.hp-bars i:nth-child(2){height:6px}.hp-bars i:nth-child(3){height:8px}.hp-bars i:nth-child(4){height:10px}
+.hp-bars b{width:1.35rem;height:.65rem;margin-left:.35rem;border:1.5px solid #16130F;border-radius:3px;padding:1px;background:linear-gradient(90deg,#16130F 72%,transparent 72%) content-box}
+.hp-app{flex:1;display:flex;flex-direction:column;justify-content:center;gap:1.15rem;padding:1rem 1.4rem 1.6rem}
+.hp-brand{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.hp-brand img{width:2rem;height:2rem}
+.hp-h1{margin:0;font-size:clamp(1.65rem,2.05vw,2.05rem);line-height:1.06;font-weight:650;font-stretch:104%;letter-spacing:-.02em;text-wrap:balance}
+.hp-h1 span{color:var(--pmm-brand-fill)}
+.hp-p{margin:0;font-size:.9rem;line-height:1.55;color:#3A342D;text-wrap:pretty}
+.hp-ctas{display:flex;flex-direction:column;gap:.5rem}
+.hp-join,.hp-price{height:2.9rem;display:flex;align-items:center;justify-content:center;border-radius:.6rem;font-size:.95rem;font-weight:600;text-decoration:none;cursor:pointer;font-family:inherit}
+.hp-join{background:var(--pmm-brand-fill);color:#fff;border:0}
+.hp-price{border:1px solid #16130F;color:#16130F;background:transparent}
+.hp-track{display:flex;align-items:center;gap:.45rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:#6B6257;font-variant-numeric:tabular-nums}
+.hp-dot{width:.45rem;height:.45rem;border-radius:50%;background:#1E7A4A;box-shadow:0 0 0 0 rgba(30,122,74,.5);animation:hp-pulse 2s infinite}
+@keyframes hp-pulse{70%{box-shadow:0 0 0 .4rem rgba(30,122,74,0)}100%{box-shadow:0 0 0 0 rgba(30,122,74,0)}}
+/* layers inside the screen: home screen < app < game < home bar < glare.
+   Chrome hit-tests children of a 3D-turned parent wrongly (the screen swallows
+   clicks, z-index is ignored) unless the phone is its own flat layer and the
+   layers inside carry no will-change. */
+.hp-phone{transform:translateZ(0)}
+.hp-homescreen{position:absolute;inset:0;z-index:1}
+.hp-appwin{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;background:#F6F2EA;padding-bottom:.8rem;transform-origin:50% 100%;overflow:hidden}
+.hp-appwin.closed{pointer-events:none}
+.hp-gamewin{position:absolute;inset:0;z-index:3;overflow:hidden}
+/* home bar: a wide, tall hit area around the visible pill; only it blocks page scroll */
+.hp-home{all:unset;box-sizing:border-box;position:absolute;z-index:6;left:50%;bottom:0;width:11rem;height:2rem;transform:translateX(-50%);cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
+.hp-home::before{content:'';position:absolute;left:50%;bottom:.5rem;width:7.5rem;height:.3rem;margin-left:-3.75rem;border-radius:.2rem;background:#16130F;opacity:.85;transition:background .3s,opacity .3s,transform .2s}
+.hp-home:hover::before,.hp-home.held::before{opacity:1;transform:scaleX(1.06)}
+.hp-home.held{cursor:grabbing}
+.hp-home:focus-visible::before{outline:2px solid var(--pmm-brand);outline-offset:3px}
+.hp-m-game .hp-home::before{background:#F6F2EA;opacity:.7}
+.hp-m-home .hp-home{pointer-events:none}
+.hp-m-home .hp-home::before{opacity:.35}
+.hp-home.nudge::before{animation:hp-nudge 1.6s cubic-bezier(.3,.7,.3,1)}
+@keyframes hp-nudge{0%,100%{transform:none;box-shadow:0 0 0 0 rgba(235,94,18,0)}
+  18%{transform:translateY(-6px);background:var(--pmm-brand);box-shadow:0 0 .7rem .1rem rgba(235,94,18,.55)}
+  36%{transform:none}52%{transform:translateY(-3px);background:var(--pmm-brand)}70%{transform:none}}
+.hp-home::after{content:attr(data-tip);position:absolute;left:50%;bottom:1.45rem;transform:translate(-50%,.25rem);padding:.25rem .5rem;border-radius:.4rem;background:#16130F;color:#F6F2EA;
+  font:600 .6rem 'JetBrains Mono',monospace;letter-spacing:.03em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.hp-m-game .hp-home::after{background:#F6F2EA;color:#16130F}
+@media (hover:hover){.hp-home:hover::after{opacity:1;transform:translate(-50%,0)}}
+.hp-home:focus-visible::after{opacity:1;transform:translate(-50%,0)}
+.hp-home.held::after{opacity:0}
+.hp-glare{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;z-index:7}
+.hp-shadow{position:absolute;left:18%;right:12%;bottom:.2rem;height:1.4rem;border-radius:50%;background:radial-gradient(closest-side,rgba(22,19,15,.28),rgba(22,19,15,0));filter:blur(4px);z-index:-1}
+@media (max-width:979px){
+  .hp-fly{width:min(20rem,86vw)}
+  .hp-screen{min-height:0}
+  .hp-h1{font-size:1.75rem}
+}
+@media (prefers-reduced-motion:reduce){.hp-dot,.hp-home.nudge::before{animation:none}}

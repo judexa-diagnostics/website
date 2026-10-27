@@ -92,7 +92,10 @@ export default class SiteLogic extends DCLogic {
     const rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const pref = this.props.startMode === 'Slideshow' ? 'slides' : null;
     const mode = saved || pref || (rm || window.innerWidth < 980 ? 'slides' : 'anim');
-    this.setState({ page: this.readPage(), w: window.innerWidth, mode }, () => { if (mode === 'anim') this.playScene(0); setTimeout(this.onScroll, 60); });
+    // The walkthrough plays unless the visitor turned it off here or asks for reduced motion.
+    let walkPref = null; try { walkPref = localStorage.getItem('inphox-walk'); } catch(e) {}
+    const walk = walkPref ? walkPref === 'on' : !rm;
+    this.setState({ page: this.readPage(), w: window.innerWidth, mode, walk }, () => { if (mode === 'anim') this.playScene(0); setTimeout(this.onScroll, 60); });
   }
   componentWillUnmount() {
     window.removeEventListener('hashchange', this.onHash);
@@ -186,6 +189,7 @@ export default class SiteLogic extends DCLogic {
       this.setState({ scene:i });
     }
   }
+  saveWalk(v) { try { localStorage.setItem('inphox-walk', v); } catch(e) {} }
   setMode(m) {
     try { localStorage.setItem('inphox-motion', m); } catch(e) {}
     this.timers.forEach(clearTimeout);
@@ -346,8 +350,8 @@ export default class SiteLogic extends DCLogic {
         trust: trustLine(),
         plans: teaserPlans().map(p => this.planTile(p)),
         walk: s.walk,
-        openWalk: () => this.setState({ walk:true }, () => { const el = this.walkRef.current; if (el && el.scrollIntoView) el.scrollIntoView({ behavior:'smooth', block:'start' }); }),
-        closeWalk: () => this.setState({ walk:false }, () => { const el = document.getElementById('how'); if (el && el.scrollIntoView) el.scrollIntoView({ block:'start' }); })
+        openWalk: () => { this.saveWalk('on'); this.setState({ walk:true }, () => { const el = this.walkRef.current; if (el && el.scrollIntoView) el.scrollIntoView({ behavior:'smooth', block:'start' }); }); },
+        closeWalk: () => { this.saveWalk('off'); this.setState({ walk:false }, () => { const el = document.getElementById('how'); if (el && el.scrollIntoView) el.scrollIntoView({ block:'start' }); }); }
       },
       tenPhones: this.tenRes.map(([t,c], k) => { const st = s.tenStage[k]; return {
         t, c, scr: st >= 2 ? '#F6F2EA' : '#0B0907', bd: st >= 1 ? '#B9AE9E' : '#6B6257',
