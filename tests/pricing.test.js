@@ -59,9 +59,9 @@ describe('plan data', async () => {
     }
   });
 
-  test('the Free card line: credit or debit, a $1 hold released, nothing charged, no prepaid', () => {
+  test('the Free card line: credit or debit, a $100 hold released, nothing charged, no prepaid', () => {
     const note = plan('free').cardNote;
-    for (const s of ['credit or debit card is required', '$1 hold', 'released', 'Nothing is charged', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
+    for (const s of ['credit or debit card is required', '$100 hold', 'released', 'Nothing is charged', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
     assert.equal(P.planCard(plan('free')).checks, '25 device checks included a month');
   });
 
@@ -98,6 +98,9 @@ describe('plan data', async () => {
     assert.deepEqual(by['Employees'], ['\u2014', 'Included', 'Included', 'Included', 'Included']);
     assert.deepEqual(by['Phone Intake'].slice(0, 4), ['—', '—', 'Included', 'Included']);
     assert.deepEqual(by['Repairs'], ['—', 'Add-on, $40 a month', 'Add-on, $100 a month', 'Included', 'Included']);
+    // Chris 2026-11-03: every shop lists on the Marketplace, from Free up (it was Max only)
+    assert.deepEqual(by['Listing on the Marketplace'], ['Included', 'Included', 'Included', 'Included', 'Included']);
+    assert.equal(by['Listing'], undefined);
   });
 
   test('with no env vars: the Contact form goes to the InPhox platform, default login URL', () => {
