@@ -43,7 +43,9 @@ const ADDS = {
   free: [
     { label: 'Device scanning and lookups', flags: ['scanner', 'basic_lookup'] },
     { label: 'Stock list, receipts and CSV export', flags: ['stock_list', 'receipts', 'csv_export', 'export'] },
-    { label: 'Card invoicing and crypto payments', flags: ['payments'] }
+    { label: 'Card invoicing and crypto payments', flags: ['payments'] },
+    // Chris 2026-11-03: every shop lists on the Marketplace (a shop needs a verified card anyway), not Max only.
+    { label: 'Listing on the Marketplace', flags: ['listing'] }
   ],
   basics: [
     { label: 'Employees', flags: ['employees'] },
@@ -69,7 +71,6 @@ const ADDS = {
   ],
   max: [
     { label: 'Repairs included', flags: ['repairs', 'repairs_pro'] },
-    { label: 'Listing', flags: ['listing'] },
     { label: 'Reverse logistics', flags: ['reverse_logistics'] },
     { label: 'Workflow automations', flags: ['workflow_automations'] },
     { label: 'Custom roles', flags: ['rbac'] },
@@ -84,7 +85,7 @@ export const pricing = {
     {
       code: 'free', name: 'Free', hubCode: true, who: 'Try InPhox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
-      cardNote: 'A credit or debit card is required: a $1 hold that is released. Nothing is charged. Prepaid cards are not accepted.',
+      cardNote: 'A credit or debit card is required: a $100 hold that is released. Nothing is charged. Prepaid cards are not accepted.',
       adds: ADDS.free
     },
     {
@@ -128,7 +129,7 @@ export const pricing = {
     },
     {
       q: 'Is Free really free?',
-      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $1 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
+      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
     },
     {
       q: 'Where do I pay?',
