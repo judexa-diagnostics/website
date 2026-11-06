@@ -1,4 +1,5 @@
 import { FxScope } from '../redesign/fx/index.jsx';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
 export default function Contact({ v }) {
   const { ct, goTrial, startLabel, ui } = v;
@@ -17,7 +18,7 @@ export default function Contact({ v }) {
           </div>
           <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Email</span>
-            <a href="mailto:sales@inphox.com" style={{ color: "#16130F" }}>sales@inphox.com</a>
+            <ObfuscatedEmail style={{ color: "#16130F" }} />
           </div>
           <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Support</span>
