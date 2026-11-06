@@ -18,9 +18,9 @@ describe('home data', async () => {
 
   test('the trust line is built from the Free plan and names no overage rate', () => {
     assert.deepEqual(P.trustLine(), [
-      `Free plan: ${free.checksIncluded} device checks a month`, 'prepaid and overage plans available', 'card needed, nothing charged'
+      `Always Free plan: ${free.checksIncluded} device checks a month`, 'prepaid and overage plans available', 'card needed, nothing charged'
     ]);
-    assert.equal(P.trustLine()[0], 'Free plan: 25 device checks a month');
+    assert.equal(P.trustLine()[0], 'Always Free plan: 25 device checks a month');
   });
 
   test('the home plan cards are the same plan objects as the Plans page (Free, Basics, Growth)', () => {
@@ -99,7 +99,7 @@ describe('home rendered', () => {
     const { signupOpen } = await import('../src/config.js');
     const html = render({ page: 'home' });
     const plans = html.slice(html.indexOf('id="hm-plans"'), html.indexOf('id="hm-close"'));
-    assert.deepEqual([...plans.matchAll(/class="pl-name">([^<]+)</g)].map(m => m[1]), ['Free', 'Basics', 'Growth']);
+    assert.deepEqual([...plans.matchAll(/class="pl-name">([^<]+)</g)].map(m => m[1]), ['Always Free', 'Basics', 'Growth']);
     for (const [code, price] of [['free', '$0'], ['basics', '$30'], ['growth', '$150']]) {
       assert.ok(plans.includes(signupOpen ? `href="https://home.inphox.net/signup?plan=${code}"` : 'href="#/contact"'), code);
       assert.ok(plans.includes(`<b>${price}</b>`), price);

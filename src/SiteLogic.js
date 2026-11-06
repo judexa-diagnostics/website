@@ -495,7 +495,7 @@ export default class SiteLogic extends DCLogic {
     const st = {
       loginUrl: LOGIN_HREF,
       headline: 'Create your InPhox account.',
-      sub: 'Pick a plan to continue to sign-up. Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
+      sub: 'Pick a plan to continue to sign-up. Always Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
       plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: this.planTile(p).act }; })
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.

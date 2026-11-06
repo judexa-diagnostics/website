@@ -27,7 +27,7 @@ describe('plan data', async () => {
 
   test('the plans billing sells, with exactly its names and monthly prices', () => {
     assert.deepEqual(pricing.plans.map(p => [p.code, p.name, p.price]), [
-      ['free', 'Free', 0], ['basics', 'Basics', 30], ['growth', 'Growth', 150], ['max', 'Max', 500], ['enterprise', 'Enterprise', null]
+      ['free', 'Always Free', 0], ['basics', 'Basics', 30], ['growth', 'Growth', 150], ['max', 'Max', 500], ['enterprise', 'Enterprise', null]
     ]);
   });
 
@@ -97,7 +97,9 @@ describe('plan data', async () => {
     assert.deepEqual(by['Device checks included a month'], ['25', '125', '1,000', '5,000', 'By contract']);
     assert.deepEqual(by['Employees'], ['\u2014', 'Included', 'Included', 'Included', 'Included']);
     assert.deepEqual(by['Phone Intake'].slice(0, 4), ['—', '—', 'Included', 'Included']);
-    assert.deepEqual(by['Repairs'], ['—', 'Add-on, $40 a month', 'Add-on, $100 a month', 'Included', 'Included']);
+    // Chris 2026-11-06: Repairs is in no plan (Max too); one $200/month add-on on Basics, Growth and Max, never Free
+    assert.deepEqual(by['Repairs'], ['—', 'Add-on, $200 a month', 'Add-on, $200 a month', 'Add-on, $200 a month', 'By contract']);
+    assert.ok(!rows.some(r => /Repairs included/.test(r[0])));
     // Chris 2026-11-03: every shop lists on the Marketplace, from Free up (it was Max only)
     assert.deepEqual(by['Listing on the Marketplace'], ['Included', 'Included', 'Included', 'Included', 'Included']);
     assert.equal(by['Listing'], undefined);
@@ -210,7 +212,7 @@ describe('rendered', () => {
 
   test('pricing: five plans, each price with the prepaid and overage line beside it, no rate anywhere', () => {
     const html = text(r.render({ page: 'pricing' }));
-    for (const s of ['>Free<', '>Basics<', '>Growth<', '>Max<', '>Enterprise<', '$0', '$30', '$150', '$500', 'Talk to sales']) assert.ok(html.includes(s), s);
+    for (const s of ['>Always Free<', '>Basics<', '>Growth<', '>Max<', '>Enterprise<', '$0', '$30', '$150', '$500', 'Talk to sales']) assert.ok(html.includes(s), s);
     const cards = html.match(/<article.*?<\/article>/gs);
     assert.equal(cards.length, 5);
     for (const card of cards) assert.match(card, /class="pl-over">Prepaid and overage plans available\.</);
@@ -238,7 +240,7 @@ describe('rendered', () => {
     const html = text(r.render({ page: 'pricing' }));
     assert.ok(html.includes('What happens when I go over my included checks?'));
     assert.ok(html.indexOf('Compare plans') < html.indexOf('>Questions<'));
-    assert.match(html, /<table>.*<th scope="col">Free<\/th>.*<th scope="row">Price a month<\/th>/s);
+    assert.match(html, /<table>.*<th scope="col">Always Free<\/th>.*<th scope="row">Price a month<\/th>/s);
   });
 
   test('pricing: reachable by keyboard (real links and buttons, the table scroller takes focus), no horizontal page scroll rules', () => {
@@ -356,6 +358,12 @@ describe('rendered, platform configured', () => {
 });
 
 describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () => {
+  // Chris 2026-11-06: "Start with Free plan" must open the hub sign-up (an onboarding), not the walkthrough request
+  test('the production build has sign-up open', () => {
+    const env = readFileSync(join(root, '.env.production'), 'utf8');
+    assert.match(env, /^VITE_SIGNUP_OPEN=1$/m);
+  });
+
   let r;
   before(async () => (r = await renderWith('VITE_SIGNUP_OPEN=1\nVITE_PLATFORM_URL=off\n')));
   after(() => r.close());

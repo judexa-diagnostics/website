@@ -70,7 +70,7 @@ const ADDS = {
     { label: 'Label printing', flags: ['label_printing'] }
   ],
   max: [
-    { label: 'Repairs included', flags: ['repairs', 'repairs_pro'] },
+    { label: 'Outside repairers (with the Repairs add-on)', flags: ['repairs_pro'] },
     { label: 'Reverse logistics', flags: ['reverse_logistics'] },
     { label: 'Workflow automations', flags: ['workflow_automations'] },
     { label: 'Custom roles', flags: ['rbac'] },
@@ -83,7 +83,7 @@ const ADDS = {
 export const pricing = {
   plans: [
     {
-      code: 'free', name: 'Free', hubCode: true, who: 'Try InPhox on real devices',
+      code: 'free', name: 'Always Free', hubCode: true, who: 'Try InPhox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
       cardNote: 'A credit or debit card is required: a $100 hold that is released. Nothing is charged. Prepaid cards are not accepted.',
       adds: ADDS.free
@@ -91,18 +91,19 @@ export const pricing = {
     {
       code: 'basics', name: 'Basics', hubCode: true, who: 'One shop with a small team',
       price: 30, checksIncluded: 125, locations: 1, staff: 3,
-      adds: ADDS.basics, repairsAddon: 40
+      adds: ADDS.basics, repairsAddon: 200
     },
     {
       code: 'growth', name: 'Growth', hubCode: true, who: 'A busy shop or a few locations', highlight: true,
       price: 150, checksIncluded: 1000, locations: 5, staff: 30,
-      adds: ADDS.growth, repairsAddon: 100
+      adds: ADDS.growth, repairsAddon: 200
     },
     {
       code: 'max', name: 'Max', hubCode: true, who: 'Many locations, your own workflows',
       price: 500, checksIncluded: 5000, locations: null, staff: null,
       customOverage: true,
-      adds: ADDS.max
+      // Chris 2026-11-06: Repairs is not included in any plan, Max too; one $200/month add-on on Basics, Growth and Max
+      adds: ADDS.max, repairsAddon: 200
     },
     {
       // Not self-serve: a contract. Its button goes to the sales contact, not to the hub.
@@ -128,8 +129,8 @@ export const pricing = {
       a: 'One lookup of a device’s IMEI, blacklist, carrier and manufacturer data. Each lookup counts once, and a check that fails before the lookup runs is not counted.'
     },
     {
-      q: 'Is Free really free?',
-      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Free account.'
+      q: 'Is Always Free really free?',
+      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Always Free account.'
     },
     {
       q: 'Where do I pay?',
@@ -207,12 +208,11 @@ export function compareRows() {
     ['Device checks included a month', ...P.map(p => (p.checksIncluded == null ? 'By contract' : count(p.checksIncluded)))],
     ['Staff', ...P.map(p => (p.staff === 0 ? 'Owner only' : p.staff == null ? 'Unlimited' : count(p.staff)))],
     ['Locations', ...P.map(p => (p.locations == null ? 'Unlimited' : count(p.locations)))],
-    ['Repairs', ...P.map(p => (p.repairsAddon ? `Add-on, ${money(p.repairsAddon)} a month` : p.customOverage ? 'Included' : '—'))]
+    ['Repairs', ...P.map(p => (p.repairsAddon ? `Add-on, ${money(p.repairsAddon)} a month` : p.talkToSales ? 'By contract' : '—'))]
   ];
   P.forEach((plan, i) => {
     if (plan.talkToSales) return;
     for (const a of plan.adds) {
-      if (a.label === 'Repairs included') continue;
       rows.push([a.label, ...P.map((p, j) => (j >= i ? 'Included' : '—'))]);
     }
   });
