@@ -91,18 +91,18 @@ export const pricing = {
     {
       code: 'basics', name: 'Basics', hubCode: true, who: 'One shop with a small team',
       price: 30, checksIncluded: 125, locations: 1, staff: 3,
-      adds: ADDS.basics, repairsAddon: 200
+      adds: ADDS.basics, repairsAddon: 40
     },
     {
       code: 'growth', name: 'Growth', hubCode: true, who: 'A busy shop or a few locations', highlight: true,
       price: 150, checksIncluded: 1000, locations: 5, staff: 30,
-      adds: ADDS.growth, repairsAddon: 200
+      adds: ADDS.growth, repairsAddon: 100
     },
     {
       code: 'max', name: 'Max', hubCode: true, who: 'Many locations, your own workflows',
       price: 500, checksIncluded: 5000, locations: null, staff: null,
       customOverage: true,
-      // Chris 2026-11-06: Repairs is not included in any plan, Max too; one $200/month add-on on Basics, Growth and Max
+      // Chris 2026-11-06: Repairs add-on: Basics is $40/mo, Growth is $100/mo, Max is $200/mo; prorated difference on upgrade
       adds: ADDS.max, repairsAddon: 200
     },
     {

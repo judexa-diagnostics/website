@@ -19,6 +19,24 @@ export default function Legal({ doc }) {
       {d.paragraphs.map((p, i) => (
         <p key={i} style={{ margin: '0 0 1rem', fontSize: '1rem', lineHeight: 1.65, color: '#3A342D', overflowWrap: 'anywhere' }}>{para(p)}</p>
       ))}
+      {doc === 'privacy' && (
+        <div style={{ marginTop: '2rem', padding: '1.25rem', border: '1px solid #D9D0C2', borderRadius: '4px', background: '#F9F6F0' }}>
+          <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.125rem', fontWeight: 600, color: '#16130F' }}>Data Export &amp; Deletion Requests</h3>
+          <p style={{ margin: '0 0 0.75rem', fontSize: '0.9375rem', color: '#3A342D', lineHeight: 1.55 }}>
+            You may download an export of your account data directly from your account center (downloads are rate-limited to 3 exports per 24 hours for security).
+          </p>
+          <p style={{ margin: 0, fontSize: '0.9375rem', color: '#3A342D', lineHeight: 1.55 }}>
+            To permanently delete your account and associated personal data, submit a static deletion request by emailing us at{' '}
+            <a href="mailto:support@inphox.net?subject=Account%20Data%20Deletion%20Request" style={{ color: '#C2470A', fontWeight: 600 }}>
+              support@inphox.net
+            </a>{' '}
+            or{' '}
+            <a href="mailto:christopher@inphox.net?subject=Account%20Data%20Deletion%20Request" style={{ color: '#C2470A', fontWeight: 600 }}>
+              christopher@inphox.net
+            </a>. Requests are verified and completed within 30 days.
+          </p>
+        </div>
+      )}
       <p style={{ marginTop: '2rem', fontSize: '0.875rem' }}>
         <a href={other[0]} style={{ color: '#C2470A' }}>{other[1]}</a>{' · '}
         <ObfuscatedEmail style={{ color: '#C2470A' }} />

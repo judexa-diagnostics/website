@@ -97,8 +97,8 @@ describe('plan data', async () => {
     assert.deepEqual(by['Device checks included a month'], ['25', '125', '1,000', '5,000', 'By contract']);
     assert.deepEqual(by['Employees'], ['\u2014', 'Included', 'Included', 'Included', 'Included']);
     assert.deepEqual(by['Phone Intake'].slice(0, 4), ['—', '—', 'Included', 'Included']);
-    // Chris 2026-11-06: Repairs is in no plan (Max too); one $200/month add-on on Basics, Growth and Max, never Free
-    assert.deepEqual(by['Repairs'], ['—', 'Add-on, $200 a month', 'Add-on, $200 a month', 'Add-on, $200 a month', 'By contract']);
+    // Chris 2026-11-06: Repairs add-on: Basics is $40/mo, Growth is $100/mo, Max is $200/mo, never Free
+    assert.deepEqual(by['Repairs'], ['—', 'Add-on, $40 a month', 'Add-on, $100 a month', 'Add-on, $200 a month', 'By contract']);
     assert.ok(!rows.some(r => /Repairs included/.test(r[0])));
     // Chris 2026-11-03: every shop lists on the Marketplace, from Free up (it was Max only)
     assert.deepEqual(by['Listing on the Marketplace'], ['Included', 'Included', 'Included', 'Included', 'Included']);
