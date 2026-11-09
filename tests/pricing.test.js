@@ -59,9 +59,14 @@ describe('plan data', async () => {
     }
   });
 
-  test('the Free card line: credit or debit, a $100 hold released, nothing charged, no prepaid', () => {
+  test('the Free card line: the card promise word for word, then the $100 hold released and no prepaid', () => {
+    assert.equal(P.CARD_PROMISE, 'Credit or debit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.');
     const note = plan('free').cardNote;
-    for (const s of ['credit or debit card is required', '$100 hold', 'released', 'Nothing is charged', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
+    assert.ok(note.startsWith(P.CARD_PROMISE), 'the promise opens the Free card line');
+    for (const s of ['$100 hold', 'released', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
+    assert.doesNotMatch(note, /Nothing is charged/, 'the old "nothing is charged" line would contradict the overage rule');
+    assert.ok(pricing.faq.some(f => f.a.includes(P.CARD_PROMISE)), 'the FAQ says the same words');
+    assert.equal(P.CARD_PROMISE.match(/\d+/)[0], String(plan('free').checksIncluded), 'the promise quotes the Free allowance');
     assert.equal(P.planCard(plan('free')).checks, '25 device checks included a month');
   });
 
@@ -93,7 +98,7 @@ describe('plan data', async () => {
     const rows = P.compareRows();
     for (const r of rows) assert.equal(r.length, pricing.plans.length + 1, r[0]);
     const by = Object.fromEntries(rows.map(r => [r[0], r.slice(1)]));
-    assert.deepEqual(by['Price a month'], ['$0', '$30', '$150', '$500', 'Talk to sales']);
+    assert.deepEqual(by['Price a month'], ['$0', '$30', '$150', '$500', 'Custom contract']);
     assert.deepEqual(by['Device checks included a month'], ['25', '125', '1,000', '5,000', 'By contract']);
     assert.deepEqual(by['Employees'], ['\u2014', 'Included', 'Included', 'Included', 'Included']);
     assert.deepEqual(by['Phone Intake'].slice(0, 4), ['—', '—', 'Included', 'Included']);
@@ -168,13 +173,13 @@ async function renderWith(envFile) {
 const text = html => html.replaceAll('&#x27;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 
 /** Run a Contact form submit with valid values and a stubbed fetch; returns the fetch calls and the final state. */
-async function submitLead(r, fetchImpl) {
+async function submitLead(r, fetchImpl, extra = {}) {
   const calls = [];
   const realFetch = globalThis.fetch, realWindow = globalThis.window;
   globalThis.fetch = async (url, opts) => { calls.push({ url, opts }); return fetchImpl(); };
   globalThis.window = { scrollTo() {} };
   try {
-    const logic = r.logicWith({ page: 'contact', c: { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', locs: '1', segment: 'Independent repair shops', volume: '100–500', msg: '' } });
+    const logic = r.logicWith({ page: 'contact', c: { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', locs: '1', segment: 'Independent repair shops', volume: '100–500', msg: '', ...extra } });
     logic.renderVals().ct.submit({ preventDefault() {} });
     await new Promise(res => setTimeout(res, 10));
     return { calls, state: logic.state };
@@ -262,6 +267,26 @@ describe('rendered', () => {
     for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(planLinks(html).includes(`https://home.inphox.net/signup?plan=${code}`), code);
   });
 
+  test('Start: five plans in order with their prices, the card promise above them, word for word', async () => {
+    const html = text(r.render({ page: 'start' }));
+    const names = [...html.matchAll(/<b>([^<]+)<\/b> <span[^>]*>([^<]+)<\/span>/g)].map(m => [m[1], m[2]]);
+    assert.deepEqual(names, [['Always Free', '$0 / month'], ['Basics', '$30 / month'], ['Growth', '$150 / month'], ['Max', '$500 / month'], ['Enterprise', 'Custom contract']]);
+    const { CARD_PROMISE } = await import('../src/pricing.js');
+    const promise = html.indexOf(CARD_PROMISE);
+    assert.ok(promise > 0, 'the promise is on the page');
+    assert.ok(promise < html.indexOf('<b>Always Free</b>'), 'above the plans');
+    assert.match(html, /class="pl-card-promise" role="note" style="[^"]*font-size:1rem/);
+  });
+
+  test('Platform: the page header carries the InPhox logo above the headline', () => {
+    const html = r.render({ page: 'platform' });
+    const main = html.slice(html.indexOf('<main'));
+    const logo = main.indexOf('src="assets/inphox-logo.png"');
+    assert.ok(logo > 0, 'the logo is in the Platform page itself, not only the site bar');
+    assert.ok(logo < main.indexOf('<h1'), 'above the headline');
+    assert.ok(main.includes('InPhox platform'));
+  });
+
   test('the hub being down lands on "Sign-up is busy, try again in a minute"', () => {
     const html = text(r.render({ page: 'signup-busy' }));
     assert.ok(html.includes('Sign-up is busy, try again in a minute.'));
@@ -343,6 +368,25 @@ describe('rendered, platform configured', () => {
     assert.deepEqual(Object.fromEntries(calls[0].opts.body), { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', segment: 'Independent repair shops', volume: '100–500' });
     assert.equal(state.cSent, true);
     assert.equal(state.cSending, false);
+  });
+
+  test('Contact form: the optional website posts as company_website, never as the spam-trap key `website`', async () => {
+    const { calls, state } = await submitLead(r, () => ({ ok: true, status: 204 }), { site: ' leephones.com ' });
+    const sent = Object.fromEntries(calls[0].opts.body);
+    assert.equal(sent.company_website, 'leephones.com');
+    assert.ok(!('website' in sent), 'a filled-in `website` key makes both lead doors drop the lead');
+    assert.equal(state.cSent, true);
+  });
+
+  test('Contact form: a website that is not one keeps the form, says so, and sends nothing', async () => {
+    const { calls, state } = await submitLead(r, () => ({ ok: true, status: 204 }), { site: 'not a site' });
+    assert.equal(calls.length, 0);
+    assert.equal(state.cSent, false);
+    assert.match(state.cErr.site, /yourshop\.com, or leave it empty/);
+    assert.equal(state.c.name, 'Pat Lee', 'what was typed stays');
+    const html = text(r.render({ page: 'contact' }));
+    assert.ok(html.includes('Company website') && html.includes('placeholder="yourshop.com"'));
+    assert.match(html, /Company website <span[^>]*>Optional<\/span>/);
   });
 
   test('Contact form: an error keeps the form and shows an inline retry line', async () => {

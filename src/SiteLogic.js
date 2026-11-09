@@ -1,10 +1,10 @@
 import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
-import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, trustLine, teaserPlans, SALES_HREF, START_FREE } from './pricing.js';
+import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, trustLine, teaserPlans, SALES_HREF, START_FREE, CARD_PROMISE } from './pricing.js';
 import { openSignup } from './hub.js';
 import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
-import { textProblem, isEmail } from './formCheck.js';
+import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy'];
 // The last shop this browser signed in to, so Sign in is one click next time.
@@ -14,6 +14,9 @@ const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KE
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const [FREE, BASICS, GROWTH, MAX] = ['free','basics','growth','max'].map(findPlan);
 const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /inphox/lead receives
+// The visitor's own website (optional) posts as `company_website`: both lead doors treat a filled-in `website` key as
+// their hidden spam trap and drop the lead, so the field must never be sent under that name.
+export const LEAD_SITE_KEY = 'company_website';
 // Layout is sized in rem; converts a design-pixel value (at a 16px root) to
 // actual screen pixels at the current root font size.
 const sc = px => px * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) / 16;
@@ -25,7 +28,7 @@ export default class SiteLogic extends DCLogic {
     hSel:{}, hPage:0, tenStage:[0,0,0,0,0,0,0,0,0,0], hQ:'', hStatus:'All statuses', hLoc:'All locations', hNote:'', carts:0,
     xfOn:false, ind:0, platMore:false, platCat:'All',
     fMod:'All', fQ:'',
-    c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
+    c:{name:'',email:'',company:'',site:'',locs:'',segment:'',volume:'',msg:''}, cRep:{}, cErr:{}, cSent:false, cSending:false, cSendErr:'',
     siShop:'', siErr:'', siLast: readLastShop()
   };
   wrapRef = React.createRef(); stageRef = React.createRef(); trackRef = React.createRef();
@@ -456,21 +459,22 @@ export default class SiteLogic extends DCLogic {
     const ce = s.cErr;
     const sent = () => { this.setState({ cSending:false, cSent:true }); window.scrollTo(0,0); };
     const ct = {
-      sent: s.cSent, form: !s.cSent, v: s.c, e: { name: ce.name || '', email: ce.email || '', company: ce.company || '', volume: ce.volume || '' },
-      bd: { name: ce.name ? '#B3261E' : '#D9D0C2', email: ce.email ? '#B3261E' : '#D9D0C2', company: ce.company ? '#B3261E' : '#D9D0C2' },
-      set: { name: setC('name'), email: setC('email'), company: setC('company'), locs: setC('locs'), msg: setC('msg') },
+      sent: s.cSent, form: !s.cSent, v: s.c, e: { name: ce.name || '', email: ce.email || '', company: ce.company || '', site: ce.site || '', volume: ce.volume || '' },
+      bd: { name: ce.name ? '#B3261E' : '#D9D0C2', email: ce.email ? '#B3261E' : '#D9D0C2', company: ce.company ? '#B3261E' : '#D9D0C2', site: ce.site ? '#B3261E' : '#D9D0C2' },
+      set: { name: setC('name'), email: setC('email'), company: setC('company'), site: setC('site'), locs: setC('locs'), msg: setC('msg') },
       segments: this.pickChips(segs, s.c.segment, t => this.setState(st => ({ c: { ...st.c, segment:t } }))),
       volumes: this.pickChips(vols, s.c.volume, t => this.setState(st => ({ c: { ...st.c, volume:t }, cErr: { ...st.cErr, volume:'' } }))),
       reps: this.pickChips(reps, s.cRep, t => this.setState(st => ({ cRep: { ...st.cRep, [t]: !st.cRep[t] } })), true),
       first: (s.c.name.trim().split(' ')[0] || 'there'), email: s.c.email, ref: String(4100 + (s.c.email.length * 37) % 900),
       sending: s.cSending, submitLabel: s.cSending ? 'Sending…' : 'Request a walkthrough',
       note: s.cSendErr || "We'll only use this to follow up on your request.", noteFg: s.cSendErr ? '#B3261E' : '#6B6257',
-      reset: () => this.setState({ cSent:false, cSendErr:'', c:{name:'',email:'',company:'',locs:'',segment:'',volume:'',msg:''}, cRep:{} }),
+      reset: () => this.setState({ cSent:false, cSendErr:'', c:{name:'',email:'',company:'',site:'',locs:'',segment:'',volume:'',msg:''}, cRep:{} }),
       submit: e => { e.preventDefault(); if (s.cSending) return; const c = s.c, er = {};
         const cn = textProblem(c.name, 'Your name', true, 'Enter your name.'), cc = textProblem(c.company, 'Company name', true, 'Enter your company name.');
         if (cn) er.name = cn;
         if (!isEmail(c.email)) er.email = 'Enter a valid work email.';
         if (cc) er.company = cc;
+        if ((c.site || '').trim() && !isWebsite(c.site)) er.site = 'Enter a website like yourshop.com, or leave it empty.';
         if (!c.volume) er.volume = 'Pick your monthly volume.';
         if (Object.keys(er).length) { this.setState({ cErr: er, cSent:false }); window.scrollTo(0,0); return; }
         // Platform turned off (VITE_PLATFORM_URL=off): client-side only, no network request.
@@ -478,6 +482,7 @@ export default class SiteLogic extends DCLogic {
         // Send the lead form-encoded to the platform; show the success card only on a 2xx.
         this.setState({ cErr:{}, cSending:true, cSendErr:'' });
         const body = new URLSearchParams(LEAD_FIELDS.map(k => [k, (c[k] || '').trim()]));
+        if ((c.site || '').trim()) body.set(LEAD_SITE_KEY, c.site.trim());
         fetch(leadAction, { method:'POST', headers:{ Accept:'application/json' }, body })
           .then(res => { if (!res.ok) throw new Error('Lead not accepted: ' + res.status); sent(); })
           .catch(() => this.setState({ cSending:false, cSendErr:"That didn't go through. Please try again in a moment." })); }
@@ -495,7 +500,8 @@ export default class SiteLogic extends DCLogic {
     const st = {
       loginUrl: LOGIN_HREF,
       headline: 'Create your InPhox account.',
-      sub: 'Pick a plan to continue to sign-up. Always Free starts with 25 device checks a month and needs a credit or debit card; nothing is charged.',
+      sub: 'Pick a plan to continue to sign-up. Always Free starts with 25 device checks a month.',
+      card: CARD_PROMISE,
       plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: this.planTile(p).act }; })
     };
     // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.

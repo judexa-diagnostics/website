@@ -18,7 +18,7 @@ describe('home data', async () => {
 
   test('the trust line is built from the Free plan and names no overage rate', () => {
     assert.deepEqual(P.trustLine(), [
-      `Always Free plan: ${free.checksIncluded} device checks a month`, 'prepaid and overage plans available', 'card needed, nothing charged'
+      `Always Free plan: ${free.checksIncluded} device checks a month`, 'prepaid and overage plans available', 'card required, never charged within 25 checks'
     ]);
     assert.equal(P.trustLine()[0], 'Always Free plan: 25 device checks a month');
   });

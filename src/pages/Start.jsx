@@ -1,7 +1,8 @@
 import PlanButton from '../components/PlanButton.jsx';
 import '../plans.css';
 
-// Sign-up lives at the InPhox hub. This page only lists the plans and sends each to the hub with its code.
+// Sign-up lives at the InPhox hub. This page only lists the five plans (Always Free, Basics, Growth, Max, Enterprise)
+// and sends each to the hub with its code; the card promise sits above them, word for word (pricing.js CARD_PROMISE).
 export default function Start({ v }) {
   const { st } = v;
   return (
@@ -9,6 +10,7 @@ export default function Start({ v }) {
       <section className="pl-start">
         <h1>{st.headline}</h1>
         <p className="pl-note" style={{ fontSize: '1rem' }}>{st.sub}</p>
+        <p className="pl-card-promise" role="note" style={{ margin: '0.75rem 0 1.25rem', padding: '0.875rem 1rem', border: '1px solid var(--pmm-text)', borderLeftWidth: '4px', borderRadius: '2px', fontSize: '1rem', lineHeight: 1.5, fontWeight: 600, overflowWrap: 'anywhere' }}>{st.card}</p>
         <div style={{ borderTop: '1px solid var(--pmm-text)' }}>
           {st.plans.map(p => (
             <div className="pl-row" key={p.name}>
