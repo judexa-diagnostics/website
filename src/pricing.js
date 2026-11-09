@@ -80,12 +80,21 @@ const ADDS = {
   ]
 };
 
+/**
+ * The card promise (redesign brief 2026-11-09 §5), word for word wherever a plan is picked: the Free card line, the
+ * Create account page and the FAQ. A card is needed to open Free; it is only charged past the 25 included checks.
+ */
+export const CARD_PROMISE = 'Credit or debit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.';
+
+/** Enterprise's price line: a contract, not a list price (redesign brief 2026-11-09 §5). */
+export const CONTRACT_PRICE = 'Custom contract';
+
 export const pricing = {
   plans: [
     {
       code: 'free', name: 'Always Free', hubCode: true, who: 'Try InPhox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
-      cardNote: 'A credit or debit card is required: a $100 hold that is released. Nothing is charged. Prepaid cards are not accepted.',
+      cardNote: CARD_PROMISE + ' A $100 hold is placed and released. Prepaid cards are not accepted.',
       adds: ADDS.free
     },
     {
@@ -130,7 +139,7 @@ export const pricing = {
     },
     {
       q: 'Is Always Free really free?',
-      a: 'Yes. You get 25 device checks a month and nothing is charged. We ask for a credit or debit card and place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Always Free account.'
+      a: 'Yes. You get 25 device checks a month. ' + CARD_PROMISE + ' We place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Always Free account.'
     },
     {
       q: 'Where do I pay?',
@@ -162,7 +171,7 @@ export function planCard(plan) {
   const card = {
     code: plan.code, name: plan.name, who: plan.who,
     tag: plan.highlight ? 'Most shops start here' : '',
-    priceStr: plan.price == null ? 'Talk to sales' : money(plan.price),
+    priceStr: plan.price == null ? CONTRACT_PRICE : money(plan.price),
     per: plan.price == null ? '' : '/ month',
     checks: plan.checksIncluded == null ? 'Checks included are set in your contract' : `${count(plan.checksIncluded)} device checks included a month`,
     overage: overageLine(plan),
@@ -179,7 +188,7 @@ export function planCard(plan) {
 
 /**
  * The home page's trust line under the hero buttons, built from the Free plan so it cannot drift:
- * "Free plan: 25 device checks a month · prepaid and overage plans available · card needed, nothing charged".
+ * "Always Free plan: 25 device checks a month · prepaid and overage plans available · card required, never charged within 25 checks".
  * No rate here: the site names no overage rate (Chris 10-26, see usageLine).
  */
 export function trustLine() {
@@ -187,7 +196,7 @@ export function trustLine() {
   return [
     `${free.name} plan: ${count(free.checksIncluded)} device checks a month`,
     'prepaid and overage plans available',
-    'card needed, nothing charged'
+    `card required, never charged within ${count(free.checksIncluded)} checks`
   ];
 }
 
@@ -204,7 +213,7 @@ export function teaserPlans() {
 export function compareRows() {
   const P = pricing.plans;
   const rows = [
-    ['Price a month', ...P.map(p => (p.price == null ? 'Talk to sales' : money(p.price)))],
+    ['Price a month', ...P.map(p => (p.price == null ? CONTRACT_PRICE : money(p.price)))],
     ['Device checks included a month', ...P.map(p => (p.checksIncluded == null ? 'By contract' : count(p.checksIncluded)))],
     ['Staff', ...P.map(p => (p.staff === 0 ? 'Owner only' : p.staff == null ? 'Unlimited' : count(p.staff)))],
     ['Locations', ...P.map(p => (p.locations == null ? 'Unlimited' : count(p.locations)))],
