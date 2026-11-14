@@ -380,7 +380,7 @@ export default class SiteLogic extends DCLogic {
     ['Diagnostics','IMEI, carrier & blacklist check','Runs automatically as soon as a device is connected'],
     ['Diagnostics','iCloud / FRP lock detection','Locked devices are flagged before anyone works on them'],
     ['Diagnostics','Battery health','Capacity and cycle count recorded on the device'],
-    ['Erasure','Certified erasure','NIST 800-88 compliant data erasure'],
+    ['Erasure','Certified erasure','Cryptographic erase following NIST SP 800-88, with a certificate per device'],
     ['Erasure','Erasure certificates','A PDF per IMEI, attachable to invoices'],
     ['Grading','Cosmetic grading','Grades A–D with photo capture'],
     ['Grading','Grade rules by model','Define what counts as A or B for each model'],

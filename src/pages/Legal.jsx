@@ -25,13 +25,13 @@ const para = p => { const m = p.match(HEAD); return m ? [<strong key="h" style={
 export default function Legal({ doc }) {
   const d = DOCS[doc] || DOCS.terms;
   const other = doc === 'privacy' ? ['#/terms', 'Terms of Service'] : ['#/privacy', 'Privacy Policy'];
-  // A customer-protective draft page shows a plain banner until the lawyer signs off (website#20 / odm#1333).
+  // A page whose Version line says Draft shows a plain banner (website#20 / odm#1333). Published pages carry a plain date.
   const isDraft = /\bDraft\b/i.test(d.version || '');
   return (
     <section style={{ maxWidth: '46rem', margin: '0 auto', padding: 'clamp(2rem,6vw,4rem) 1rem', minWidth: 0 }}>
       {isDraft ? (
         <div role="note" style={{ margin: '0 0 1.25rem', padding: '0.75rem 1rem', borderRadius: '0.5rem', background: 'var(--pmm-brand-soft, #FBEEE6)', color: '#6B3A12', fontSize: '0.875rem', lineHeight: 1.5 }}>
-          Draft, needs Chris's lawyer. This page shows a plain, customer-protective draft and is not legal advice; the final wording is pending review.
+          This page is a draft and may change before it takes effect.
         </div>
       ) : null}
       <div style={{ fontFamily: mono, fontSize: '0.6875rem', color: '#6B6257' }}>{'Version ' + d.version}</div>

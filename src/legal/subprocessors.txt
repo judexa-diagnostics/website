@@ -1,16 +1,20 @@
-Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Version: 2026-11-14
 Title: Subprocessors
 
-Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer. It lists the categories of third parties that help run the Service; the specific vendor names are confirmed with the lawyer before publishing.
+InPhox uses a small number of service providers ("subprocessors") to run the Service. Each one may handle personal information only to do its work for us, and only under a written contract that requires it to protect that information to the standard in our Terms of Service (section 20) and Privacy Policy. We stay responsible for their work.
 
-1. Hosting and infrastructure. Cloud hosting and database providers that store and serve the Service.
+1. Hosting and databases. Cloud hosting and database providers in the United States that store and serve the Service and its backups.
 
-2. Payments. Payment processors that handle card and payout transactions; InPhox does not store full card numbers.
+2. Payments. A card payment processor that handles subscription charges, card checks and Marketplace payments. We never see or store your full card number.
 
-3. Email and notifications. Services that deliver transactional email and push notifications.
+3. Email and text messages. Providers that deliver sign-in links, one-time codes, receipts and service messages.
 
-4. Shipping. Carrier and label providers used when you buy a shipping label.
+4. Shipping. Carrier and label providers, used only when you buy or print a shipping label. They receive the names and addresses on that shipment.
 
-5. Maps and device checks. On-device and network services used by the diagnostics and scanning features.
+5. Address checking. Address data sources used to check and complete addresses as you type them.
 
-6. Updates. When this list changes, we update this page. Contact support to ask which specific vendors are in use.
+6. Device data sources. Carrier, manufacturer and industry databases used for device checks. They receive the device identifier (such as IMEI or serial number), never your name or your customers' names.
+
+7. Maps. A public map service that supplies the map pictures in the diagnostics app's location test. It sees the map area and the phone's internet address.
+
+8. Changes. We give shops at least 30 days' notice, by email or in the Service, before a new subprocessor starts handling their customers' personal information. A shop can object by emailing support@inphox.net within that time; if we cannot reasonably address the objection, the shop may stop using the affected feature or close its account. Shops can ask for the current list of providers by emailing support@inphox.net.

@@ -1,14 +1,16 @@
-Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Version: 2026-11-14
 Title: Refund Policy
 
-Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer.
+This page explains refunds in plain words. Our Terms of Service (sections 7, 8 and 9) are the binding text, and if anything here differs, the Terms win.
 
-1. Subscriptions. You can cancel your InPhox subscription at any time from Billing. Cancelling stops future charges; it does not, by itself, clear a balance you already owe. Any amount still owed at cancellation stays due and is shown on your Billing page and in the cancellation email.
+1. Plans and checks. Paid plans are charged monthly in advance and renew until you cancel. All fees are non-refundable, including for partial months, unused checks, unused seats, downgrades and cancellations, except where the law requires a refund. Credits are at our discretion and have no cash value.
 
-2. Our fee. The InPhox service fee charged on a sale is collected for running the marketplace and the platform. A refund you give your own customer comes from you, the seller; our fee on that sale is not automatically returned.
+2. Cancelling. You can cancel at any time on the Billing page. Your plan runs to the end of the period you paid for and then stops. Cancelling stops future charges; anything already owed, such as extra checks used that month, stays due and is shown on your Billing page.
 
-3. Your customers. How you refund the people who buy from you is set by your own shop's return policy, which you choose in your shop settings and which prints on every receipt and invoice. InPhox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
+3. Billing errors. If you think we charged you by mistake, email support@inphox.net within 30 days of the charge with the date and amount. If we charged you in error, we refund that charge to your card.
 
-4. Billing errors. If you think InPhox charged you in error, contact support within 60 days of the charge and we will review it.
+4. Marketplace purchases. InPhox is not the buyer or the seller and never holds your money. A refund for a Marketplace sale comes from the seller's own payment account, as section 9 of the Terms describes. The 2% platform fee is returned only when no sale took place.
 
-5. How to reach us. Use the contact details in the footer or email support. We aim to answer within two business days.
+5. Your own customers. How you refund people who buy from your shop is up to your shop's return policy, which you set in your shop settings and which prints on your receipts and invoices. InPhox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
+
+6. Contact. Email support@inphox.net. We aim to answer within two business days.
