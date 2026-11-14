@@ -13,7 +13,7 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 
 // The versions live in the sign-in service (inphox-id app/data/legal). Bump these when sync-legal.mjs pulls newer
 // texts; the test then guarantees the website never regresses to an older copy.
-const CURRENT = { terms: '2026-11-13', privacy: '2026-11-13.2' };
+const CURRENT = { terms: '2026-11-14', privacy: '2026-11-14' };  // inphox-id#168 legal review
 
 for (const [doc, version] of Object.entries(CURRENT)) {
   test(`the website ${doc} is the current version people agree to (${version})`, () => {
@@ -25,4 +25,12 @@ for (const [doc, version] of Object.entries(CURRENT)) {
 
 test('the Terms include the Marketplace section (the old website copy did not)', () => {
   assert.match(read('src/legal/terms.txt'), /marketplace/i, 'terms.txt has no Marketplace wording');
+});
+
+test('the internal Status line of the synced texts never reaches the page', async () => {
+  const { parseLegal } = await import('../src/legalDoc.js');
+  for (const doc of ['terms', 'privacy']) {
+    const d = parseLegal(read(`src/legal/${doc}.txt`));
+    assert.ok(!d.paragraphs.some(p => /^Status:|Chris/.test(p)), `${doc}: nothing internal is shown`);
+  }
 });
