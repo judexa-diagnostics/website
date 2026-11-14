@@ -1,14 +1,16 @@
-Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Version: 2026-11-14
 Title: Copyright and Abuse
 
-Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer. The designated copyright agent is registered once the lawyer approves.
+InPhox respects copyright and expects its users to do the same. This page explains how to report content on InPhox, such as a Marketplace listing or photo, that you believe infringes your copyright, under the Digital Millennium Copyright Act (17 U.S.C. 512).
 
-1. Reporting copyright infringement. If you believe content on InPhox infringes your copyright, send a written notice to our designated agent with: your signature; identification of the work; identification of the material and where it is; your contact details; a statement that you believe in good faith the use is not authorised; and a statement, under penalty of perjury, that the notice is accurate and you are authorised to act.
+1. Sending a notice. Send a written notice to our copyright agent (section 5) that includes: (a) your physical or electronic signature; (b) the copyrighted work you say is infringed; (c) the material you say infringes it and enough detail for us to find it, such as the listing link; (d) your name, address, phone number and email address; (e) a statement that you believe in good faith that the use is not authorised by the copyright owner, its agent or the law; and (f) a statement that the notice is accurate and, under penalty of perjury, that you are the owner or authorised to act for the owner. A notice that leaves these out may not be acted on.
 
-2. Counter-notice. If your content was removed and you believe that was a mistake, you may send a counter-notice with the same kinds of detail.
+2. What we do. When we receive a complete notice we remove or disable access to the material and tell the person who posted it.
 
-3. Repeat infringers. Accounts that repeatedly infringe are suspended or closed.
+3. Counter-notice. If your material was removed and you believe it was a mistake or misidentification, send our agent a counter-notice that includes: (a) your physical or electronic signature; (b) the material that was removed and where it appeared before; (c) a statement under penalty of perjury that you believe in good faith it was removed by mistake or misidentification; and (d) your name, address and phone number, and a statement that you consent to the jurisdiction of the federal district court for your address (or, if you are outside the United States, any district where InPhox may be found) and will accept service from the person who sent the notice. Unless that person tells us within 10 business days that they have filed a court action, we may restore the material 10 to 14 business days after we receive the counter-notice.
 
-4. Other abuse. To report fraud, harassment, or other abuse of the Service, contact support with the details and we will review it.
+4. Repeat infringers. We suspend or close the accounts of users who repeatedly infringe. Sending false notices or counter-notices can make you liable for damages (17 U.S.C. 512(f)).
 
-5. Designated agent. The registered copyright agent's name and address will be listed here once registered. Until then, send notices to support and mark them "Copyright".
+5. Copyright agent. Send notices by email to support@inphox.net with "Copyright" in the subject line, or by post to InPhox LLC, Attn: Copyright Agent, at the postal address on our Contact page.
+
+6. Other abuse. To report fraud, a stolen device, harassment or other misuse of InPhox, email support@inphox.net with the details. We review every report and may remove content or suspend accounts under our Terms of Service.
