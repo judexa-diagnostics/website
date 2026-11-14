@@ -1,10 +1,12 @@
-Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Version: 2026-11-14
 Title: Accessibility
 
-Draft for review. This is a plain statement of intent, not a certification.
+We want everyone to be able to use InPhox, including people who use screen readers, keyboard navigation, magnification or other assistive technology.
 
-1. Our aim. We want InPhox to be usable by everyone, and we work toward the WCAG 2.1 AA guidelines: readable text, keyboard navigation, a skip link to the main content, meaningful labels, and colour that is not the only way meaning is shown.
+1. Our standard. We work toward the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. That includes readable text sizes, full keyboard use, a skip link to the main content, labels on every control, and colour that is never the only way meaning is shown.
 
-2. Known gaps. Some marketing animations are decorative and can be skipped; if any content is hard to use, tell us and we will fix it.
+2. Motion. Decorative animations follow your device's reduce-motion setting and can be turned off on the website.
 
-3. How to reach us. If you hit an accessibility barrier, contact us (details in the footer) and we will respond and work with you on an alternative.
+3. Known gaps. Some interactive demos on the website are visual walkthroughs; the same information is in the text around them. If anything is hard to use, tell us and we will fix it or give you the information another way.
+
+4. Contact. Email support@inphox.net with the page and what got in the way. We aim to answer within two business days.

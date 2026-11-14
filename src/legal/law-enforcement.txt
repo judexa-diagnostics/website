@@ -1,14 +1,18 @@
-Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Version: 2026-11-14
 Title: Law Enforcement Requests
 
-Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer.
+This page is for government and law enforcement agencies requesting information about InPhox users. It does not create rights for anyone.
 
-1. How to make a request. Law enforcement requests for user data must be in writing, on official letterhead, and sent to the contact listed here. We review each request for legal sufficiency.
+1. How to make a request. Send requests from an official government email address to support@inphox.net with "Law Enforcement" in the subject line, or by post to InPhox LLC, Attn: Law Enforcement Requests, at the postal address shown at the bottom of every page. Include the agency, the officer's name and badge or ID number, a way to verify the request, and the account or device identifiers it concerns.
 
-2. What we require. We require valid legal process appropriate to the data sought (for example, a subpoena, court order, or warrant as the law requires). We do not hand over data on an informal request.
+2. What we require. We disclose user information only in response to valid legal process issued under applicable law: a subpoena for basic account information, a court order for other non-content records, and a search warrant for the content of a user's records, as the Stored Communications Act (18 U.S.C. 2701 and following) requires. We review each request and may refuse or narrow one that is overbroad, unclear or not legally valid. Requests from outside the United States should come through a mutual legal assistance treaty or a similar process.
 
-3. Notice to users. Unless we are legally prohibited, or there is a risk to someone's safety, we try to tell the affected user before we disclose their data, so they can respond.
+3. Preservation. On a valid preservation request (18 U.S.C. 2703(f)) we keep a snapshot of the records described for 90 days, extendable once, while you obtain legal process.
 
-4. Emergencies. In a genuine emergency involving a risk of death or serious harm, we may disclose limited data to the extent the law allows.
+4. Notice to users. Our practice is to tell users about requests for their information before we disclose it, unless the law prohibits it or a court has ordered us not to, or where telling them would create a risk of death or serious physical harm or the request is about an emergency.
 
-5. Contact. Send requests to the address in the footer, marked "Law Enforcement".
+5. Emergencies. If there is an emergency involving danger of death or serious physical injury, we may disclose information without legal process when we believe in good faith it is needed to prevent that harm (18 U.S.C. 2702). Mark the email "Emergency" and explain the emergency.
+
+6. Stolen devices. Device check results can show that a device has been reported lost or stolen. To report a stolen device, contact the carrier or manufacturer and your local police; we cannot change the status those sources report.
+
+7. Costs. We may ask for reimbursement of reasonable costs of answering a request where the law allows (18 U.S.C. 2706).

@@ -22,7 +22,8 @@ test('no request to an outside font host on load (fonts are self-hosted)', () =>
 test('a cookie section and an accessibility statement exist and are drafts', () => {
   for (const slug of ['cookies', 'accessibility']) {
     const txt = read(join('src/legal', slug + '.txt'));
-    assert.match(txt, /Draft, needs Chris's lawyer|plain statement/i, `${slug} is a draft/statement`);
+    assert.match(txt, /^Version: \d{4}-\d{2}-\d{2}$/m, `${slug}: a plain dated version`);
+    assert.doesNotMatch(txt, /Chris|lawyer|pending|\[[^\]]*\]/i, `${slug}: no internal names or placeholders`);
     assert.ok(read('src/SiteLogic.js').includes(`'${slug}'`), `${slug} is routable`);
     assert.ok(read('src/components/Footer.jsx').includes(`href="#/${slug}"`), `footer links to ${slug}`);
   }
@@ -34,10 +35,10 @@ test('the contact form shows a privacy notice with a Privacy link', () => {
   assert.ok(c.includes('href="#/privacy"'), 'the notice links to the Privacy Policy');
 });
 
-test('the footer carries a business address and phone (placeholders pending Chris)', () => {
+test('the footer shows the company address and phone from config, never a placeholder', () => {
   const f = read('src/components/Footer.jsx');
-  assert.ok(f.includes('data-needs-chris="postal-address"'), 'a postal-address slot is in the footer');
-  assert.ok(f.includes('data-needs-chris="phone"'), 'a phone slot is in the footer');
+  assert.ok(f.includes('COMPANY_POSTAL_ADDRESS') && f.includes('COMPANY_PHONE'), 'address and phone come from config');
+  assert.doesNotMatch(f, /pending Chris|data-needs-chris|\[postal|\[phone/i, 'no placeholder text in the footer');
 });
 
 test('there is a skip link to the main content', () => {
