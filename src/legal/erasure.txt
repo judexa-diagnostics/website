@@ -1,0 +1,12 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Erasure claims
+
+Draft for review. This page explains what backs the words "Certified erasure" and "NIST 800-88 compliant" used elsewhere on the site, so the claims are substantiated. It is a plain draft, not legal advice; the final wording is pending Chris's lawyer.
+
+1. What we mean by certified erasure. When a device goes through InPhox erasure, the tool records the method, the device identifier (IMEI/serial), the operator and the time, and produces a certificate attached to that device's record and its invoice. The certificate is the evidence a buyer can ask for.
+
+2. NIST 800-88. "NIST 800-88 compliant" refers to the sanitization guidance in NIST Special Publication 800-88 (Guidelines for Media Sanitization). Our erasure follows the clear/purge approach appropriate to the device and records which was used. We do not claim certification by NIST; NIST publishes the guideline, it does not certify products.
+
+3. Limits. Erasure results depend on the device supporting the operation (for example, a locked or faulty device may not erase); when it cannot be completed, the record says so rather than issuing a certificate.
+
+4. Questions. To ask what backs a specific certificate, contact support with the IMEI.

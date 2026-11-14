@@ -26,7 +26,8 @@ test('the parser joins wrapped lines and drops blank paragraphs', () => {
 });
 
 test('terms and privacy are pages, linked from the footer, with clean URLs', () => {
-  assert.match(read('src/SiteLogic.js'), /'terms','privacy'\]/);
+  const pagesLine = read('src/SiteLogic.js');
+  assert.ok(pagesLine.includes("'terms'") && pagesLine.includes("'privacy'"), 'terms and privacy are in PAGES');
   const layout = read('src/Layout.jsx');
   assert.ok(layout.includes('<Legal doc="terms" />') && layout.includes('<Legal doc="privacy" />'));
   const footer = read('src/components/Footer.jsx');

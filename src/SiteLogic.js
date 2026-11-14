@@ -6,7 +6,7 @@ import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy'];
+const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };

@@ -1,0 +1,14 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Refund Policy
+
+Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer.
+
+1. Subscriptions. You can cancel your InPhox subscription at any time from Billing. Cancelling stops future charges; it does not, by itself, clear a balance you already owe. Any amount still owed at cancellation stays due and is shown on your Billing page and in the cancellation email.
+
+2. Our fee. The InPhox service fee charged on a sale is collected for running the marketplace and the platform. A refund you give your own customer comes from you, the seller; our fee on that sale is not automatically returned.
+
+3. Your customers. How you refund the people who buy from you is set by your own shop's return policy, which you choose in your shop settings and which prints on every receipt and invoice. InPhox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
+
+4. Billing errors. If you think InPhox charged you in error, contact support within 60 days of the charge and we will review it.
+
+5. How to reach us. Use the contact details in the footer or email support. We aim to answer within two business days.

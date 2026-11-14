@@ -1,0 +1,14 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Law Enforcement Requests
+
+Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer.
+
+1. How to make a request. Law enforcement requests for user data must be in writing, on official letterhead, and sent to the contact listed here. We review each request for legal sufficiency.
+
+2. What we require. We require valid legal process appropriate to the data sought (for example, a subpoena, court order, or warrant as the law requires). We do not hand over data on an informal request.
+
+3. Notice to users. Unless we are legally prohibited, or there is a risk to someone's safety, we try to tell the affected user before we disclose their data, so they can respond.
+
+4. Emergencies. In a genuine emergency involving a risk of death or serious harm, we may disclose limited data to the extent the law allows.
+
+5. Contact. Send requests to the address in the footer, marked "Law Enforcement".

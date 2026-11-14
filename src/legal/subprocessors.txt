@@ -1,0 +1,16 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Subprocessors
+
+Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer. It lists the categories of third parties that help run the Service; the specific vendor names are confirmed with the lawyer before publishing.
+
+1. Hosting and infrastructure. Cloud hosting and database providers that store and serve the Service.
+
+2. Payments. Payment processors that handle card and payout transactions; InPhox does not store full card numbers.
+
+3. Email and notifications. Services that deliver transactional email and push notifications.
+
+4. Shipping. Carrier and label providers used when you buy a shipping label.
+
+5. Maps and device checks. On-device and network services used by the diagnostics and scanning features.
+
+6. Updates. When this list changes, we update this page. Contact support to ask which specific vendors are in use.
