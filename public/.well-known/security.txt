@@ -1,0 +1,5 @@
+# InPhox security contact. See https://www.rfc-editor.org/rfc/rfc9116
+Contact: mailto:support@inphox.net
+Preferred-Languages: en
+Canonical: https://inphox.net/.well-known/security.txt
+Expires: 2027-05-14T00:00:00.000Z

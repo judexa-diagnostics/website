@@ -34,6 +34,11 @@ export default function Layout({ v }) {
         {is['signup-busy'] ? <SignupBusy /> : null}
         {is.terms ? <Legal doc="terms" /> : null}
         {is.privacy ? <Legal doc="privacy" /> : null}
+        {is.refunds ? <Legal doc="refunds" /> : null}
+        {is.copyright ? <Legal doc="copyright" /> : null}
+        {is['law-enforcement'] ? <Legal doc="law-enforcement" /> : null}
+        {is.subprocessors ? <Legal doc="subprocessors" /> : null}
+        {is.erasure ? <Legal doc="erasure" /> : null}
       </main>
       <Footer v={v} />
     </div>
