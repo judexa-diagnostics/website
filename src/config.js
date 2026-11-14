@@ -43,3 +43,8 @@ export const hubUrl = (read('VITE_HUB_URL') || 'https://home.inphox.net').replac
 /** Where every Sign in link goes. Once the hub is public (signupOpen), people sign in at the InPhox hub
  *  (home.inphox.net/login), which then opens their shop; until then, the site's own "Sign in to your shop" page. */
 export const LOGIN_HREF = signupOpen ? `${hubUrl}/login` : SIGNIN_HREF;
+
+/** The company's postal address and phone, shown in the footer (CAN-SPAM, DMCA agent, law-enforcement post).
+ *  Empty until the real ones are set: an empty value shows nothing, never a placeholder. */
+export const COMPANY_POSTAL_ADDRESS = '';
+export const COMPANY_PHONE = '';

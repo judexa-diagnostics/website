@@ -1,0 +1,14 @@
+Version: 2026-11-14
+Title: Cookies
+
+This page covers the InPhox website (inphox.net). The InPhox apps and the sign-in service use only the cookies needed to sign you in and keep your account safe, as our Privacy Policy says.
+
+1. What this website stores. The website sets no cookies. It keeps a few small settings in your browser's local storage so it works the way you left it: the last shop address you signed in at, whether you turned animations off, whether you skipped the walkthrough, and your best score in the phone game. They stay on your device and are never sent to us.
+
+2. No tracking. We do not use advertising, analytics or cross-site tracking cookies, and no other company collects information about your activity on this website. Because we do not track you, a Do Not Track or Global Privacy Control signal changes nothing here. If that ever changes, we will update this page first and honour those signals.
+
+3. Fonts and files. The website's fonts and files are served from our own servers, so loading a page does not tell any other company that you visited.
+
+4. Your control. You can clear local storage from your browser's settings at any time; the website still works and simply forgets those settings.
+
+5. More. See the Privacy Policy for how we handle personal information, and the Subprocessors page for the services we rely on.
