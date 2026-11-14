@@ -74,6 +74,16 @@
       "source": "/erasure",
       "destination": "/#/erasure",
       "permanent": false
+    },
+    {
+      "source": "/cookies",
+      "destination": "/#/cookies",
+      "permanent": false
+    },
+    {
+      "source": "/accessibility",
+      "destination": "/#/accessibility",
+      "permanent": false
     }
   ]
 }

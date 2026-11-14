@@ -5,6 +5,8 @@ import copyright from '../legal/copyright.txt?raw';
 import lawEnforcement from '../legal/law-enforcement.txt?raw';
 import subprocessors from '../legal/subprocessors.txt?raw';
 import erasure from '../legal/erasure.txt?raw';
+import cookies from '../legal/cookies.txt?raw';
+import accessibility from '../legal/accessibility.txt?raw';
 import { parseLegal } from '../legalDoc.js';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
@@ -16,6 +18,8 @@ const DOCS = {
   'law-enforcement': parseLegal(lawEnforcement),
   subprocessors: parseLegal(subprocessors),
   erasure: parseLegal(erasure),
+  cookies: parseLegal(cookies),
+  accessibility: parseLegal(accessibility),
 };
 const mono = "'JetBrains Mono',monospace";
 // "7. Plans, payments and no refunds. ...": the numbered heading is bold so the sections can be scanned.

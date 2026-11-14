@@ -1,0 +1,10 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Accessibility
+
+Draft for review. This is a plain statement of intent, not a certification.
+
+1. Our aim. We want InPhox to be usable by everyone, and we work toward the WCAG 2.1 AA guidelines: readable text, keyboard navigation, a skip link to the main content, meaningful labels, and colour that is not the only way meaning is shown.
+
+2. Known gaps. Some marketing animations are decorative and can be skipped; if any content is hard to use, tell us and we will fix it.
+
+3. How to reach us. If you hit an accessibility barrier, contact us (details in the footer) and we will respond and work with you on an alternative.

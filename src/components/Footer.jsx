@@ -42,9 +42,11 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/law-enforcement" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Law enforcement</a>
           <a className="fx-ul fx-ul-tight" href="#/subprocessors" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Subprocessors</a>
           <a className="fx-ul fx-ul-tight" href="#/erasure" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Erasure claims</a>
+          <a className="fx-ul fx-ul-tight" href="#/cookies" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Cookies</a>
+          <a className="fx-ul fx-ul-tight" href="#/accessibility" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Accessibility</a>
         </div>
       </div>
-      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC</span><span>{"Language: "}<span>{langName}</span></span></div>
+      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC</span><span>{"InPhox LLC · "}<span data-needs-chris="postal-address">[postal address — pending Chris]</span>{" · "}<span data-needs-chris="phone">[phone — pending Chris]</span></span><span>{"Language: "}<span>{langName}</span></span></div>
     </footer>
   );
 }

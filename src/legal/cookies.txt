@@ -1,0 +1,12 @@
+Version: 2026-11-14 (Draft, needs Chris's lawyer)
+Title: Cookies
+
+Draft for review. This page is a plain, customer-protective draft and is not legal advice; the final wording is pending Chris's lawyer.
+
+1. What we use. This website uses only what it needs to work: a small amount of local storage in your browser to remember your preferences (for example, your language). We do not use advertising or cross-site tracking cookies, and we do not load an outside advertising network.
+
+2. Analytics. If we add analytics later, we will list it here and only use a privacy-respecting, first-party setup.
+
+3. Your control. You can clear local storage and cookies from your browser's settings at any time; the site still works.
+
+4. More. See the Privacy Policy for how we handle your data, and the Subprocessors page for the categories of services we rely on.
