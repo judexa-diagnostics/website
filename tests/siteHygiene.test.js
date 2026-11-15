@@ -47,3 +47,11 @@ test('there is a skip link to the main content', () => {
   assert.match(l, /Skip to main content/);
   assert.match(l, /id="main"/);
 });
+
+test('the footer shows the real address and phone, and no footer text is under 16px (Chris 2026-11-15)', () => {
+  const c = readFileSync(join(root, 'src/config.js'), 'utf8');
+  assert.match(c, /COMPANY_POSTAL_ADDRESS = '375 S 9th Street, Joe West Hall, San Jose, CA 95112'/);
+  assert.match(c, /COMPANY_PHONE = '916-582-9140'/);
+  const f = readFileSync(join(root, 'src/components/Footer.jsx'), 'utf8');
+  for (const m of f.matchAll(/fontSize: "([0-9.]+)rem"/g)) assert.ok(Number(m[1]) >= 1, `footer font ${m[1]}rem is under 16px`);
+});
