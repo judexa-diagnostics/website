@@ -14,6 +14,11 @@ export default function Platform({ v }) {
     <MotionConfig reducedMotion="user">
     <FxScope>
       <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) 0" }}>
+        {/* The page header's brand mark (redesign brief 2026-11-09 §5): the InPhox logo above the headline. */}
+        <div className="plat-brand" data-fx="" style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
+          <img src="assets/inphox-logo.png" alt="" width="48" height="48" style={{ width: "3rem", height: "3rem", flex: "none" }} />
+          <span style={{ fontSize: "1.125rem", fontWeight: "700", letterSpacing: "-.01em" }}>InPhox platform</span>
+        </div>
         <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(2rem,3.6vw,3.375rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance", maxWidth: "66.25rem" }}>Built in house, end to end. One record per device.</h1>
       </section>
       <section style={{ padding: "2rem clamp(1rem,3vw,2.5rem) 0" }}>

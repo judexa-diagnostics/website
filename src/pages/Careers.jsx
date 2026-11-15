@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
 import { FxScope, spot } from '../redesign/fx/index.jsx';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
-const MAIL = 'christopher@inphox.net';
 const mono = "'JetBrains Mono',monospace";
-const mailto = subject => `mailto:${MAIL}?subject=${encodeURIComponent(subject)}`;
 
 const ROLES = [
   {
@@ -36,7 +35,7 @@ const ROLES = [
       'A few lines about yourself is plenty'
     ],
     note: 'Every message is read by a person.',
-    cta: `Send your CV to ${MAIL}`, subject: 'Open application'
+    cta: 'Send your CV to christopher@inphox.net', subject: 'Open application'
   }
 ];
 
@@ -47,7 +46,7 @@ function Inbox() {
   return (
     <div aria-hidden="true" style={{ background: '#16130F', color: '#F6F2EA', borderRadius: '4px', padding: '1rem', fontFamily: mono, fontSize: '0.75rem', overflow: 'hidden', minWidth: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', color: '#B9AE9E', paddingBottom: '0.625rem', borderBottom: '1px solid #3A342D' }}>
-        <span>{MAIL}</span><span style={{ color: '#EB5E12' }}>inbox</span>
+        <ObfuscatedEmail style={{ color: '#B9AE9E', textDecoration: 'none' }} /><span style={{ color: '#EB5E12' }}>inbox</span>
       </div>
       {rows.map(([r, f], i) => (
         <m.div key={i}
@@ -92,7 +91,7 @@ function Role({ r }) {
         {list(r.you)}
       </div>
       <p style={{ margin: 0, fontFamily: mono, fontSize: '0.75rem', color: '#6B6257' }}>{r.note}</p>
-      <a className="hv-2 fx-press" href={mailto(r.subject)} style={{ marginTop: 'auto', minHeight: '3rem', padding: '0.5rem 1.125rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: '#EB5E12', color: '#16130F', borderRadius: '2px', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', overflowWrap: 'anywhere' }}>{r.cta}</a>
+      <ObfuscatedEmail className="hv-2 fx-press" subject={r.subject} style={{ marginTop: 'auto', minHeight: '3rem', padding: '0.5rem 1.125rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: '#EB5E12', color: '#16130F', borderRadius: '2px', fontSize: '0.9375rem', fontWeight: 600, textDecoration: 'none', overflowWrap: 'anywhere' }}>{r.cta}</ObfuscatedEmail>
     </article>
   );
 }

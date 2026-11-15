@@ -1,6 +1,7 @@
 import terms from '../legal/terms.txt?raw';
 import privacy from '../legal/privacy.txt?raw';
 import { parseLegal } from '../legalDoc.js';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
 const DOCS = { terms: parseLegal(terms), privacy: parseLegal(privacy) };
 const mono = "'JetBrains Mono',monospace";
@@ -20,7 +21,7 @@ export default function Legal({ doc }) {
       ))}
       <p style={{ marginTop: '2rem', fontSize: '0.875rem' }}>
         <a href={other[0]} style={{ color: '#C2470A' }}>{other[1]}</a>{' · '}
-        <a href="mailto:support@inphox.net" style={{ color: '#C2470A' }}>support@inphox.net</a>
+        <ObfuscatedEmail style={{ color: '#C2470A' }} />
       </p>
     </section>
   );

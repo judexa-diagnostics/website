@@ -1,4 +1,5 @@
 import { FxScope } from '../redesign/fx/index.jsx';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
 export default function Contact({ v }) {
   const { ct, goTrial, startLabel, ui } = v;
@@ -17,7 +18,7 @@ export default function Contact({ v }) {
           </div>
           <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Email</span>
-            <a href="mailto:sales@inphox.com" style={{ color: "#16130F" }}>sales@inphox.com</a>
+            <ObfuscatedEmail style={{ color: "#16130F" }} />
           </div>
           <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Support</span>
@@ -54,6 +55,11 @@ export default function Contact({ v }) {
             {"Company "}
             <input className="fc-9" value={ct.v.company} onChange={ct.set.company} style={{ height: "2.75rem", padding: "0 0.75rem", border: `1px solid ${ct.bd.company}`, borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
             <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E" }}><span key={ct.e.company} className="fx-err">{ct.e.company}</span></span>
+          </label>
+          <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" }}>
+            <span>{"Company website "}<span style={{ fontWeight: "400", color: "#6B6257" }}>Optional</span></span>
+            <input className="fc-9" value={ct.v.site} onChange={ct.set.site} type="text" inputMode="url" autoComplete="url" placeholder="yourshop.com" style={{ height: "2.75rem", padding: "0 0.75rem", border: `1px solid ${ct.bd.site}`, borderRadius: "2px", fontSize: "1rem", fontWeight: "400", color: "#16130F", outline: "none", background: "#FFFFFF" }} />
+            <span style={{ fontSize: "0.75rem", fontWeight: "400", color: "#B3261E" }}><span key={ct.e.site} className="fx-err">{ct.e.site}</span></span>
           </label>
           <label style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.8125rem", fontWeight: "600" }}>
             {"Locations "}
