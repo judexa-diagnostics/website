@@ -1,4 +1,4 @@
-Version: 2026-11-14
+Version: 2026-11-15
 Title: Privacy Policy
 Status: Draft, needs Chris's lawyer
 
@@ -32,7 +32,7 @@ What we share. Service providers that run parts of the Service for us (hosting, 
 
 Staff access. InPhox support staff can see your account to help you, to fix a problem or to stop fraud. Every look is logged.
 
-How long we keep it. Sign-in links and one-time codes: removed 7 days after they can no longer be used. Records of finished email or phone changes: 30 days. Ended sessions: about 13 months (400 days). The security log and your agreement record: for the life of your account and as long afterwards as security, disputes and legal duties need. Earlier phones and addresses: while orders that used them need them. Billing and tax records: as long as the law requires, usually up to 7 years. When you delete your account we delete or de-identify the rest within 30 days, except what we must keep for those reasons.
+How long we keep it. Sign-in links and one-time codes: removed 7 days after they can no longer be used. Records of finished email or phone changes: 30 days. Ended sessions: about 13 months (400 days). The security log and your agreement record: for the life of your account and as long afterwards as security, disputes and legal duties need. Earlier phones and addresses: while orders that used them need them. Billing and tax records: as long as the law requires, usually up to 7 years. When you delete your account we delete or de-identify the rest within 30 days, except what we must keep for those reasons. After you delete your account we keep a scrambled (hashed) form of its email address for 30 days, so the same address can sign up again only after that. If we close an account for fraud, abuse, non-payment or a lost chargeback, we keep a scrambled form of its email address and phone number, the reason and the date for as long as we need them to stop that person opening a new account and to defend legal claims; we keep nothing else for this.
 
 Security. We use encryption in transit, hashed credentials, access logging and least-privilege access. No system is perfectly secure.
 
@@ -40,7 +40,7 @@ Your choices and rights. You can see and change your details in My InPhox, downl
 
 Do Not Track. We do not track you across other websites, and no other company collects information about your activity over time or across websites through InPhox. So a Do Not Track or Global Privacy Control signal changes nothing: there is no tracking to turn off. If that ever changed, we would honour those signals as an opt-out.
 
-People in the EEA, UK and Switzerland. The Service is offered to businesses in the United States. Where the GDPR or UK GDPR applies, InPhox LLC is the controller of your account information; for a shop's records about its own customers, the shop is the controller and we process them for it. Our legal bases are: our contract with you (your account and the features you use); our legitimate interests in securing the Service, preventing fraud, abuse and scraping, and improving the Service, which we weigh against your rights; legal duties (such as billing, tax and lawful requests); and your consent where we ask for it, which you can withdraw at any time. You have the right to access, correct or delete your information, to restrict or object to how we use it, to get a copy in a portable form (Data export), and to complain to your local data protection authority. If you object to a use based on our legitimate interests, we stop unless we have compelling grounds or need it for legal claims.
+People in the EEA, UK and Switzerland. The Service is offered to businesses in the United States. Where the GDPR or UK GDPR applies, InPhox LLC is the controller of your account information; for a shop's records about its own customers, the shop is the controller and we process them for it. Our legal bases are: our contract with you (your account and the features you use); our legitimate interests in securing the Service, preventing fraud, abuse and scraping, and improving the Service, which we weigh against your rights; legal duties (such as billing, tax and lawful requests); and your consent where we ask for it, which you can withdraw at any time. You have the right to access, correct or delete your information, to restrict or object to how we use it, to get a copy in a portable form (Data export), and to complain to your local data protection authority. If you object to a use based on our legitimate interests, we stop unless we have compelling grounds or need it for legal claims. Keeping the scrambled email and phone of an account we closed for fraud, abuse, non-payment or a lost chargeback is one of those grounds: it prevents fraud and protects legal claims, so deleting your account does not remove it.
 
 Children. The Service is only for people 18 or older, the same age as our Terms of Service. We do not knowingly collect information from anyone under 18. If you think someone under 18 gave us information, tell us and we will delete it.
 
@@ -50,4 +50,4 @@ When you agree. We record the version you agreed to, the time and a scrambled (h
 
 Changes. We may change this policy. Each version takes effect on the date in its Version line. When we change it, we change the Version line above, tell you about important changes by email or in the Service, and ask you to agree again the next time you sign in.
 
-Contact: InPhox LLC, support@inphox.net
+Contact: InPhox LLC, 375 S 9th Street, Joe West Hall, San Jose, CA 95112 · 916-582-9140 · support@inphox.net

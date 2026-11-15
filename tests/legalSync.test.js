@@ -13,7 +13,7 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 
 // The versions live in the sign-in service (inphox-id app/data/legal). Bump these when sync-legal.mjs pulls newer
 // texts; the test then guarantees the website never regresses to an older copy.
-const CURRENT = { terms: '2026-11-14', privacy: '2026-11-14' };  // inphox-id#168 legal review
+const CURRENT = { terms: '2026-11-15', privacy: '2026-11-15' };  // inphox-id#168 legal review + 2026-11-15 address, closed-account rule
 
 for (const [doc, version] of Object.entries(CURRENT)) {
   test(`the website ${doc} is the current version people agree to (${version})`, () => {
