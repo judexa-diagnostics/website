@@ -1,0 +1,29 @@
+name: Website tests
+
+# The website had no CI: merging to main deployed the public site with nothing run (odm#1422 audit, 2026-11-15).
+# This runs the tests and the production build on every pull request and on main. It cannot block a merge by itself:
+# a required check needs a GitHub plan that offers branch protection on this repo (Chris).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: [self-hosted, linux, inphox-ci]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci --no-audit --no-fund
+      - name: Tests
+        run: npm test
+      - name: The production build, and no source map in it
+        run: |
+          npm run build
+          if find dist -name '*.map' | grep -q .; then echo "a source map was built"; exit 1; fi

@@ -28,7 +28,7 @@ export default function Contact({ v }) {
       </div>
       {ct.sent ? (
         <div className="fx-mount" style={{ background: "#FFFFFF", border: "1px solid #16130F", borderRadius: "0.25rem", padding: "1.75rem", display: "flex", flexDirection: "column", gap: "0.875rem" }}>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#1E7A4A" }}>Request received · REQ-<span>{ct.ref}</span></span>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#1E7A4A" }}>Request received</span>
           <span style={{ fontSize: "1.5rem", fontWeight: "600", fontStretch: "102%" }}>{"Thanks, "}<span>{ct.first}</span>. We'll be in touch within a business day.</span>
           <span style={{ fontSize: "0.9375rem", lineHeight: "1.6", color: "#3A342D" }}>
             {"We'll email "}<span>{ct.email}</span>{" with a few times for a walkthrough. Meanwhile, you can create your account and connect a station."}

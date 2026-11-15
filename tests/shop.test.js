@@ -1,7 +1,7 @@
 // "Sign in to your shop" helpers (src/shop.js). Run with `npm test`.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { shopFromInput, shopLoginUrl } from '../src/shop.js';
+import { shopFromInput, shopLoginUrl, savedShop } from '../src/shop.js';
 
 const D = 'inphox.net';
 
@@ -52,4 +52,14 @@ test('the throttle allows 5 tries a minute, then says how long to wait, then let
   t += 55000; // the the first try left the window
   assert.equal(th.try().ok, true);
   assert.equal(th.try().ok, false);
+});
+
+test('the shop remembered in this browser is used only when it is a plain shop name', () => {
+  assert.equal(savedShop('bayareaphones', D), 'bayareaphones');
+  assert.equal(savedShop(' BayAreaPhones ', D), 'bayareaphones');
+  for (const bad of [null, undefined, '', 'evil.com/#', 'evil.com', 'a@b', 'https://evil.com', 'www', 'x'.repeat(64), '-a', 'a b', '../x']) {
+    assert.equal(savedShop(bad, D), '', String(bad));
+  }
+  // what would otherwise be opened: https://${shop}.${domain}/web/login
+  assert.equal(shopLoginUrl(savedShop('evil.com/#', D) || 'x', D).startsWith('https://x.'), true);
 });

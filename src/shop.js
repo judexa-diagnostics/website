@@ -59,3 +59,15 @@ export function createThrottle({ max = 5, windowMs = 60000, now = Date.now } = {
 
 /** The shop's own sign-in page. */
 export const shopLoginUrl = (shop, domain) => `https://${shop}.${domain}/web/login`;
+
+/**
+ * The shop name saved in this browser by the last sign-in, or '' when what is stored is not a plain shop name. The stored
+ * text is never trusted: it goes into an address the browser then opens, so anything but a real shop name (a dot, a slash,
+ * a "#") is dropped and the person types the name again.
+ */
+export function savedShop(stored, domain) {
+  const raw = String(stored || '').trim().toLowerCase();
+  if (!raw) return '';
+  const r = shopFromInput(raw, domain);
+  return r.shop && r.shop === raw ? r.shop : '';
+}
