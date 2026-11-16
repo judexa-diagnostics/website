@@ -84,7 +84,7 @@ const ADDS = {
  * The card promise (redesign brief 2026-11-09 §5), word for word wherever a plan is picked: the Free card line, the
  * Create account page and the FAQ. A card is needed to open Free; it is only charged past the 25 included checks.
  */
-export const CARD_PROMISE = 'Credit or debit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.';
+export const CARD_PROMISE = 'Credit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.';
 
 /** Enterprise's price line: a contract, not a list price (redesign brief 2026-11-09 §5). */
 export const CONTRACT_PRICE = 'Custom contract';
@@ -94,7 +94,7 @@ export const pricing = {
     {
       code: 'free', name: 'Always Free', hubCode: true, who: 'Try InPhox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
-      cardNote: CARD_PROMISE + ' A $100 hold is placed and released. Prepaid cards are not accepted.',
+      cardNote: CARD_PROMISE + ' A $20 hold is placed and released. Debit and prepaid cards are not accepted.',
       adds: ADDS.free
     },
     {
@@ -139,7 +139,7 @@ export const pricing = {
     },
     {
       q: 'Is Always Free really free?',
-      a: 'Yes. You get 25 device checks a month. ' + CARD_PROMISE + ' We place a $100 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Always Free account.'
+      a: 'Yes. You get 25 device checks a month. ' + CARD_PROMISE + ' We place a $20 hold that is released straight away. Debit and prepaid cards are not accepted, and one card opens one Always Free account.'
     },
     {
       q: 'Where do I pay?',

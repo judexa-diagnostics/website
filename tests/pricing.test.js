@@ -59,11 +59,11 @@ describe('plan data', async () => {
     }
   });
 
-  test('the Free card line: the card promise word for word, then the $100 hold released and no prepaid', () => {
-    assert.equal(P.CARD_PROMISE, 'Credit or debit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.');
+  test('the Free card line: the card promise word for word, then the $20 hold released, no debit or prepaid (Chris 2026-11-15)', () => {
+    assert.equal(P.CARD_PROMISE, 'Credit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.');
     const note = plan('free').cardNote;
     assert.ok(note.startsWith(P.CARD_PROMISE), 'the promise opens the Free card line');
-    for (const s of ['$100 hold', 'released', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
+    for (const s of ['$20 hold', 'released', 'Debit and prepaid cards are not accepted']) assert.ok(note.includes(s), s);
     assert.doesNotMatch(note, /Nothing is charged/, 'the old "nothing is charged" line would contradict the overage rule');
     assert.ok(pricing.faq.some(f => f.a.includes(P.CARD_PROMISE)), 'the FAQ says the same words');
     assert.equal(P.CARD_PROMISE.match(/\d+/)[0], String(plan('free').checksIncluded), 'the promise quotes the Free allowance');
@@ -221,7 +221,7 @@ describe('rendered', () => {
     const cards = html.match(/<article.*?<\/article>/gs);
     assert.equal(cards.length, 5);
     for (const card of cards) assert.match(card, /class="pl-over">Prepaid and overage plans available\.</);
-    assert.ok(cards[0].includes('Prepaid cards are not accepted'));
+    assert.ok(cards[0].includes('Debit and prepaid cards are not accepted'));
     assert.ok(!html.includes('$0.50') && !html.includes('Custom overage'), 'no rate on the pricing page');
     assert.ok(!html.includes('/ year') && !html.includes('Annual'), 'no annual billing');
   });

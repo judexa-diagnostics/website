@@ -13,7 +13,7 @@ const read = p => readFileSync(join(root, p), 'utf8');
 test('both texts parse with a version, a title and real paragraphs', () => {
   for (const [file, title] of [['src/legal/terms.txt', 'Terms of Service'], ['src/legal/privacy.txt', 'Privacy Policy']]) {
     const d = parseLegal(read(file));
-    assert.match(d.version, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(d.version, /^\d{4}-\d{2}-\d{2}(\.\d+)?$/);  // the sign-in service may suffix a same-day revision, e.g. 2026-11-13.2
     assert.equal(d.title, title);
     assert.ok(d.paragraphs.length >= 15, file);
     assert.ok(!d.paragraphs.join(' ').includes('PLACEHOLDER'), file);
