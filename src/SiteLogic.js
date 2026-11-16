@@ -2,14 +2,15 @@ import React from 'react';
 import { DCLogic } from './lib/dcLogic.jsx';
 import { pricing, findPlan, planCard, compareRows, signupUrl, overageLine, trustLine, teaserPlans, SALES_HREF, START_FREE, CARD_PROMISE } from './pricing.js';
 import { openSignup } from './hub.js';
+import { sendLead } from './lead.js';
 import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config.js';
-import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
+import { shopFromInput, shopLoginUrl, createThrottle, savedShop } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure','cookies','accessibility'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
-const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };
+const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
 const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KEY, shop); else localStorage.removeItem(LAST_SHOP_KEY); } catch (e) { /* private window */ } };
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const [FREE, BASICS, GROWTH, MAX] = ['free','basics','growth','max'].map(findPlan);
@@ -465,7 +466,7 @@ export default class SiteLogic extends DCLogic {
       segments: this.pickChips(segs, s.c.segment, t => this.setState(st => ({ c: { ...st.c, segment:t } }))),
       volumes: this.pickChips(vols, s.c.volume, t => this.setState(st => ({ c: { ...st.c, volume:t }, cErr: { ...st.cErr, volume:'' } }))),
       reps: this.pickChips(reps, s.cRep, t => this.setState(st => ({ cRep: { ...st.cRep, [t]: !st.cRep[t] } })), true),
-      first: (s.c.name.trim().split(' ')[0] || 'there'), email: s.c.email, ref: String(4100 + (s.c.email.length * 37) % 900),
+      first: (s.c.name.trim().split(' ')[0] || 'there'), email: s.c.email,
       sending: s.cSending, submitLabel: s.cSending ? 'Sending…' : 'Request a walkthrough',
       note: s.cSendErr || "We'll only use this to follow up on your request.", noteFg: s.cSendErr ? '#B3261E' : '#6B6257',
       reset: () => this.setState({ cSent:false, cSendErr:'', c:{name:'',email:'',company:'',site:'',locs:'',segment:'',volume:'',msg:''}, cRep:{} }),
@@ -483,9 +484,8 @@ export default class SiteLogic extends DCLogic {
         this.setState({ cErr:{}, cSending:true, cSendErr:'' });
         const body = new URLSearchParams(LEAD_FIELDS.map(k => [k, (c[k] || '').trim()]));
         if ((c.site || '').trim()) body.set(LEAD_SITE_KEY, c.site.trim());
-        fetch(leadAction, { method:'POST', headers:{ Accept:'application/json' }, body })
-          .then(res => { if (!res.ok) throw new Error('Lead not accepted: ' + res.status); sent(); })
-          .catch(() => this.setState({ cSending:false, cSendErr:"That didn't go through. Please try again in a moment." })); }
+        sendLead(leadAction, body).then(r => r === 'sent' ? sent()
+          : this.setState({ cSending:false, cSendErr:"That didn't go through. Please try again in a moment." })); }
     };
 
     const cats = ['All', ...Array.from(new Set(this.integrations.map(i => i[1])))];
