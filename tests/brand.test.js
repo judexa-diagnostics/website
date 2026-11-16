@@ -53,8 +53,11 @@ test('the global brand tokens match the shop: Satoshi face and copper links', ()
 });
 
 test('Satoshi is actually loaded for the page', () => {
-  const html = read('index.html');
-  assert.match(html, /satoshi/i, 'index.html does not load the Satoshi face');
+  // Self-hosted now (website#19): no outside font host; the face is declared in src/styles/fonts.css and imported by
+  // main.jsx, served from /fonts.
+  const fontsCss = read('src/styles/fonts.css');
+  assert.match(fontsCss, /font-family:\s*'Satoshi'/i, 'fonts.css does not declare the Satoshi face');
+  assert.ok(read('src/main.jsx').includes('styles/fonts.css'), 'main.jsx does not import the self-hosted fonts');
 });
 
 // Guardrail: the marketing 3D design keeps its orange. If this ever flips to

@@ -1,0 +1,16 @@
+Version: 2026-11-14
+Title: Refund Policy
+
+This page explains refunds in plain words. Our Terms of Service (sections 7, 8 and 9) are the binding text, and if anything here differs, the Terms win.
+
+1. Plans and checks. Paid plans are charged monthly in advance and renew until you cancel. All fees are non-refundable, including for partial months, unused checks, unused seats, downgrades and cancellations, except where the law requires a refund. Credits are at our discretion and have no cash value.
+
+2. Cancelling. You can cancel at any time on the Billing page. Your plan runs to the end of the period you paid for and then stops. Cancelling stops future charges; anything already owed, such as extra checks used that month, stays due and is shown on your Billing page.
+
+3. Billing errors. If you think we charged you by mistake, email support@inphox.net within 30 days of the charge with the date and amount. If we charged you in error, we refund that charge to your card.
+
+4. Marketplace purchases. InPhox is not the buyer or the seller and never holds your money. A refund for a Marketplace sale comes from the seller's own payment account, as section 9 of the Terms describes. The 2% platform fee is returned only when no sale took place.
+
+5. Your own customers. How you refund people who buy from your shop is up to your shop's return policy, which you set in your shop settings and which prints on your receipts and invoices. InPhox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
+
+6. Contact. Email support@inphox.net. We aim to answer within two business days.

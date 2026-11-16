@@ -49,6 +49,41 @@
       "source": "/privacy",
       "destination": "/#/privacy",
       "permanent": false
+    },
+    {
+      "source": "/refunds",
+      "destination": "/#/refunds",
+      "permanent": false
+    },
+    {
+      "source": "/copyright",
+      "destination": "/#/copyright",
+      "permanent": false
+    },
+    {
+      "source": "/law-enforcement",
+      "destination": "/#/law-enforcement",
+      "permanent": false
+    },
+    {
+      "source": "/subprocessors",
+      "destination": "/#/subprocessors",
+      "permanent": false
+    },
+    {
+      "source": "/erasure",
+      "destination": "/#/erasure",
+      "permanent": false
+    },
+    {
+      "source": "/cookies",
+      "destination": "/#/cookies",
+      "permanent": false
+    },
+    {
+      "source": "/accessibility",
+      "destination": "/#/accessibility",
+      "permanent": false
     }
   ]
 }

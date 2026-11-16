@@ -6,7 +6,7 @@ import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config
 import { shopFromInput, shopLoginUrl, createThrottle } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy'];
+const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure','cookies','accessibility'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY)) || ''; } catch (e) { return ''; } };
@@ -380,7 +380,7 @@ export default class SiteLogic extends DCLogic {
     ['Diagnostics','IMEI, carrier & blacklist check','Runs automatically as soon as a device is connected'],
     ['Diagnostics','iCloud / FRP lock detection','Locked devices are flagged before anyone works on them'],
     ['Diagnostics','Battery health','Capacity and cycle count recorded on the device'],
-    ['Erasure','Certified erasure','NIST 800-88 compliant data erasure'],
+    ['Erasure','Certified erasure','Cryptographic erase following NIST SP 800-88, with a certificate per device'],
     ['Erasure','Erasure certificates','A PDF per IMEI, attachable to invoices'],
     ['Grading','Cosmetic grading','Grades A–D with photo capture'],
     ['Grading','Grade rules by model','Define what counts as A or B for each model'],

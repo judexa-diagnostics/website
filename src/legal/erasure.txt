@@ -1,0 +1,12 @@
+Version: 2026-11-14
+Title: Erasure Claims
+
+This page explains what backs the words "Certified erasure" and "NIST 800-88" where InPhox uses them.
+
+1. What a certificate means. When InPhox erases a device, it records the device identifier (IMEI or serial number), the erase method, the standard it follows, the result and the date and time, and keeps a signed record of it. The certificate is attached to the device's record in the shop and can be shared with the buyer.
+
+2. NIST SP 800-88. NIST Special Publication 800-88, Guidelines for Media Sanitization (Revision 2, September 2025), describes three levels: clear, purge and destroy. InPhox erases supported devices by cryptographic erase, which the guideline treats as a purge method: the device's storage is encrypted and erasing destroys the key, so the data cannot be read back. The certificate names the method used. NIST publishes the guideline; it does not certify products, and we do not claim NIST certification.
+
+3. Limits. Erasure only works on a device that supports the operation. If a device is locked, faulty or cannot be verified after the erase, InPhox does not issue a certificate, and the device's record says the erase was not completed.
+
+4. Questions. To ask about a specific certificate, email support@inphox.net with the certificate ID or the device's IMEI.

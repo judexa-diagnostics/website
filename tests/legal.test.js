@@ -26,7 +26,8 @@ test('the parser joins wrapped lines and drops blank paragraphs', () => {
 });
 
 test('terms and privacy are pages, linked from the footer, with clean URLs', () => {
-  assert.match(read('src/SiteLogic.js'), /'terms','privacy'\]/);
+  const pagesLine = read('src/SiteLogic.js');
+  assert.ok(pagesLine.includes("'terms'") && pagesLine.includes("'privacy'"), 'terms and privacy are in PAGES');
   const layout = read('src/Layout.jsx');
   assert.ok(layout.includes('<Legal doc="terms" />') && layout.includes('<Legal doc="privacy" />'));
   const footer = read('src/components/Footer.jsx');
@@ -42,4 +43,9 @@ test('the company is InPhox LLC everywhere (Chris 2026-10-24), never "Inc."', ()
     assert.ok(!/InPhox,? Inc\b/.test(read(f)), f);
   }
   for (const f of ['src/legal/terms.txt', 'src/legal/privacy.txt']) assert.ok(read(f).includes('InPhox LLC'), f);
+});
+
+test('the sign-in service\'s internal "Status:" line is never shown as text', () => {
+  const d = parseLegal('Version: 2026-11-14\nTitle: T\nStatus: Draft, internal\n\nOne.\n');
+  assert.deepEqual(d, { version: '2026-11-14', title: 'T', paragraphs: ['One.'] });
 });

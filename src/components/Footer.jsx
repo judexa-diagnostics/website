@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useReveal } from '../redesign/fx/index.jsx';
+import { COMPANY_POSTAL_ADDRESS, COMPANY_PHONE } from '../config.js';
 
 export default function Footer({ v }) {
   const { goTrial, startLabel, langName, loginUrl } = v;
@@ -13,33 +14,40 @@ export default function Footer({ v }) {
             <img src="assets/inphox-logo.png" alt="" style={{ width: "1.875rem", height: "1.875rem" }} />
             <span style={{ fontSize: "1.125rem", fontWeight: "700" }}>InPhox</span>
           </a>
-          <p style={{ margin: "0", fontSize: "0.875rem", lineHeight: "1.55", color: "var(--pmm-text-2)", maxWidth: "20rem" }}>
+          <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.55", color: "var(--pmm-text-2)", maxWidth: "20rem" }}>
             Diagnostics, inventory, repair and sales for businesses that buy, fix and resell electronics.
           </p>
         </div>
-        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
-          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Product</span>
+        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "1rem" }}>
+          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Product</span>
           <a className="fx-ul fx-ul-tight" href="#/features" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Features</a>
           <a className="fx-ul fx-ul-tight" href="#/industries" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Industries</a>
           <a className="fx-ul fx-ul-tight" href="#/pricing" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Pricing</a>
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>How it's built</a>
         </div>
-        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
-          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Start</span>
+        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "1rem" }}>
+          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Start</span>
           <a className="fx-ul fx-ul-tight" href="#/start" onClick={goTrial} style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{startLabel}</a>
           <a className="fx-ul fx-ul-tight" href={loginUrl} style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Sign in</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Contact sales</a>
         </div>
-        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.875rem" }}>
-          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Company</span>
+        <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "1rem" }}>
+          <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Company</span>
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{"Security & compliance"}</a>
           <a className="fx-ul fx-ul-tight" href="#/careers" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Careers</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Contact</a>
           <a className="fx-ul fx-ul-tight" href="#/privacy" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
           <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
+          <a className="fx-ul fx-ul-tight" href="#/refunds" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Refunds</a>
+          <a className="fx-ul fx-ul-tight" href="#/copyright" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Copyright & abuse</a>
+          <a className="fx-ul fx-ul-tight" href="#/law-enforcement" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Law enforcement</a>
+          <a className="fx-ul fx-ul-tight" href="#/subprocessors" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Subprocessors</a>
+          <a className="fx-ul fx-ul-tight" href="#/erasure" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Erasure claims</a>
+          <a className="fx-ul fx-ul-tight" href="#/cookies" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Cookies</a>
+          <a className="fx-ul fx-ul-tight" href="#/accessibility" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Accessibility</a>
         </div>
       </div>
-      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "0.6875rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC</span><span>{"Language: "}<span>{langName}</span></span></div>
+      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC</span><span>{["InPhox LLC", COMPANY_POSTAL_ADDRESS, COMPANY_PHONE].filter(Boolean).join(" · ")}</span><span>{"Language: "}<span>{langName}</span></span></div>
     </footer>
   );
 }
