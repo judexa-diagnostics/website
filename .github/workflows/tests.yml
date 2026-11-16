@@ -13,7 +13,9 @@ permissions:
 
 jobs:
   test-and-build:
-    runs-on: [self-hosted, linux, inphox-ci]
+    # GitHub's own runners: this repo is public, and our self-hosted runners (Latitude) refuse public repos on purpose
+    # (a pull request from anyone would run on our box). Hosted runners are free for public repos.
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
