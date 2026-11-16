@@ -48,3 +48,17 @@ test('the form uses it: no bare fetch of the lead in the page logic, and no made
   assert.doesNotMatch(read('src/pages/Contact.jsx'), /REQ-/, 'the number was made from the email length: nobody could look it up');
   assert.doesNotMatch(logic, /ref: String\(4100/);
 });
+
+test('every box a person fills in on Contact is sent (2026-11-16: the Message box was typed and thrown away)', () => {
+  const logic = read('src/SiteLogic.js');
+  const page = read('src/pages/Contact.jsx');
+  const boxes = [...page.matchAll(/value=\{ct\.v\.(\w+)\}/g)].map(m => m[1]);
+  assert.ok(boxes.includes('msg'), 'the Message box is on the page');
+  const fields = (logic.match(/const LEAD_FIELDS = \[([^\]]*)\]/) || [])[1] || '';
+  const sentKeys = new Set([...fields.matchAll(/'(\w+)'/g)].map(m => m[1]));
+  if (/body\.set\(LEAD_SITE_KEY, c\.site/.test(logic)) sentKeys.add('site');
+  if (/body\.set\(LEAD_MESSAGE_KEY, c\.msg/.test(logic)) sentKeys.add('msg');
+  if (/body\.set\(LEAD_LOCATIONS_KEY, c\.locs/.test(logic)) sentKeys.add('locs');
+  const lost = boxes.filter(b => !sentKeys.has(b));
+  assert.deepEqual(lost, [], 'boxes on the page that are never sent: ' + lost.join(', '));
+});

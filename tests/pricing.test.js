@@ -359,13 +359,13 @@ describe('rendered, platform configured', () => {
     assert.ok(html.includes('.shops.example.test'));
   });
 
-  test('Contact form POSTs name, email, company, segment, volume to /inphox/lead; 2xx shows success', async () => {
+  test('Contact form POSTs name, email, company, locations, segment, volume to /inphox/lead (an empty message is not sent); 2xx shows success', async () => {
     const { calls, state } = await submitLead(r, () => ({ ok: true, status: 204 }));
     assert.equal(calls.length, 1);
     assert.equal(calls[0].url, 'https://platform.example.test/inphox/lead');
     assert.equal(calls[0].opts.method, 'POST');
     assert.ok(calls[0].opts.body instanceof URLSearchParams);
-    assert.deepEqual(Object.fromEntries(calls[0].opts.body), { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', segment: 'Independent repair shops', volume: '100–500' });
+    assert.deepEqual(Object.fromEntries(calls[0].opts.body), { name: 'Pat Lee', email: 'pat@shop.test', company: 'Lee Phones', locations: '1', segment: 'Independent repair shops', volume: '100–500' });
     assert.equal(state.cSent, true);
     assert.equal(state.cSending, false);
   });
