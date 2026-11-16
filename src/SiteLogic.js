@@ -15,6 +15,8 @@ const saveLastShop = shop => { try { if (shop) localStorage.setItem(LAST_SHOP_KE
 const money = n => '$' + Math.round(n).toLocaleString('en-US');
 const [FREE, BASICS, GROWTH, MAX] = ['free','basics','growth','max'].map(findPlan);
 const LEAD_FIELDS = ['name','email','company','segment','volume']; // what POST /inphox/lead receives
+// 2026-11-16: the Message box was never sent (people typed it, nobody read it); it posts as `message`.
+const LEAD_MESSAGE_KEY = 'message', LEAD_MESSAGE_MAX = 2000, LEAD_LOCATIONS_KEY = 'locations';  // Locations was dropped too
 // The visitor's own website (optional) posts as `company_website`: both lead doors treat a filled-in `website` key as
 // their hidden spam trap and drop the lead, so the field must never be sent under that name.
 export const LEAD_SITE_KEY = 'company_website';
@@ -484,6 +486,8 @@ export default class SiteLogic extends DCLogic {
         this.setState({ cErr:{}, cSending:true, cSendErr:'' });
         const body = new URLSearchParams(LEAD_FIELDS.map(k => [k, (c[k] || '').trim()]));
         if ((c.site || '').trim()) body.set(LEAD_SITE_KEY, c.site.trim());
+        if ((c.msg || '').trim()) body.set(LEAD_MESSAGE_KEY, c.msg.trim().slice(0, LEAD_MESSAGE_MAX));
+        if ((c.locs || '').trim()) body.set(LEAD_LOCATIONS_KEY, c.locs.trim());
         sendLead(leadAction, body).then(r => r === 'sent' ? sent()
           : this.setState({ cSending:false, cSendErr:"That didn't go through. Please try again in a moment." })); }
     };
