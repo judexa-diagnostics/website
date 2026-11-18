@@ -1,7 +1,7 @@
 Version: 2026-11-14
 Title: Subprocessors
 
-InPhox uses a small number of service providers ("subprocessors") to run the Service. Each one may handle personal information only to do its work for us, and only under a written contract that requires it to protect that information to the standard in our Terms of Service (section 20) and Privacy Policy. We stay responsible for their work.
+inphox uses a small number of service providers ("subprocessors") to run the Service. Each one may handle personal information only to do its work for us, and only under a written contract that requires it to protect that information to the standard in our Terms of Service (section 20) and Privacy Policy. We stay responsible for their work.
 
 1. Hosting and databases. Cloud hosting and database providers in the United States that store and serve the Service and its backups.
 

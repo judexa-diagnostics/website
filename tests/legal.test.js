@@ -37,12 +37,12 @@ test('terms and privacy are pages, linked from the footer, with clean URLs', () 
   for (const k of ['terms', 'privacy']) assert.ok(redirects.some(r => r.source === '/' + k && r.destination === '/#/' + k), k);
 });
 
-test('the company is InPhox LLC everywhere (Chris 2026-10-24), never "Inc."', () => {
-  assert.ok(read('src/components/Footer.jsx').includes('© 2026 InPhox LLC'));
+test('the company is inphox LLC everywhere (Chris 2026-10-24), never "Inc."', () => {
+  assert.ok(read('src/components/Footer.jsx').includes('© 2026 inphox LLC'));
   for (const f of ['src/components/Footer.jsx', 'src/legal/terms.txt', 'src/legal/privacy.txt']) {
-    assert.ok(!/InPhox,? Inc\b/.test(read(f)), f);
+    assert.ok(!/inphox,? Inc\b/.test(read(f)), f);
   }
-  for (const f of ['src/legal/terms.txt', 'src/legal/privacy.txt']) assert.ok(read(f).includes('InPhox LLC'), f);
+  for (const f of ['src/legal/terms.txt', 'src/legal/privacy.txt']) assert.ok(read(f).includes('inphox LLC'), f);
 });
 
 test('the sign-in service\'s internal "Status:" line is never shown as text', () => {

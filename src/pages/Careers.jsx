@@ -8,7 +8,7 @@ const mono = "'JetBrains Mono',monospace";
 const ROLES = [
   {
     k: '01', tag: 'Internship', title: 'Sales intern',
-    lede: 'Help used-phone shops find out what InPhox can do for them, and learn how a software company sells from the inside.',
+    lede: 'Help used-phone shops find out what inphox can do for them, and learn how a software company sells from the inside.',
     doing: [
       'Talk with refurbishers, repair shops and wholesale buyers about how they work today',
       'Book and sit in on demos, then follow up',
@@ -106,7 +106,7 @@ export default function Careers({ v }) {
           <div data-fx="" style={{ fontFamily: mono, fontSize: '0.6875rem', letterSpacing: '.02em', color: '#6B6257' }}>Careers · 2 openings</div>
           <h1 data-fx="" style={{ margin: 0, fontSize: 'clamp(2rem,3.4vw,3.125rem)', lineHeight: 1.04, fontWeight: 650, fontStretch: '104%', letterSpacing: '-.02em', textWrap: 'balance' }}>Help build the system used electronics run on.</h1>
           <p data-fx="" style={{ margin: 0, fontSize: '1.0625rem', lineHeight: 1.6, color: '#3A342D', maxWidth: '36rem', textWrap: 'pretty' }}>
-            We're small, we build everything in house, and we work closely with the shops that use InPhox every day. No forms and no portals: email us and a person will reply.
+            We're small, we build everything in house, and we work closely with the shops that use inphox every day. No forms and no portals: email us and a person will reply.
           </p>
         </div>
         <div data-fx="scale" data-fx-delay="200" style={{ minWidth: 0 }}><Inbox /></div>

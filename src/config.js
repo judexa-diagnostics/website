@@ -6,17 +6,17 @@ const env = import.meta.env || {};
 
 const read = key => (typeof env[key] === 'string' ? env[key].trim() : '');
 
-/** Every shop runs its own InPhox app at <shop>.<this domain>. */
+/** Every shop runs its own inphox app at <shop>.<this domain>. */
 export const DEFAULT_SHOP_DOMAIN = 'inphox.net';
 
-/** The central InPhox app sign-ups go through. */
+/** The central inphox app sign-ups go through. */
 export const DEFAULT_PLATFORM_URL = 'https://platform.inphox.net';
 
 /** phone-intake's billing service, without a trailing slash: the sign-up path until the platform is
  *  live. Used only when VITE_PLATFORM_URL is not set (.env.production sets it today). */
 export const billingBaseUrl = read('VITE_BILLING_BASE_URL').replace(/\/+$/, '');
 
-/** Base URL of the InPhox platform, without a trailing slash, or '' while sign-ups go to phone-intake.
+/** Base URL of the inphox platform, without a trailing slash, or '' while sign-ups go to phone-intake.
  *  VITE_PLATFORM_URL wins; else VITE_BILLING_BASE_URL (phone-intake); else the default platform.
  *  VITE_PLATFORM_URL=off keeps both forms client-side (a local preview that must not create sign-ups). */
 const platformSetting = read('VITE_PLATFORM_URL');
@@ -37,10 +37,10 @@ export const leadAction = platformUrl ? `${platformUrl}/inphox/lead` : viaPhoneI
  *  to Contact: the hub is still behind a password, and a browser password box is a dead end for a visitor. */
 export const signupOpen = ['1', 'on', 'true', 'yes'].includes(read('VITE_SIGNUP_OPEN').toLowerCase());
 
-/** The InPhox hub, where every plan button sends people to sign up (home.inphox.net/signup?plan=<code>). */
+/** The inphox hub, where every plan button sends people to sign up (home.inphox.net/signup?plan=<code>). */
 export const hubUrl = (read('VITE_HUB_URL') || 'https://home.inphox.net').replace(/\/+$/, '');
 
-/** Where every Sign in link goes. Once the hub is public (signupOpen), people sign in at the InPhox hub
+/** Where every Sign in link goes. Once the hub is public (signupOpen), people sign in at the inphox hub
  *  (home.inphox.net/login), which then opens their shop; until then, the site's own "Sign in to your shop" page. */
 export const LOGIN_HREF = signupOpen ? `${hubUrl}/login` : SIGNIN_HREF;
 

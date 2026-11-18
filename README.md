@@ -1,6 +1,6 @@
-# InPhox website
+# inphox website
 
-Marketing site for InPhox: a multi-page React 18 app built with Vite. Pages are switched by the URL hash (`#/pricing`, `#/start`, ...); there is no router library and no backend of its own.
+Marketing site for inphox: a multi-page React 18 app built with Vite. Pages are switched by the URL hash (`#/pricing`, `#/start`, ...); there is no router library and no backend of its own.
 
 ## Running it
 

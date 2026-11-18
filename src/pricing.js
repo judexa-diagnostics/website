@@ -5,13 +5,13 @@
 // `npm test` imports this file directly.
 //
 // The website takes no payment and has no sign-up form of its own. Every plan button
-// goes to the InPhox hub's sign-up with the plan's code (`signupUrl`); the hub checks
+// goes to the inphox hub's sign-up with the plan's code (`signupUrl`); the hub checks
 // the code, takes the card and shows "You picked <Plan>".
 
 /** Every device check past a plan's included amount costs this, on every plan. */
 export const OVERAGE_PER_CHECK = 0.5;
 
-/** The InPhox hub, where sign-up lives. VITE_HUB_URL (config.js) overrides it for previews. */
+/** The inphox hub, where sign-up lives. VITE_HUB_URL (config.js) overrides it for previews. */
 export const DEFAULT_HUB_URL = 'https://home.inphox.net';
 
 /** The page a plan button opens when the hub does not answer. */
@@ -92,7 +92,7 @@ export const CONTRACT_PRICE = 'Custom contract';
 export const pricing = {
   plans: [
     {
-      code: 'free', name: 'Always Free', hubCode: true, who: 'Try InPhox on real devices',
+      code: 'free', name: 'Always Free', hubCode: true, who: 'Try inphox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
       cardNote: CARD_PROMISE + ' A $20 hold is placed and released. Debit and prepaid cards are not accepted.',
       adds: ADDS.free
@@ -143,7 +143,7 @@ export const pricing = {
     },
     {
       q: 'Where do I pay?',
-      a: 'Not on this website. Pick a plan and you continue to InPhox sign-up, where you add your card.'
+      a: 'Not on this website. Pick a plan and you continue to inphox sign-up, where you add your card.'
     }
   ]
 };

@@ -110,7 +110,7 @@ describe('plan data', async () => {
     assert.equal(by['Listing'], undefined);
   });
 
-  test('with no env vars: the Contact form goes to the InPhox platform, default login URL', () => {
+  test('with no env vars: the Contact form goes to the inphox platform, default login URL', () => {
     assert.equal(config.platformUrl, 'https://platform.inphox.net');
     assert.equal(config.signupAction, undefined, 'sign-up is the hub, not a form on this site');
     assert.equal(config.leadAction, 'https://platform.inphox.net/inphox/lead');
@@ -278,13 +278,13 @@ describe('rendered', () => {
     assert.match(html, /class="pl-card-promise" role="note" style="[^"]*font-size:1rem/);
   });
 
-  test('Platform: the page header carries the InPhox logo above the headline', () => {
+  test('Platform: the page header carries the inphox logo above the headline', () => {
     const html = r.render({ page: 'platform' });
     const main = html.slice(html.indexOf('<main'));
     const logo = main.indexOf('src="assets/inphox-logo.png"');
     assert.ok(logo > 0, 'the logo is in the Platform page itself, not only the site bar');
     assert.ok(logo < main.indexOf('<h1'), 'above the headline');
-    assert.ok(main.includes('InPhox platform'));
+    assert.ok(main.includes('inphox platform'));
   });
 
   test('the hub being down lands on "Sign-up is busy, try again in a minute"', () => {
@@ -412,7 +412,7 @@ describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () =>
   before(async () => (r = await renderWith('VITE_SIGNUP_OPEN=1\nVITE_PLATFORM_URL=off\n')));
   after(() => r.close());
 
-  test('every Sign in link opens the InPhox hub sign-in, never a shop\'s own Odoo page', () => {
+  test('every Sign in link opens the inphox hub sign-in, never a shop\'s own Odoo page', () => {
     const html = r.render({ page: 'start', menu: true });
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer

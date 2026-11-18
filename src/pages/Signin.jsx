@@ -1,4 +1,4 @@
-// Sign in to your shop: every shop runs its own InPhox app at <shop>.<domain>;
+// Sign in to your shop: every shop runs its own inphox app at <shop>.<domain>;
 // this page asks which one and sends the browser to that shop's sign-in page.
 import { FxScope } from '../redesign/fx/index.jsx';
 
@@ -12,7 +12,7 @@ export default function Signin({ v }) {
         <img data-fx="scale" src="assets/inphox-logo.png" alt="" style={{ width: "4rem", height: "4rem" }} />
         <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(1.75rem,2.8vw,2.5rem)", lineHeight: "1.06", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.015em", textWrap: "balance" }}>Sign in to your shop.</h1>
         <p data-fx="" style={{ margin: "0", fontSize: "0.9375rem", lineHeight: "1.6", color: "#D9D0C2", maxWidth: "26.25rem" }}>
-          Every shop has its own InPhox address. It's in your welcome email, and it's the address you sign in at every day.
+          Every shop has its own inphox address. It's in your welcome email, and it's the address you sign in at every day.
         </p>
       </div>
       <div style={{ padding: "clamp(2rem,5vw,4rem) clamp(1rem,4vw,4rem)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "40rem", width: "100%" }}>
@@ -47,9 +47,9 @@ export default function Signin({ v }) {
         </form>
 
         <p data-fx="fade" style={{ margin: "0", fontSize: "0.8125rem", lineHeight: "1.6", color: "#3A342D" }}>
-          Can't find your shop's address? It's in the "Your InPhox shop is ready" email.{" "}
+          Can't find your shop's address? It's in the "Your inphox shop is ready" email.{" "}
           <a href="#/contact" style={{ color: "#16130F", fontWeight: "600" }}>Contact us</a> if you still can't find it.
-          {" "}New to InPhox? <a href="#/start" onClick={si.goTrial} style={{ color: "#16130F", fontWeight: "600" }}>{si.startLabel}</a>.
+          {" "}New to inphox? <a href="#/start" onClick={si.goTrial} style={{ color: "#16130F", fontWeight: "600" }}>{si.startLabel}</a>.
         </p>
       </div>
     </section>
