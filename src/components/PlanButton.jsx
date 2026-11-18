@@ -1,7 +1,7 @@
 import { isPlainClick, openSignup } from '../hub.js';
 
 // A plan's call to action, drawn with the caller's class and style. `a` comes from SiteLogic:
-//   { href, hub: true }   the InPhox hub's sign-up with the plan's code. A real link, so it works
+//   { href, hub: true }   the inphox hub's sign-up with the plan's code. A real link, so it works
 //                         with JavaScript off and in a new tab; a plain click first checks that the
 //                         hub answers and otherwise opens "Sign-up is busy, try again in a minute".
 //   { href }              any other link (Talk to sales)

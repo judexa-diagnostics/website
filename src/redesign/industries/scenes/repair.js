@@ -118,7 +118,7 @@ function drawMonitor(g, W, H, S) {
   // top bar
   g.fillStyle = OR2; g.fillRect(0, 0, W, 58);
   logo(g, 16, 11, 36);
-  g.fillStyle = '#fff'; g.font = sans(24, 750); g.fillText('InPhox', 62, 38);
+  g.fillStyle = '#fff'; g.font = sans(24, 750); g.fillText('inphox', 62, 38);
   g.font = sans(17, 550);
   ['Repairs', 'Devices', 'Parts', 'Customers'].forEach((n, i) => {
     g.globalAlpha = i === 0 ? 1 : 0.72; g.fillText(n, 196 + i * 120, 37);
@@ -304,7 +304,7 @@ function drawTablet(g, W, H, S) {
   g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
   g.fillStyle = OR2; g.fillRect(0, 0, W, 54);
   logo(g, 14, 10, 34);
-  g.fillStyle = '#fff'; g.font = sans(22, 750); g.fillText('InPhox', 58, 36);
+  g.fillStyle = '#fff'; g.font = sans(22, 750); g.fillText('inphox', 58, 36);
   g.font = sans(17, 550); g.globalAlpha = 0.8; g.fillText('Counter', 150, 35); g.globalAlpha = 1;
   g.font = mono(15, 600); g.textAlign = 'right'; g.fillText(S.tm, W - 18, 35); g.textAlign = 'left';
   const L = 36;
@@ -414,7 +414,7 @@ function drawPhone(g, w, h, S) {
     g.textAlign = 'left';
   } else if (S.mode === 'boot') {
     logo(g, w / 2 - 50, h / 2 - 120, 100);
-    g.fillStyle = CREAM; g.textAlign = 'center'; g.font = sans(30, 700); g.fillText('InPhox', w / 2, h / 2 + 30);
+    g.fillStyle = CREAM; g.textAlign = 'center'; g.font = sans(30, 700); g.fillText('inphox', w / 2, h / 2 + 30);
     g.font = mono(16, 500); g.fillStyle = M3; g.fillText('Reading device…', w / 2, h / 2 + 66); g.textAlign = 'left';
   } else if (S.mode === 'test' || S.mode === 'result') {
     const bad = S.fails, pct = S.count / 42;

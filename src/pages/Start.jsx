@@ -1,7 +1,7 @@
 import PlanButton from '../components/PlanButton.jsx';
 import '../plans.css';
 
-// Sign-up lives at the InPhox hub. This page only lists the five plans (Always Free, Basics, Growth, Max, Enterprise)
+// Sign-up lives at the inphox hub. This page only lists the five plans (Always Free, Basics, Growth, Max, Enterprise)
 // and sends each to the hub with its code; the card promise sits above them, word for word (pricing.js CARD_PROMISE).
 export default function Start({ v }) {
   const { st } = v;

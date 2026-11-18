@@ -407,7 +407,7 @@ export default async function create(ctx) {
     g.fillStyle = '#000'; rr(g, SW / 2 - 52, 22, 104, 30, 15); g.fill();
     g.fillStyle = INK; g.fillRect(SW - 74, 36, 26, 13);
     if (LOGO) g.drawImage(LOGO, 28, 82, 36, 36); else { g.fillStyle = ORANGE; rr(g, 28, 82, 36, 36, 8); g.fill(); }
-    g.fillStyle = INK; g.font = sans(26, 800); g.fillText('InPhox', 74, 110);
+    g.fillStyle = INK; g.font = sans(26, 800); g.fillText('inphox', 74, 110);
     g.fillStyle = MUTED; g.font = mono(15, 500); g.fillText(title, 28, 160);
   }
   const opScreen = dynTex(SW, SH, (g, w, h, s) => {
@@ -747,7 +747,7 @@ export default async function create(ctx) {
     // top bar
     g.fillStyle = INK; g.fillRect(0, 0, w, 56);
     if (LOGO) g.drawImage(LOGO, 18, 12, 32, 32);
-    g.fillStyle = CREAM; g.font = sans(22, 800); g.fillText('InPhox', 60, 36);
+    g.fillStyle = CREAM; g.font = sans(22, 800); g.fillText('inphox', 60, 36);
     g.fillStyle = '#B9AE9E'; g.font = mono(15, 500); g.fillText('HOME OFFICE · 1 STATION', 170, 35);
     g.textAlign = 'right'; g.fillText('8:42 PM', w - 22, 35); g.textAlign = 'left';
     if (s.st === 'total') {
@@ -1222,7 +1222,7 @@ export default async function create(ctx) {
 
   const captions = [
     { at: 0, title: 'Meet the seller', body: 'A parking lot at golden hour. The phone gets checked before any money moves.' },
-    { at: 3.6, title: 'IMEI check on your phone', body: 'Scan the IMEI. InPhox confirms it is clean and suggests what to pay.' },
+    { at: 3.6, title: 'IMEI check on your phone', body: 'Scan the IMEI. inphox confirms it is clean and suggests what to pay.' },
     { at: 8.4, title: 'Pay phone to phone', body: 'Pay on the spot. The phone lands in your stock with its cost.' },
     { at: 13.6, title: 'Drive home', body: 'Stock, cost and the seller receipt are already in your books.' },
     { at: 27.4, title: 'Test and grade on the couch', body: 'Plug it into the laptop. Full tests, a wipe and a grade in minutes.' },

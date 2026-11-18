@@ -14,10 +14,10 @@ export default function Platform({ v }) {
     <MotionConfig reducedMotion="user">
     <FxScope>
       <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) 0" }}>
-        {/* The page header's brand mark (redesign brief 2026-11-09 §5): the InPhox logo above the headline. */}
+        {/* The page header's brand mark (redesign brief 2026-11-09 §5): the inphox logo above the headline. */}
         <div className="plat-brand" data-fx="" style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
           <img src="assets/inphox-logo.png" alt="" width="48" height="48" style={{ width: "3rem", height: "3rem", flex: "none" }} />
-          <span style={{ fontSize: "1.125rem", fontWeight: "700", letterSpacing: "-.01em" }}>InPhox platform</span>
+          <span style={{ fontSize: "1.125rem", fontWeight: "700", letterSpacing: "-.01em" }}>inphox platform</span>
         </div>
         <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(2rem,3.6vw,3.375rem)", lineHeight: "1.02", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance", maxWidth: "66.25rem" }}>Built in house, end to end. One record per device.</h1>
       </section>
@@ -40,10 +40,10 @@ export default function Platform({ v }) {
           ); })}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: ui.c48, gap: "clamp(1rem,4vw,3rem)", padding: "1.5rem 0" }}>
-          <span data-fx="" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257", lineHeight: "1.6" }}>BUILT IN = part of InPhox today<br />ON REQUEST = set up with your shop when you need it</span>
+          <span data-fx="" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", color: "#6B6257", lineHeight: "1.6" }}>BUILT IN = part of inphox today<br />ON REQUEST = set up with your shop when you need it</span>
           <div data-fx="" style={{ display: "flex", flexDirection: "column", gap: "0.875rem", maxWidth: "45rem" }}>
             <p style={{ margin: "0", fontSize: "1.0625rem", lineHeight: "1.6", color: "#3A342D" }}>
-              We build InPhox ourselves, from the station that tests a phone to the invoice that sells it. There is no stack of plug-ins underneath, so there is one record per device: the IMEI and everything that has happened to it.
+              We build inphox ourselves, from the station that tests a phone to the invoice that sells it. There is no stack of plug-ins underneath, so there is one record per device: the IMEI and everything that has happened to it.
             </p>
             {plat.more ? (
               <div className="fx-mount" style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>

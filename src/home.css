@@ -82,7 +82,7 @@
 .hm-cap p { margin: 0; font-size: .875rem; line-height: 1.5; color: var(--pmm-text-2); }
 @media (max-width: 47.99rem) { .hm-caps .hm-cap-more { display: none; } }
 
-/* ---- 5. Before / with InPhox ---- */
+/* ---- 5. Before / with inphox ---- */
 .hm-xf { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); }
 @media (min-width: 61.25rem) { .hm-xf { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
 .hm-xf-l h2 { font-size: clamp(1.625rem, 2.6vw, 2.25rem); line-height: 1.1; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }

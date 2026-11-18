@@ -274,7 +274,7 @@ export default async function create(ctx) {
   const posTex = ctex(640, 440, (g, w, h, st = 0) => {
     g.fillStyle = CREAM; g.fillRect(0, 0, w, h);
     g.fillStyle = INK; g.fillRect(0, 0, w, 54);
-    g.fillStyle = CREAM; g.font = SANS(24, 700); g.fillText('InPhox', 22, 36);
+    g.fillStyle = CREAM; g.font = SANS(24, 700); g.fillText('inphox', 22, 36);
     g.fillStyle = '#B9AE9E'; g.font = MONO(18, 500); g.fillText('Counter · Trade-in', 130, 35);
     g.fillStyle = MUTED; g.font = MONO(18, 600); g.fillText('WALK-IN · BAG OF 8', 26, 92);
     const rows = [['iPhone 13 · 128', 'A', 210], ['iPhone 12 · 64', 'B', 120], ['Galaxy S23 · 256', 'A', 260], ['+ 5 more', '', 650]];
@@ -367,7 +367,7 @@ export default async function create(ctx) {
   const monTex = ctex(1024, 576, (g, w, h, st = { phase: 0, done: 0 }) => {
     g.fillStyle = '#FBF8F2'; g.fillRect(0, 0, w, h);
     g.fillStyle = INK; g.fillRect(0, 0, w, 64);
-    g.fillStyle = CREAM; g.font = SANS(30, 700); g.fillText('InPhox', 28, 43);
+    g.fillStyle = CREAM; g.font = SANS(30, 700); g.fillText('inphox', 28, 43);
     g.fillStyle = '#B9AE9E'; g.font = MONO(22, 500); g.fillText('Station · BACK-01', 160, 42);
     g.textAlign = 'right'; g.fillStyle = st.phase ? ORANGE : '#3FB27F'; g.fillText(st.phase === 0 ? '● READY' : st.done >= 4 ? '● 4/4 DONE' : '● TESTING', w - 28, 42); g.textAlign = 'left';
     const rows = [['iPhone 13', '128 GB · Midnight'], ['iPhone 12', '64 GB · Blue'], ['Galaxy S23', '256 GB · Cream'], ['Pixel 7', '128 GB · Obsidian']];
@@ -588,7 +588,7 @@ export default async function create(ctx) {
   extra.push(beamGeo);
 
   // ---------------------------------------------------------------- people
-  // Pictogram cast: staff in an InPhox-orange vest, visitors plain white.
+  // Pictogram cast: staff in an inphox-orange vest, visitors plain white.
   const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset });
   const mixers = [];
   function person(opts) {
@@ -701,7 +701,7 @@ export default async function create(ctx) {
     [[bx, by, 1, 1], [bx + bw, by, -1, 1], [bx, by + bh, 1, -1], [bx + bw, by + bh, -1, -1]].forEach(([x, y, a, b]) => { g.beginPath(); g.moveTo(x, y + b * 40); g.lineTo(x, y); g.lineTo(x + a * 40, y); g.stroke(); });
     g.fillStyle = 'rgba(235,94,18,0.9)'; g.fillRect(bx + 10, by + bh / 2, bw - 20, 4);
     g.fillStyle = CREAM; g.font = SANS(28, 700); g.textAlign = 'center'; g.fillText('Scan IMEI', w / 2, 80);
-    g.font = MONO(18, 500); g.fillStyle = '#B9AE9E'; g.fillText('InPhox · Counter', w / 2, h - 60);
+    g.font = MONO(18, 500); g.fillStyle = '#B9AE9E'; g.fillText('inphox · Counter', w / 2, h - 60);
   }));
   const handTech = makePhone(PHONE_STYLES[4], handClerk.userData.screenMat.emissiveMap);
   [handClerk, handTech].forEach(p => { p.scale.setScalar(1.05); scene.add(p); });

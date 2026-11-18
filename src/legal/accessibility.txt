@@ -1,7 +1,7 @@
 Version: 2026-11-14
 Title: Accessibility
 
-We want everyone to be able to use InPhox, including people who use screen readers, keyboard navigation, magnification or other assistive technology.
+We want everyone to be able to use inphox, including people who use screen readers, keyboard navigation, magnification or other assistive technology.
 
 1. Our standard. We work toward the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. That includes readable text sizes, full keyboard use, a skip link to the main content, labels on every control, and colour that is never the only way meaning is shown.
 

@@ -70,7 +70,7 @@ export default class SiteLogic extends DCLogic {
     ['CRM for customers and vendors','Accounts, purchase history, terms and price lists for buyers and suppliers.'],
     ['Online listings','Graded stock is ready to list the moment it is graded. Marketplace connections are set up with you on request.'],
     ['Returns','RMA intake that brings returned devices back into the test-and-grade flow.'],
-    ['Auction and vendor marketplace','Sell lots to vetted buyers, or buy from vendors, without leaving InPhox.'],
+    ['Auction and vendor marketplace','Sell lots to vetted buyers, or buy from vendors, without leaving inphox.'],
     ['Data insights','Dwell time, margin by model and grade, and technician throughput.'],
     ['Third-party routing','Send devices to outside repair or recycling partners and track them while they are out.'],
     ['Built in house','Testing, erasure, inventory, repairs and sales are one product we build ourselves, not a bundle of plug-ins.'],
@@ -324,7 +324,7 @@ export default class SiteLogic extends DCLogic {
       bFill: settled ? '#1E7A4A' : '#8E857A', sFill: settled ? '#1E7A4A' : '#16130F',
       rows: [...rounds.filter(r => p7 >= r[0]).map(([bp,b,sp,sval,by],i) => { const has = p7 >= sp; return { n:'R' + (i + 1), b:'$' + b, s: has ? '$' + sval : '…', by: has ? by : '', g: has ? '$' + (sval - b) : '', gFg:'#3A342D' }; }),
         ...(settled ? [{ n:'Final', b:'Accepts', s:'$346', by:'', g:'$0', gFg:'#1E7A4A' }] : [])],
-      result: dealDone ? 'Settled at $346 / unit · $4,152 for 12 · invoice created' : settled ? 'Buyer accepted. Creating invoice…' : 'Negotiating · InPhox counters only above your floor',
+      result: dealDone ? 'Settled at $346 / unit · $4,152 for 12 · invoice created' : settled ? 'Buyer accepted. Creating invoice…' : 'Negotiating · inphox counters only above your floor',
       resBg: dealDone ? '#1E7A4A' : '#FFFFFF', resFg: dealDone ? '#FFFFFF' : '#3A342D'
     };
 
@@ -411,7 +411,7 @@ export default class SiteLogic extends DCLogic {
     ['Platform','Connections on request','Tell us what your shop needs connected']
   ];
   integrations = [['Diagnostics','Devices','BUILT IN'],['Erasure certificates','Devices','BUILT IN'],['Grading','Devices','BUILT IN'],['Repairs & parts','Devices','BUILT IN'],['Inventory & locations','Stock','BUILT IN'],['Transfers','Stock','BUILT IN'],['Offers','Sales','BUILT IN'],['Sales orders & invoices','Sales','BUILT IN'],['Customer portal','Sales','BUILT IN'],['Reports','Stock','BUILT IN'],['CSV & PDF export','Connections','BUILT IN'],['Payments','Connections','ON REQUEST'],['Shipping labels','Connections','ON REQUEST'],['Marketplaces','Connections','ON REQUEST'],['Accounting','Connections','ON REQUEST']];
-  record = [['Oct 2 · 08:14','Received in lot L-0418','Manifest scan','D. Chen','WH-A · Dock 2'],['08:31','Connected · port 17','Station B-04','D. Chen','WH-A'],['08:33','Functional test 41/42 · rear camera','InPhox Diagnostics','—','Station B-04'],['08:34','Erasure certified · NIST 800-88','InPhox Diagnostics','—','Station B-04'],['09:02','Repair RT-2207 · rear camera replaced','Repair suite','M. Ortiz','Bench R-2'],['09:24','Retest 42/42 · graded A-','InPhox Diagnostics','M. Ortiz','Bench R-2'],['09:30','Shelved','Handheld scan','Sam P.','C-14-03'],['Oct 3 · 10:02','Offer accepted at $869','Offers','—','—'],['14:47','Sold · label printed','Sales order SO-10422','Sam P.','Dock 1']];
+  record = [['Oct 2 · 08:14','Received in lot L-0418','Manifest scan','D. Chen','WH-A · Dock 2'],['08:31','Connected · port 17','Station B-04','D. Chen','WH-A'],['08:33','Functional test 41/42 · rear camera','inphox Diagnostics','—','Station B-04'],['08:34','Erasure certified · NIST 800-88','inphox Diagnostics','—','Station B-04'],['09:02','Repair RT-2207 · rear camera replaced','Repair suite','M. Ortiz','Bench R-2'],['09:24','Retest 42/42 · graded A-','inphox Diagnostics','M. Ortiz','Bench R-2'],['09:30','Shelved','Handheld scan','Sam P.','C-14-03'],['Oct 3 · 10:02','Offer accepted at $869','Offers','—','—'],['14:47','Sold · label printed','Sales order SO-10422','Sam P.','Dock 1']];
 
   // One plan card's values (Plans page and home page): pricing.js planCard() plus where its button goes.
   // The site takes no payment and has no sign-up form: a plan button is a link to the hub's sign-up
@@ -503,12 +503,12 @@ export default class SiteLogic extends DCLogic {
     // Create account: sign-up lives at the hub. This page lists the plans and sends each to the hub.
     const st = {
       loginUrl: LOGIN_HREF,
-      headline: 'Create your InPhox account.',
+      headline: 'Create your inphox account.',
       sub: 'Pick a plan to continue to sign-up. Always Free starts with 25 device checks a month.',
       card: CARD_PROMISE,
       plans: pricing.plans.map(p => { const c = planCard(p); return { name: p.name, d: c.checks, o: c.overage, price: c.priceStr + (c.per ? ' ' + c.per : ''), cta: c.cta, act: this.planTile(p).act }; })
     };
-    // Sign in to your shop: each shop's InPhox app lives at <shop>.<shopDomain>.
+    // Sign in to your shop: each shop's inphox app lives at <shop>.<shopDomain>.
     // At most 5 tries a minute, so the box cannot be used to run through names.
     const throttle = this.siThrottle || (this.siThrottle = createThrottle());
     const goShop = shop => {
