@@ -1,5 +1,6 @@
 import { FxScope } from '../redesign/fx/index.jsx';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
+import { FOUNDER_NAME, FOUNDER_TITLE, FOUNDER_EMAIL, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE } from '../config.js';
 
 export default function Contact({ v }) {
   const { ct, goTrial, startLabel, ui } = v;
@@ -23,6 +24,14 @@ export default function Contact({ v }) {
           <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Support</span>
             <span>Existing customers: use Help inside the app</span>
+          </div>
+          <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Founder</span>
+            <span>{FOUNDER_NAME}, {FOUNDER_TITLE} · <a href={`mailto:${FOUNDER_EMAIL}`} style={{ color: "#16130F", textDecoration: "underline" }}>{FOUNDER_EMAIL}</a></span>
+          </div>
+          <div data-fx="" data-fx-gap="80" style={{ display: "grid", gridTemplateColumns: "7.5rem 1fr", gap: "0.75rem", padding: "0.75rem 0", borderBottom: "1px solid #D9D0C2", fontSize: "0.875rem" }}>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".06em", textTransform: "uppercase", color: "#6B6257", paddingTop: "2px" }}>Office</span>
+            <span>{COMPANY_POSTAL_ADDRESS} · {COMPANY_PHONE}</span>
           </div>
         </div>
       </div>

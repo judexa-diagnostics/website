@@ -48,3 +48,6 @@ export const LOGIN_HREF = signupOpen ? `${hubUrl}/login` : SIGNIN_HREF;
  *  Empty until the real ones are set: an empty value shows nothing, never a placeholder. */
 export const COMPANY_POSTAL_ADDRESS = '375 S 9th Street, Joe West Hall, San Jose, CA 95112';
 export const COMPANY_PHONE = '916-582-9140';
+export const FOUNDER_NAME = 'Christopher Luk';
+export const FOUNDER_TITLE = 'Founder & CEO';
+export const FOUNDER_EMAIL = 'chris@inphox.net';
