@@ -37,7 +37,6 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{"Security & compliance"}</a>
           <a className="fx-ul fx-ul-tight" href="#/careers" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Careers</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Contact</a>
-          <a className="fx-ul fx-ul-tight" href="#/about" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Founder: Christopher Luk</a>
           <a className="fx-ul fx-ul-tight" href="#/privacy" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
           <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
           <a className="fx-ul fx-ul-tight" href="#/refunds" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Refunds</a>

@@ -2,7 +2,7 @@
 // privacy notice, a business address/phone in the footer, a skip link, and an accessibility statement.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -64,7 +64,6 @@ test('the site shows founder contact info for startup compliance (Chris 2026-11-
   assert.ok(contact.includes('FOUNDER_NAME') && contact.includes('FOUNDER_EMAIL'), 'Contact page links founder info');
   const footer = readFileSync(join(root, 'src/components/Footer.jsx'), 'utf8');
   assert.match(footer, /Founded by Christopher Luk/);
-  assert.match(footer, /Founder: Christopher Luk/);
 });
 
 test('the About Us page lists the founder and team, and the footer and menu link to it (Google for Startups, 2026-11-20)', () => {
@@ -72,6 +71,10 @@ test('the About Us page lists the founder and team, and the footer and menu link
   const about = read('src/pages/About.jsx');
   assert.ok(about.includes('TEAM') && about.includes('FOUNDER_NAME'), 'About page renders the team list');
   assert.match(read('src/config.js'), /export const TEAM = \[/);
+  assert.match(read('src/config.js'), /FOUNDER_LINKEDIN = 'https:\/\/www\.linkedin\.com\/in\/christopher-luk-22312331b\/'/);
+  assert.ok(existsSync(join(root, 'public/assets/team/christopher-luk.jpg')), 'Christopher photo exists');
+  assert.ok(existsSync(join(root, 'public/assets/team/sri-vatsa-vuddanti.jpg')), 'Sri photo exists');
+  assert.ok(existsSync(join(root, 'public/assets/team/iniyan-kannappan.jpg')), 'Iniyan photo exists');
   assert.match(read('src/Layout.jsx'), /is\.about \? <About/);
   assert.match(read('src/SiteLogic.js'), /'about'/);
   const footer = read('src/components/Footer.jsx');

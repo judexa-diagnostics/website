@@ -51,6 +51,7 @@ export const COMPANY_PHONE = '916-582-9140';
 export const FOUNDER_NAME = 'Christopher Luk';
 export const FOUNDER_TITLE = 'Founder & CEO';
 export const FOUNDER_EMAIL = 'christopher@inphox.net';
+export const FOUNDER_LINKEDIN = 'https://www.linkedin.com/in/christopher-luk-22312331b/';
 
 /** Company facts shown on the About Us page. */
 export const COMPANY_LEGAL_NAME = 'InPhox LLC';
@@ -63,7 +64,8 @@ export const TEAM = [
     title: FOUNDER_TITLE,
     group: 'Founder',
     email: FOUNDER_EMAIL,
-    linkedin: '',
+    linkedin: FOUNDER_LINKEDIN,
+    image: '/assets/team/christopher-luk.jpg',
     bio: 'Founded InPhox LLC and leads the company. InPhox is built in house, end to end, for shops that buy, fix and resell used electronics.'
   },
   {
@@ -72,6 +74,7 @@ export const TEAM = [
     group: 'Co-founder',
     email: '',
     linkedin: 'https://www.linkedin.com/in/srivatsavudd',
+    image: '/assets/team/sri-vatsa-vuddanti.jpg',
     bio: 'Computer science student at San José State University. Works on LLM agents and evals, and on controls for the Spartan Racing Formula SAE team.'
   },
   {
@@ -80,6 +83,7 @@ export const TEAM = [
     group: 'Co-founder',
     email: '',
     linkedin: 'https://www.linkedin.com/in/iniyan-kannappan-492b16315/',
+    image: '/assets/team/iniyan-kannappan.jpg',
     bio: 'Computer science and linguistics student at San José State University. Builds software across AI, embedded systems and backend, including for the Spartan Racing Formula SAE Electric team.'
   }
 ];
