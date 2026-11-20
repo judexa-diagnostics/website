@@ -50,4 +50,4 @@ export const COMPANY_POSTAL_ADDRESS = '375 S 9th Street, Joe West Hall, San Jose
 export const COMPANY_PHONE = '916-582-9140';
 export const FOUNDER_NAME = 'Christopher Luk';
 export const FOUNDER_TITLE = 'Founder & CEO';
-export const FOUNDER_EMAIL = 'chris@inphox.net';
+export const FOUNDER_EMAIL = 'christoper@inphox.net';

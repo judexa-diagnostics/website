@@ -59,7 +59,7 @@ test('the footer shows the real address and phone, and no footer text is under 1
 test('the site shows founder contact info for startup compliance (Chris 2026-11-20)', () => {
   const c = readFileSync(join(root, 'src/config.js'), 'utf8');
   assert.match(c, /FOUNDER_NAME = 'Christopher Luk'/);
-  assert.match(c, /FOUNDER_EMAIL = 'chris@inphox.net'/);
+  assert.match(c, /FOUNDER_EMAIL = 'christoper@inphox.net'/);
   const contact = readFileSync(join(root, 'src/pages/Contact.jsx'), 'utf8');
   assert.ok(contact.includes('FOUNDER_NAME') && contact.includes('FOUNDER_EMAIL'), 'Contact page links founder info');
   const footer = readFileSync(join(root, 'src/components/Footer.jsx'), 'utf8');
