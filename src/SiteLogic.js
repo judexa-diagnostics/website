@@ -7,7 +7,7 @@ import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config
 import { shopFromInput, shopLoginUrl, createThrottle, savedShop } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure','cookies','accessibility'];
+const PAGES = ['home','industries','features','pricing','contact','platform','about','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure','cookies','accessibility'];
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
@@ -339,7 +339,7 @@ export default class SiteLogic extends DCLogic {
       ui, is, nav,
       menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? 'var(--pmm-text)' : 'transparent', menuBtnFg: s.menu ? 'var(--pmm-bg)' : 'var(--pmm-text)',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
-      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record']]
+      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record'],['About us','about','Who we are, our founder and our team']]
         .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),

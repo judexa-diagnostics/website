@@ -96,6 +96,11 @@
       "source": "/accessibility",
       "destination": "/#/accessibility",
       "permanent": false
+    },
+    {
+      "source": "/about",
+      "destination": "/#/about",
+      "permanent": false
     }
   ]
 }
