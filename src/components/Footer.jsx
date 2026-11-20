@@ -33,10 +33,11 @@ export default function Footer({ v }) {
         </div>
         <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "1rem" }}>
           <span style={{ fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", letterSpacing: ".02em", color: "var(--pmm-text-3)", marginBottom: "0.25rem" }}>Company</span>
+          <a className="fx-ul fx-ul-tight" href="#/about" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>About us</a>
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{"Security & compliance"}</a>
           <a className="fx-ul fx-ul-tight" href="#/careers" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Careers</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Contact</a>
-          <a className="fx-ul fx-ul-tight" href="mailto:christoper@inphox.net" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Founder: Christopher Luk</a>
+          <a className="fx-ul fx-ul-tight" href="#/about" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Founder: Christopher Luk</a>
           <a className="fx-ul fx-ul-tight" href="#/privacy" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
           <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
           <a className="fx-ul fx-ul-tight" href="#/refunds" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Refunds</a>
