@@ -36,6 +36,7 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/platform" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{"Security & compliance"}</a>
           <a className="fx-ul fx-ul-tight" href="#/careers" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Careers</a>
           <a className="fx-ul fx-ul-tight" href="#/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Contact</a>
+          <a className="fx-ul fx-ul-tight" href="mailto:christoper@inphox.net" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Founder: Christopher Luk</a>
           <a className="fx-ul fx-ul-tight" href="#/privacy" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Privacy</a>
           <a className="fx-ul fx-ul-tight" href="#/terms" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Terms</a>
           <a className="fx-ul fx-ul-tight" href="#/refunds" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Refunds</a>
@@ -47,7 +48,7 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="#/accessibility" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>Accessibility</a>
         </div>
       </div>
-      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC</span><span>{["InPhox LLC", COMPANY_POSTAL_ADDRESS, COMPANY_PHONE].filter(Boolean).join(" · ")}</span><span>{"Language: "}<span>{langName}</span></span></div>
+      <div data-fx="fade" style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--pmm-border-soft)", fontFamily: "var(--pmm-font-mono)", fontSize: "1rem", color: "var(--pmm-text-3)" }}><span>© 2026 InPhox LLC · Founded by Christopher Luk</span><span>{["InPhox LLC", COMPANY_POSTAL_ADDRESS, COMPANY_PHONE].filter(Boolean).join(" · ")}</span><span>{"Language: "}<span>{langName}</span></span></div>
     </footer>
   );
 }
