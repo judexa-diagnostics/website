@@ -1,7 +1,7 @@
 Version: 2026-11-14
 Title: Cookies
 
-This page covers the InPhox website (inphox.net). The InPhox apps and the sign-in service use only the cookies needed to sign you in and keep your account safe, as our Privacy Policy says.
+This page covers the inphox website (inphox.net). The inphox apps and the sign-in service use only the cookies needed to sign you in and keep your account safe, as our Privacy Policy says.
 
 1. What this website stores. The website sets no cookies. It keeps a few small settings in your browser's local storage so it works the way you left it: the last shop address you signed in at, whether you turned animations off, whether you skipped the walkthrough, and your best score in the phone game. They stay on your device and are never sent to us.
 

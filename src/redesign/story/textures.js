@@ -86,7 +86,7 @@ export function screenTexture(kind, extra = {}) {
       statusBar(g, true);
       if (logoImg && logoImg.naturalWidth) g.drawImage(logoImg, w / 2 - 70, h / 2 - 130, 140, 140);
       g.fillStyle = CREAM; g.font = sans(34); g.textAlign = 'center';
-      g.fillText('InPhox', w / 2, h / 2 + 50);
+      g.fillText('inphox', w / 2, h / 2 + 50);
       g.font = mono(17, 500); g.fillStyle = MUTED;
       g.fillText('Reading device…', w / 2, h / 2 + 90);
       g.fillStyle = '#2A251F'; rr(g, 70, h / 2 + 120, w - 140, 8, 4); g.fill();
@@ -98,7 +98,7 @@ export function screenTexture(kind, extra = {}) {
       g.fillStyle = CREAM; g.fillRect(0, 0, w, h);
       statusBar(g, false);
       if (logoImg && logoImg.naturalWidth) g.drawImage(logoImg, 30, 80, 46, 46);
-      g.fillStyle = INK; g.font = sans(26); g.fillText('InPhox', 86, 113);
+      g.fillStyle = INK; g.font = sans(26); g.fillText('inphox', 86, 113);
       g.font = mono(15, 600); g.fillStyle = '#1E7A4A'; g.fillText('IDENTIFIED · READY TO TEST', 30, 170);
       const rows = [['IMEI', '356798114520331'], ['Model', 'iPhone 14 Pro'], ['Storage', '256 GB'], ['Color', 'Deep Purple'], ['Carrier', 'Unlocked'], ['Battery', '91% · 312 cyc'], ['Find My', 'Off'], ['Parts', 'All genuine']];
       rows.forEach(([k, v], i) => {

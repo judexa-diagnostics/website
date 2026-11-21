@@ -46,7 +46,7 @@ export default function Industries({ v }) {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", paddingBottom: "0.5rem", borderBottom: "1px solid #16130F" }}>Your workflow in InPhox</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.6875rem", letterSpacing: ".02em", color: "#6B6257", paddingBottom: "0.5rem", borderBottom: "1px solid #16130F" }}>Your workflow in inphox</div>
                     {" "}
                     {p.flow.map((f, j) => (
                       <Fragment key={j}>

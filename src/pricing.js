@@ -5,13 +5,13 @@
 // `npm test` imports this file directly.
 //
 // The website takes no payment and has no sign-up form of its own. Every plan button
-// goes to the InPhox hub's sign-up with the plan's code (`signupUrl`); the hub checks
+// goes to the inphox hub's sign-up with the plan's code (`signupUrl`); the hub checks
 // the code, takes the card and shows "You picked <Plan>".
 
 /** Every device check past a plan's included amount costs this, on every plan. */
 export const OVERAGE_PER_CHECK = 0.5;
 
-/** The InPhox hub, where sign-up lives. VITE_HUB_URL (config.js) overrides it for previews. */
+/** The inphox hub, where sign-up lives. VITE_HUB_URL (config.js) overrides it for previews. */
 export const DEFAULT_HUB_URL = 'https://home.inphox.net';
 
 /** The page a plan button opens when the hub does not answer. */
@@ -84,7 +84,7 @@ const ADDS = {
  * The card promise (redesign brief 2026-11-09 §5), word for word wherever a plan is picked: the Free card line, the
  * Create account page and the FAQ. A card is needed to open Free; it is only charged past the 25 included checks.
  */
-export const CARD_PROMISE = 'Credit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.';
+export const CARD_PROMISE = 'A credit or debit card is required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.';
 
 /** Enterprise's price line: a contract, not a list price (redesign brief 2026-11-09 §5). */
 export const CONTRACT_PRICE = 'Custom contract';
@@ -92,9 +92,9 @@ export const CONTRACT_PRICE = 'Custom contract';
 export const pricing = {
   plans: [
     {
-      code: 'free', name: 'Always Free', hubCode: true, who: 'Try InPhox on real devices',
+      code: 'free', name: 'Always Free', hubCode: true, who: 'Try inphox on real devices',
       price: 0, checksIncluded: 25, locations: 1, staff: 0,
-      cardNote: CARD_PROMISE + ' A $20 hold is placed and released. Debit and prepaid cards are not accepted.',
+      cardNote: CARD_PROMISE + ' A $20 hold is placed and released. Prepaid cards are not accepted.',
       adds: ADDS.free
     },
     {
@@ -139,11 +139,11 @@ export const pricing = {
     },
     {
       q: 'Is Always Free really free?',
-      a: 'Yes. You get 25 device checks a month. ' + CARD_PROMISE + ' We place a $20 hold that is released straight away. Debit and prepaid cards are not accepted, and one card opens one Always Free account.'
+      a: 'Yes. You get 25 device checks a month. ' + CARD_PROMISE + ' We place a $20 hold that is released straight away. Prepaid cards are not accepted, and one card opens one Always Free account.'
     },
     {
       q: 'Where do I pay?',
-      a: 'Not on this website. Pick a plan and you continue to InPhox sign-up, where you add your card.'
+      a: 'Not on this website. Pick a plan and you continue to inphox sign-up, where you add your card.'
     }
   ]
 };

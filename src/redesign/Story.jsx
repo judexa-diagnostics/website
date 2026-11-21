@@ -1,4 +1,4 @@
-// "How InPhox fits into your workflow": a scroll-driven 3D story in seven
+// "How inphox fits into your workflow": a scroll-driven 3D story in seven
 // steps. One sticky stage holds a WebGL canvas (world.js) plus HTML overlays
 // that read the same progress value P (0..7).
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -10,12 +10,12 @@ import { START_FREE } from '../pricing.js';
 
 const SCENES = [
   { name: 'Arrive', title: 'A lot lands on the line.', body: 'Three hundred phones in totes, from a trade-in run, a wholesale lot or a stack of returns. One gets picked. Nothing is known about it yet.' },
-  { name: 'Connect', title: 'Plug it in. The phone tells InPhox the rest.', body: 'No typing. Within seconds of the cable going in, the record fills itself from the device: identity, storage, carrier, locks, battery and parts history.' },
+  { name: 'Connect', title: 'Plug it in. The phone tells inphox the rest.', body: 'No typing. Within seconds of the cable going in, the record fills itself from the device: identity, storage, carrier, locks, battery and parts history.' },
   { name: 'Diagnose', title: 'Twelve at a time. Every result on the card.', body: 'Tests, erasure and grading run side by side. Each device gets a card, and each card prints the label that goes on the device. Hover one.' },
   { name: 'Route', title: 'Every device knows where it goes next.', body: 'Results decide the lane: repair, a second look at QC, storage, the sales floor or an open order. Nobody has to ask the whiteboard.' },
   { name: 'Repair & ship', title: 'Fixed part by part. Packed against the order.', body: 'Repairs are logged to the device, part by part, then retested. Shipments are picked by scan, packed, labelled and sent on their way.' },
   { name: 'Locations', title: 'Every unit, every location, one map.', body: 'Stores, warehouses, kiosks, partners and buyers, with live counts at each pin. Drag the globe to look around.' },
-  { name: 'Offers', title: 'Negotiate on the floor. Close by scan.', body: 'Buyers bid, InPhox counters only above your floor, and the deal is verified unit by unit with the scanner before it ships.' }
+  { name: 'Offers', title: 'Negotiate on the floor. Close by scan.', body: 'Buyers bid, inphox counters only above your floor, and the deal is verified unit by unit with the scanner before it ships.' }
 ];
 // Scroll does not scrub the animation. Each scroll band triggers one beat,
 // and a beat always plays to its end on its own clock. Scrolling back shows
@@ -289,7 +289,7 @@ export default function Story({ goTrial = defaultTrial } = {}) {
         <div className="sx-flash" ref={flashRef} />
 
         <header className="sx-head">
-          <div className="sx-kicker"><span>01</span> How InPhox fits into your workflow</div>
+          <div className="sx-kicker"><span>01</span> How inphox fits into your workflow</div>
           <nav className="sx-rail" aria-label="Story steps">
             {SCENES.map((s, i) => (
               <button key={s.name} onClick={() => jump(i)} className={i === scene ? 'on' : i < scene ? 'past' : ''}>

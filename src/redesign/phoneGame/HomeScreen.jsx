@@ -38,9 +38,9 @@ const APPS = [
 ];
 const DOCK = [
   ['scan', 'Scanner', '#F6F2EA', '#16130F', 'Point it at an IMEI. It knows.'],
-  ['inphox', 'InPhox', null, null, null],
+  ['inphox', 'inphox', null, null, null],
   ['buyers', 'Buyers', '#1E7A4A', '#F6F2EA', '3 new bids on Lot L-0418.'],
-  ['board', 'Whiteboard', '#D9D0C2', '#6B6257', 'Retired. InPhox knows where it all is.']
+  ['board', 'Whiteboard', '#D9D0C2', '#6B6257', 'Retired. inphox knows where it all is.']
 ];
 
 export default function HomeScreen({ onOpenApp, onOpenGame, focusFirst }) {
@@ -68,7 +68,7 @@ export default function HomeScreen({ onOpenApp, onOpenGame, focusFirst }) {
       key={key} type="button" ref={key === 'inphox' ? dockRef : undefined}
       className={'hs-app' + (wig === key ? ' wig' : '') + (key === 'inphox' ? ' main' : '') + (key === 'game' ? ' game' : '')}
       onClick={e => tap(key, msg, e)}
-      aria-label={key === 'inphox' ? 'Open InPhox' : key === 'game' ? 'Play Box it' : label}
+      aria-label={key === 'inphox' ? 'Open inphox' : key === 'game' ? 'Play Box it' : label}
     >
       <span className="hs-tile" style={bg ? { background: bg, color: fg } : undefined}>
         {key === 'inphox' ? <img src="assets/inphox-logo.png" alt="" /> : GLYPH[key]}

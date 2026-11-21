@@ -16,7 +16,7 @@ export default function Home({ v }) {
   const proof = proofFacts();
   return (
     <div className="hm">
-      <section className="hm-hero" aria-label="InPhox">
+      <section className="hm-hero" aria-label="inphox">
         <div className="hm-hero-copy">
           {/* The hero copy lives in the phone (swipe up from its home bar for the home screen and the Box it game). */}
           <HeroPhone goTrial={goTrial} startLabel={startLabel} />
@@ -27,7 +27,7 @@ export default function Home({ v }) {
         </div>
       </section>
 
-      <section className="hm-wrap hm-proof" aria-label="InPhox in numbers">
+      <section className="hm-wrap hm-proof" aria-label="inphox in numbers">
         {proof.map(f => (
           <div key={f.k} className="hm-fact">
             <b>{f.k}{f.tag ? <span className="hm-pill">{f.tag}</span> : null}</b>
@@ -95,11 +95,11 @@ export default function Home({ v }) {
                 <span className="hm-ell">{l.l}</span>
               </div>
             ))}
-            <span aria-hidden="true" className="fx-stamp">Logged in InPhox ✓</span>
+            <span aria-hidden="true" className="fx-stamp">Logged in inphox ✓</span>
           </div>
         </div>
         <div>
-          <div className="hm-xf-head"><span>Before</span><span>With InPhox</span></div>
+          <div className="hm-xf-head"><span>Before</span><span>With inphox</span></div>
           {xf.map((x, j) => (
             <div key={j} className={'hm-xf-row' + (x.on ? ' is-on' : '')}>
               <span className="hm-xf-b" style={{ transitionDelay: x.d }}>{x.b}</span>

@@ -218,7 +218,7 @@ export default function About({ v }) {
           <div data-fx="" style={{ ...label, textTransform: 'none', letterSpacing: '.02em' }}>About us</div>
           <h1 data-fx="" style={{ margin: 0, fontSize: 'clamp(2rem,3.4vw,3.125rem)', lineHeight: 1.04, fontWeight: 650, fontStretch: '104%', letterSpacing: '-.02em', textWrap: 'balance', maxWidth: '44rem' }}>We build the system that used electronics run on.</h1>
           <p data-fx="" style={{ margin: 0, fontSize: '1.0625rem', lineHeight: 1.6, color: '#3A342D', maxWidth: '40rem', textWrap: 'pretty' }}>
-            {COMPANY_LEGAL_NAME} makes InPhox, one platform to diagnose, erase, grade, repair, store and sell used phones and devices. Every device is tracked by IMEI from the moment it is plugged in until it ships. We build it ourselves, in house, and we work closely with the shops that use it every day.
+            {COMPANY_LEGAL_NAME} makes inphox, one platform to diagnose, erase, grade, repair, store and sell used phones and devices. Every device is tracked by IMEI from the moment it is plugged in until it ships. We build it ourselves, in house, and we work closely with the shops that use it every day.
           </p>
         </div>
         <HeroCluster />
@@ -228,7 +228,7 @@ export default function About({ v }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem', minWidth: 0 }}>
           <h2 data-fx="" style={{ margin: 0, fontSize: 'clamp(1.5rem,2.3vw,2rem)', lineHeight: 1.1, fontWeight: 600 }}>Who we are</h2>
           <p data-fx="" style={{ margin: 0, fontSize: '1rem', lineHeight: 1.6, color: '#3A342D', textWrap: 'pretty' }}>
-            InPhox LLC is a small software company based in San Jose, California, founded by {FOUNDER_NAME}. Refurbishers, repair shops and buy-and-sell shops told us the same thing: diagnostics in one tool, inventory in a spreadsheet, listings somewhere else. We built one record per device, so the test result, the erasure certificate, the repair and the sale all live together.
+            inphox LLC is a small software company based in San Jose, California, founded by {FOUNDER_NAME}. Refurbishers, repair shops and buy-and-sell shops told us the same thing: diagnostics in one tool, inventory in a spreadsheet, listings somewhere else. We built one record per device, so the test result, the erasure certificate, the repair and the sale all live together.
           </p>
         </div>
         <div style={{ borderTop: '1px solid #16130F', minWidth: 0 }}>

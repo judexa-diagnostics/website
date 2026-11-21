@@ -9,8 +9,8 @@ This page explains refunds in plain words. Our Terms of Service (sections 7, 8 a
 
 3. Billing errors. If you think we charged you by mistake, email support@inphox.net within 30 days of the charge with the date and amount. If we charged you in error, we refund that charge to your card.
 
-4. Marketplace purchases. InPhox is not the buyer or the seller and never holds your money. A refund for a Marketplace sale comes from the seller's own payment account, as section 9 of the Terms describes. The 2% platform fee is returned only when no sale took place.
+4. Marketplace purchases. inphox is not the buyer or the seller and never holds your money. A refund for a Marketplace sale comes from the seller's own payment account, as section 9 of the Terms describes. The 2% platform fee is returned only when no sale took place.
 
-5. Your own customers. How you refund people who buy from your shop is up to your shop's return policy, which you set in your shop settings and which prints on your receipts and invoices. InPhox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
+5. Your own customers. How you refund people who buy from your shop is up to your shop's return policy, which you set in your shop settings and which prints on your receipts and invoices. inphox gives you the tools (refund a sale, record a return, credit note) but does not hold or move your customers' money.
 
 6. Contact. Email support@inphox.net. We aim to answer within two business days.
