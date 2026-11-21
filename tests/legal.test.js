@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { parseLegal } from '../src/legalDoc.js';
@@ -51,7 +52,6 @@ test('the sign-in service\'s internal "Status:" line is never shown as text', ()
 });
 
 test('the brand is written "inphox" in every file (Chris 2026-11-18; "inphox LLC" 2026-11-21)', () => {
-  const { execFileSync } = require('node:child_process');
   const files = execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter(f => f && !/\.(png|jpg|jpeg|webp|woff2?|ico|glb|mp4)$/.test(f));
   const old = 'In' + 'Phox';
   const bad = files.filter(f => { try { return read(f).includes(old); } catch { return false; } });
