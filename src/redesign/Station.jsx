@@ -515,7 +515,7 @@ function Bench({ goTrial }) {
     <div className="st-app">
       <div className="st-app-h">
         <img src={LOGO} alt="" onClick={narrow ? clickMac : undefined} />
-        <span className="st-app-t"><b>InPhox Station</b><span className="st-app-st"> · {HOST} · <span className="st-tab">{connected}</span> connected</span></span>
+        <span className="st-app-t"><b>inphox Station</b><span className="st-app-st"> · {HOST} · <span className="st-tab">{connected}</span> connected</span></span>
         <span className={`st-live${turbo ? ' st-live-t' : ''}`}>{turbo ? 'Turbo' : 'Live'}</span>
       </div>
       <div className="st-grid" style={narrow ? undefined : { gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gridTemplateRows: `repeat(${rows}, minmax(0,1fr))` }} data-rows={rows}>

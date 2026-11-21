@@ -1,6 +1,6 @@
 // Shared cast for the 3D scenes: pictogram figures in the spirit of road-sign
 // and wayfinding pictograms. A round head with no face, a rounded torso and
-// capsule limbs, all in one soft off-white; staff get a single InPhox-orange
+// capsule limbs, all in one soft off-white; staff get a single inphox-orange
 // vest so the operator reads apart from customers. The figure is one skinned
 // mesh built from code and bound to the rig in body.glb, so the idle/walk
 // clips (clips.json) and the arm helpers below drive it like any character.
@@ -19,7 +19,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 export const HEADS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
 // accent: the staff vest. Everything else is the same white figure.
-const ORANGE = '#EB5E12'; // InPhox accent
+const ORANGE = '#EB5E12'; // inphox accent
 export const LOOKS = {
   staffOrange: { accent: ORANGE },
   staffOrangeLong: { accent: ORANGE },

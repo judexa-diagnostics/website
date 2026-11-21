@@ -147,7 +147,7 @@ export function buildAirport() {
   // a hangar + the warehouse the box came from
   const hang = new THREE.Mesh(new THREE.BoxGeometry(90, 26, 120), new THREE.MeshStandardMaterial({ color: '#d9d4c8', roughness: 0.8 }));
   hang.position.set(-120, 11, -120); hang.castShadow = true; scene.add(hang);
-  const sign = canvasTex(512, 96, (g, w, h) => { g.fillStyle = '#16130F'; g.fillRect(0, 0, w, h); g.fillStyle = '#EB5E12'; g.fillRect(0, h - 10, w, 10); g.fillStyle = '#F6F2EA'; g.font = "700 54px 'Archivo', sans-serif"; g.fillText('InPhox · Dallas DC', 24, 62); });
+  const sign = canvasTex(512, 96, (g, w, h) => { g.fillStyle = '#16130F'; g.fillRect(0, 0, w, h); g.fillStyle = '#EB5E12'; g.fillRect(0, h - 10, w, 10); g.fillStyle = '#F6F2EA'; g.font = "700 54px 'Archivo', sans-serif"; g.fillText('inphox · Dallas DC', 24, 62); });
   const signM = new THREE.Mesh(new THREE.PlaneGeometry(60, 11), new THREE.MeshBasicMaterial({ map: sign })); signM.position.set(-120, 30, -59.9); scene.add(signM);
   const plane = makePlane({ fog: true }); scene.add(plane);
   setPlaneDoor(plane, 0);

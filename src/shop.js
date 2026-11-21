@@ -1,10 +1,10 @@
-// "Sign in to your shop": every shop runs its own InPhox app at
+// "Sign in to your shop": every shop runs its own inphox app at
 // https://<shop>.<shopDomain>. These pure helpers turn what someone typed into
 // that address; no React and no DOM, so `npm test` imports this file directly.
 
 const LABEL = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
 
-// Names that are InPhox's own hosts or that no shop may take (the same list the
+// Names that are inphox's own hosts or that no shop may take (the same list the
 // shop builder refuses): a sign-in attempt at one of these is never a real shop.
 export const RESERVED = new Set([
   'www', 'mail', 'email', 'smtp', 'imap', 'pop', 'pop3', 'mx', 'ftp', 'sftp', 'ssh', 'ns', 'ns1', 'ns2', 'dns', 'vpn',

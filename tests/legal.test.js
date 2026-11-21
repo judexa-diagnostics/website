@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { parseLegal } from '../src/legalDoc.js';
@@ -37,15 +38,29 @@ test('terms and privacy are pages, linked from the footer, with clean URLs', () 
   for (const k of ['terms', 'privacy']) assert.ok(redirects.some(r => r.source === '/' + k && r.destination === '/#/' + k), k);
 });
 
-test('the company is InPhox LLC everywhere (Chris 2026-10-24), never "Inc."', () => {
-  assert.ok(read('src/components/Footer.jsx').includes('© 2026 InPhox LLC'));
+test('the company is inphox LLC everywhere (Chris 2026-10-24), never "Inc."', () => {
+  assert.ok(read('src/components/Footer.jsx').includes('© 2026 inphox LLC'));
   for (const f of ['src/components/Footer.jsx', 'src/legal/terms.txt', 'src/legal/privacy.txt']) {
-    assert.ok(!/InPhox,? Inc\b/.test(read(f)), f);
+    assert.ok(!/inphox,? Inc\b/.test(read(f)), f);
   }
-  for (const f of ['src/legal/terms.txt', 'src/legal/privacy.txt']) assert.ok(read(f).includes('InPhox LLC'), f);
+  for (const f of ['src/legal/terms.txt', 'src/legal/privacy.txt']) assert.ok(read(f).includes('inphox LLC'), f);
 });
 
 test('the sign-in service\'s internal "Status:" line is never shown as text', () => {
   const d = parseLegal('Version: 2026-11-14\nTitle: T\nStatus: Draft, internal\n\nOne.\n');
   assert.deepEqual(d, { version: '2026-11-14', title: 'T', paragraphs: ['One.'] });
+});
+
+test('the brand is written "inphox" in every file (Chris 2026-11-18; "inphox LLC" 2026-11-21)', () => {
+  const files = execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter(f => f && !/\.(png|jpg|jpeg|webp|woff2?|ico|glb|mp4)$/.test(f));
+  const old = 'In' + 'Phox';
+  const bad = files.filter(f => { try { return read(f).includes(old); } catch { return false; } });
+  assert.deepEqual(bad, []);
+});
+
+test('the Terms say what the product does: credit or debit, no prepaid; 30 days after an account is deleted (2026-11-21)', () => {
+  const terms = read('src/legal/terms.txt');
+  assert.ok(terms.includes('a real credit or debit card (prepaid cards are not accepted)'));
+  assert.ok(!/debit and prepaid/i.test(terms));
+  assert.ok(terms.includes('If you delete your account, the email address it used cannot be used to open a new account for 30 days.'));
 });

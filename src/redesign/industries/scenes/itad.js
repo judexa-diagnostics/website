@@ -210,13 +210,13 @@ export default async function create(ctx) {
     });
   });
 
-  // InPhox-style UI for monitors.
+  // inphox-style UI for monitors.
   function uiTex(title, rows, foot) {
     return canvasTex(512, 320, (g, w, h) => {
       g.fillStyle = CREAM; g.fillRect(0, 0, w, h);
       g.fillStyle = INK; g.fillRect(0, 0, w, 44);
       g.fillStyle = ORANGE; rr(g, 16, 13, 18, 18, 4); g.fill();
-      g.fillStyle = CREAM; g.font = sans(19, 700); g.fillText('InPhox', 42, 29);
+      g.fillStyle = CREAM; g.font = sans(19, 700); g.fillText('inphox', 42, 29);
       g.fillStyle = '#B9AE9E'; g.font = mono(14, 500); g.textAlign = 'right'; g.fillText('WAREHOUSE A', w - 16, 28); g.textAlign = 'left';
       g.fillStyle = INK; g.font = sans(24, 700); g.fillText(title, 18, 80);
       rows.forEach(([a, pill, col], i) => {
@@ -735,7 +735,7 @@ export default async function create(ctx) {
   bake(stat); scene.add(stat);
 
   // ---------------------------------------------------------- people
-  // Semi-realistic crew: shared body + photoreal heads, work shirts in InPhox
+  // Semi-realistic crew: shared body + photoreal heads, work shirts in inphox
   // orange / charcoal / cream. One clip per worker keeps the mixers cheap.
   const kit = await loadPeople(ctx.loadGLTF, { asset: ctx.asset });
   const clip = n => kit.clips[n];
@@ -1069,7 +1069,7 @@ export default async function create(ctx) {
   return {
     scene, camera, duration: D,
     captions: [
-      { at: 0, title: 'One floor, every device tracked', body: 'Thousands of phones a day: receive, test, erase, grade, repair, store and ship, all in InPhox.' },
+      { at: 0, title: 'One floor, every device tracked', body: 'Thousands of phones a day: receive, test, erase, grade, repair, store and ship, all in inphox.' },
       { at: 3.6, title: 'Receive lots against the manifest', body: 'Trucks unload pallet boxes of phones; every IMEI is scanned to the lot, so nothing goes missing.' },
       { at: 10.6, title: 'Test dozens of phones at once', body: 'Benches run full diagnostics; pass and fail land on each device record automatically.' },
       { at: 16.6, title: 'Certified erasure for every device', body: 'Each phone is wiped and verified, and its certificate is filed with its history.' },

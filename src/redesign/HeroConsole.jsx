@@ -416,7 +416,7 @@ export default function HeroConsole() {
               {/* app bar */}
               <div className="hc-bar">
                 <div className="hc-bar-l">
-                  <span className="hc-brand">InPhox</span>
+                  <span className="hc-brand">inphox</span>
                   {MENUS.slice(0, 2).map(m => <Menu key={m.key} m={m} open={s.menu === m.key} dispatch={dispatch} onItem={menuItem} />)}
                   <button type="button" className="hc-bar-btn" onClick={() => toast('Opening Shipping… 4 boxes outbound, 0 taped to the ceiling.')}>Shipping</button>
                   {MENUS.slice(2).map(m => <Menu key={m.key} m={m} open={s.menu === m.key} dispatch={dispatch} onItem={menuItem} />)}
