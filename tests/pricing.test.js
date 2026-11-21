@@ -59,11 +59,11 @@ describe('plan data', async () => {
     }
   });
 
-  test('the Free card line: the card promise word for word, then the $20 hold released, no debit or prepaid (Chris 2026-11-15)', () => {
-    assert.equal(P.CARD_PROMISE, 'Credit card required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.');
+  test('the Free card line: the card promise word for word, then the $20 hold released, credit or debit, no prepaid (Chris 2026-11-19)', () => {
+    assert.equal(P.CARD_PROMISE, 'A credit or debit card is required. We will NEVER charge your card on the Free plan unless you exceed your 25 included monthly checks.');
     const note = plan('free').cardNote;
     assert.ok(note.startsWith(P.CARD_PROMISE), 'the promise opens the Free card line');
-    for (const s of ['$20 hold', 'released', 'Debit and prepaid cards are not accepted']) assert.ok(note.includes(s), s);
+    for (const s of ['$20 hold', 'released', 'Prepaid cards are not accepted']) assert.ok(note.includes(s), s);
     assert.doesNotMatch(note, /Nothing is charged/, 'the old "nothing is charged" line would contradict the overage rule');
     assert.ok(pricing.faq.some(f => f.a.includes(P.CARD_PROMISE)), 'the FAQ says the same words');
     assert.equal(P.CARD_PROMISE.match(/\d+/)[0], String(plan('free').checksIncluded), 'the promise quotes the Free allowance');
@@ -110,7 +110,7 @@ describe('plan data', async () => {
     assert.equal(by['Listing'], undefined);
   });
 
-  test('with no env vars: the Contact form goes to the InPhox platform, default login URL', () => {
+  test('with no env vars: the Contact form goes to the inphox platform, default login URL', () => {
     assert.equal(config.platformUrl, 'https://platform.inphox.net');
     assert.equal(config.signupAction, undefined, 'sign-up is the hub, not a form on this site');
     assert.equal(config.leadAction, 'https://platform.inphox.net/inphox/lead');
@@ -221,7 +221,7 @@ describe('rendered', () => {
     const cards = html.match(/<article.*?<\/article>/gs);
     assert.equal(cards.length, 5);
     for (const card of cards) assert.match(card, /class="pl-over">Prepaid and overage plans available\.</);
-    assert.ok(cards[0].includes('Debit and prepaid cards are not accepted'));
+    assert.ok(cards[0].includes('Prepaid cards are not accepted'));
     assert.ok(!html.includes('$0.50') && !html.includes('Custom overage'), 'no rate on the pricing page');
     assert.ok(!html.includes('/ year') && !html.includes('Annual'), 'no annual billing');
   });
@@ -278,13 +278,13 @@ describe('rendered', () => {
     assert.match(html, /class="pl-card-promise" role="note" style="[^"]*font-size:1rem/);
   });
 
-  test('Platform: the page header carries the InPhox logo above the headline', () => {
+  test('Platform: the page header carries the inphox logo above the headline', () => {
     const html = r.render({ page: 'platform' });
     const main = html.slice(html.indexOf('<main'));
     const logo = main.indexOf('src="assets/inphox-logo.png"');
     assert.ok(logo > 0, 'the logo is in the Platform page itself, not only the site bar');
     assert.ok(logo < main.indexOf('<h1'), 'above the headline');
-    assert.ok(main.includes('InPhox platform'));
+    assert.ok(main.includes('inphox platform'));
   });
 
   test('the hub being down lands on "Sign-up is busy, try again in a minute"', () => {
@@ -412,7 +412,7 @@ describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () =>
   before(async () => (r = await renderWith('VITE_SIGNUP_OPEN=1\nVITE_PLATFORM_URL=off\n')));
   after(() => r.close());
 
-  test('every Sign in link opens the InPhox hub sign-in, never a shop\'s own Odoo page', () => {
+  test('every Sign in link opens the inphox hub sign-in, never a shop\'s own Odoo page', () => {
     const html = r.render({ page: 'start', menu: true });
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer

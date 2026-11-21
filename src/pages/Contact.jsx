@@ -8,7 +8,7 @@ export default function Contact({ v }) {
     <FxScope>
     <section style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,3vw,2.5rem) clamp(3.5rem,7vw,6rem)", display: "grid", gridTemplateColumns: ui.c57, gap: "clamp(2rem,5vw,5rem)", alignItems: "start" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "1.125rem" }}>
-        <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(2rem,3.2vw,3rem)", lineHeight: "1.04", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance" }}>Tell us how your floor runs. We'll show you InPhox on it.</h1>
+        <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(2rem,3.2vw,3rem)", lineHeight: "1.04", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.02em", textWrap: "balance" }}>Tell us how your floor runs. We'll show you inphox on it.</h1>
         <p data-fx="" style={{ margin: "0", fontSize: "1rem", lineHeight: "1.6", color: "#3A342D" }}>
           A 20-minute walkthrough with someone who knows refurb and repair, built around your device mix and the number of locations you run.
         </p>

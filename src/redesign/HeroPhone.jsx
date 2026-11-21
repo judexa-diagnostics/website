@@ -13,7 +13,7 @@ import { START_FREE } from '../pricing.js';
 //
 // Easter egg: swipe up from the home bar (touch or mouse drag, or focus the
 // bar and press ArrowUp) and the app closes like a real phone, revealing a
-// home screen. The InPhox icon reopens the app; "Box it" opens a mini game,
+// home screen. The inphox icon reopens the app; "Box it" opens a mini game,
 // which the same swipe closes again.
 const REST_Y = 16, REST_X = 4, TILT = 9;
 const NARROW = '(max-width: 979px)';
@@ -163,7 +163,7 @@ export default function HeroPhone({ goTrial, startLabel = START_FREE }) {
                 <m.div className={'hp-appwin' + (appOpen ? '' : ' closed')} style={{ scale: appScale, y: appY, opacity: appOpacity, borderRadius: appRadius }}>
                   <div className="hp-status"><span>9:41</span><span className="hp-bars"><i /><i /><i /><i /><b /></span></div>
                   <div className="hp-app">
-                    <div className="hp-brand"><img src="assets/inphox-logo.png" alt="" /><span>InPhox</span></div>
+                    <div className="hp-brand"><img src="assets/inphox-logo.png" alt="" /><span>inphox</span></div>
                     <h1 className="hp-h1">The all-in-one platform for used electronics. <span>Literally.</span></h1>
                     <p className="hp-p">Diagnose, erase, grade, repair, store and sell from one system. Every device is tracked by IMEI from the moment it's plugged in until it ships.</p>
                     <div className="hp-ctas">

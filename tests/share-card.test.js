@@ -7,7 +7,7 @@ const page = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const meta = (attr, name) => (page.match(new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`)) || [])[1];
 
 test('the page carries a full share card', () => {
-  assert.equal(meta('property', 'og:title'), 'InPhox: Device operations platform');
+  assert.equal(meta('property', 'og:title'), 'inphox: Device operations platform');
   const text = meta('property', 'og:description');
   assert.ok(text && text.length <= 160, 'a description of at most 160 characters');
   assert.equal(meta('name', 'description'), text);
