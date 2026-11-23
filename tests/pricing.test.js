@@ -110,6 +110,12 @@ describe('plan data', async () => {
     assert.equal(by['Listing'], undefined);
   });
 
+  test('Chris 2026-11-23 "growth and up for phone-intake": no page says every plan has intake; the station says Growth', () => {
+    const src = ['src/redesign/Station.jsx', 'src/SiteLogic.js', 'index.html'].map(f => [f, readFileSync(new URL('../' + f, import.meta.url), 'utf8')]);
+    for (const [f, text] of src) assert.doesNotMatch(text, /every plan (includes|has)[^.]*\bintake\b/i, f);
+    assert.match(src[0][1], /Growth and up add Phone Intake and the station app/);
+  });
+
   test('with no env vars: the Contact form goes to the inphox platform, default login URL', () => {
     assert.equal(config.platformUrl, 'https://platform.inphox.net');
     assert.equal(config.signupAction, undefined, 'sign-up is the hub, not a form on this site');

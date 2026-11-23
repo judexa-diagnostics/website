@@ -564,7 +564,7 @@ function Bench({ goTrial }) {
         <h2>Plug in ten or more of your phones and judge the results yourself.</h2>
       </div>
       <div className="st-h-r">
-        <p>Every plan includes intake, device checks and inventory. Growth and up add the station app on your own bench.</p>
+        <p>Every plan includes device checks and inventory. Growth and up add Phone Intake and the station app on your own bench.</p>
         <div className="st-ctas">
           <button type="button" className="ix-btn is-primary" onClick={goTrial}>{START_FREE}</button>
           <a className="ix-btn" href="#/contact">Talk to sales</a>
