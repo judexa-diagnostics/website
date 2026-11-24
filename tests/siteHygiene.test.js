@@ -24,15 +24,15 @@ test('a cookie section and an accessibility statement exist and are drafts', () 
     const txt = read(join('src/legal', slug + '.txt'));
     assert.match(txt, /^Version: \d{4}-\d{2}-\d{2}$/m, `${slug}: a plain dated version`);
     assert.doesNotMatch(txt, /Chris|lawyer|pending|\[[^\]]*\]/i, `${slug}: no internal names or placeholders`);
-    assert.ok(read('src/SiteLogic.js').includes(`'${slug}'`), `${slug} is routable`);
-    assert.ok(read('src/components/Footer.jsx').includes(`href="#/${slug}"`), `footer links to ${slug}`);
+    assert.ok(read('src/routes.js').includes(`'${slug}'`), `${slug} is routable`);
+    assert.ok(read('src/components/Footer.jsx').includes(`href="/${slug}"`), `footer links to ${slug}`);
   }
 });
 
 test('the contact form shows a privacy notice with a Privacy link', () => {
   const c = read('src/pages/Contact.jsx');
   assert.match(c, /Privacy Policy/);
-  assert.ok(c.includes('href="#/privacy"'), 'the notice links to the Privacy Policy');
+  assert.ok(c.includes('href="/privacy"'), 'the notice links to the Privacy Policy');
 });
 
 test('the footer shows the company address and phone from config, never a placeholder', () => {
@@ -78,6 +78,7 @@ test('the About Us page lists the founder and team, and the footer and menu link
   assert.match(read('src/Layout.jsx'), /is\.about \? <About/);
   assert.match(read('src/SiteLogic.js'), /'about'/);
   const footer = read('src/components/Footer.jsx');
-  assert.match(footer, /href="#\/about"[^>]*>About us</);
+  assert.match(footer, /href="\/about"[^>]*>\{f\.aboutUs\}</);
+  assert.match(read('src/chrome.js'), /aboutUs: 'About us'/);
   assert.ok(!/christoper@/.test(footer + read('src/config.js') + read('src/pages/Contact.jsx')), 'founder email is spelled christopher@');
 });

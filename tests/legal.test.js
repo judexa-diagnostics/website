@@ -27,15 +27,16 @@ test('the parser joins wrapped lines and drops blank paragraphs', () => {
 });
 
 test('terms and privacy are pages, linked from the footer, with clean URLs', () => {
-  const pagesLine = read('src/SiteLogic.js');
-  assert.ok(pagesLine.includes("'terms'") && pagesLine.includes("'privacy'"), 'terms and privacy are in PAGES');
+  const routes = read('src/routes.js');
+  assert.ok(routes.includes("path: '/terms'") && routes.includes("path: '/privacy'"), 'terms and privacy are routes with real paths');
   const layout = read('src/Layout.jsx');
   assert.ok(layout.includes('<Legal doc="terms" />') && layout.includes('<Legal doc="privacy" />'));
   const footer = read('src/components/Footer.jsx');
-  assert.ok(footer.includes('href="#/privacy"') && footer.includes('href="#/terms"'));
-  assert.ok(!/href="#\/home"[^>]*>(Privacy|Terms)</.test(footer));
-  const redirects = JSON.parse(read('vercel.json')).redirects;
-  for (const k of ['terms', 'privacy']) assert.ok(redirects.some(r => r.source === '/' + k && r.destination === '/#/' + k), k);
+  assert.ok(footer.includes('href="/privacy"') && footer.includes('href="/terms"'));
+  assert.ok(!/href="\/"[^>]*>(Privacy|Terms)</.test(footer));
+  const v = JSON.parse(read('vercel.json'));
+  assert.equal(v.cleanUrls, true, '/terms is served from the prerendered terms.html');
+  assert.ok(!(v.redirects || []).some(r => /#/.test(r.destination)), 'no redirect sends a page back to a #/ address');
 });
 
 test('the company is inphox LLC everywhere (Chris 2026-10-24), never "Inc."', () => {

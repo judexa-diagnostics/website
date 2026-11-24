@@ -28,7 +28,7 @@ const para = p => { const m = p.match(HEAD); return m ? [<strong key="h" style={
 
 export default function Legal({ doc }) {
   const d = DOCS[doc] || DOCS.terms;
-  const other = doc === 'privacy' ? ['#/terms', 'Terms of Service'] : ['#/privacy', 'Privacy Policy'];
+  const other = doc === 'privacy' ? ['/terms', 'Terms of Service'] : ['/privacy', 'Privacy Policy'];
   // A page whose Version line says Draft shows a plain banner (website#20 / odm#1333). Published pages carry a plain date.
   const isDraft = /\bDraft\b/i.test(d.version || '');
   return (

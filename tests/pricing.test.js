@@ -121,7 +121,7 @@ describe('plan data', async () => {
     assert.equal(config.signupAction, undefined, 'sign-up is the hub, not a form on this site');
     assert.equal(config.leadAction, 'https://platform.inphox.net/inphox/lead');
     assert.equal(config.shopDomain, 'inphox.net');
-    assert.equal(config.SIGNIN_HREF, '#/signin');
+    assert.equal(config.SIGNIN_HREF, '/signin');
   });
 
   test('no Odoo, vendor or P&M names in src/ or index.html', () => {
@@ -161,6 +161,9 @@ async function renderWith(envFile) {
   const { renderToStaticMarkup } = await import('react-dom/server');
   const { default: SiteLogic } = await server.ssrLoadModule('/src/SiteLogic.js');
   const { default: Layout } = await server.ssrLoadModule('/src/Layout.jsx');
+  // Like the build prerender: hand the lazy Autograding page in directly, so it renders synchronously.
+  const { default: Autograding } = await server.ssrLoadModule('/src/pages/Autograding.jsx');
+  (await server.ssrLoadModule('/src/pages/autogradingSlot.js')).setEagerAutograding(Autograding);
   /** A SiteLogic whose setState applies directly, for driving handlers without a browser. */
   const logicWith = state => {
     const logic = new SiteLogic({ showPromo: false });
@@ -237,8 +240,8 @@ describe('rendered', () => {
     const cards = html.match(/<article.*?<\/article>/gs);
     const hrefs = cards.map(c => c.match(/<a [^>]*class="pl-btn[^"]*"[^>]*href="([^"]*)"|<a [^>]*href="([^"]*)"[^>]*class="pl-btn[^"]*"/)).map(m => m[1] || m[2]);
     // Until the hub's sign-up is public (src/config.js signupOpen), every plan button goes to Contact.
-    const hub = ['free', 'basics', 'growth', 'max'].map(c => (signupOpen ? `https://home.inphox.net/signup?plan=${c}` : '#/contact'));
-    assert.deepEqual(hrefs, [...hub, '#/contact']);
+    const hub = ['free', 'basics', 'growth', 'max'].map(c => (signupOpen ? `https://home.inphox.net/signup?plan=${c}` : '/contact'));
+    assert.deepEqual(hrefs, [...hub, '/contact']);
   });
 
   test('pricing: no packs line ("coming") and no pack price table; the plan line says prepaid is available', () => {
@@ -267,7 +270,7 @@ describe('rendered', () => {
     const html = text(r.render({ page: 'start' }));
     assert.ok(!html.includes('<form') && !html.includes('type="password"') && !html.includes('type="email"'));
     if (!signupOpen) {   // closed: no hub sign-up link anywhere, plan buttons go to Contact
-      assert.ok(!planLinks(html).some(h => h.includes('/signup')) && planLinks(html).includes('#/contact'), 'closed: Contact');
+      assert.ok(!planLinks(html).some(h => h.includes('/signup')) && planLinks(html).includes('/contact'), 'closed: Contact');
       return;
     }
     for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(planLinks(html).includes(`https://home.inphox.net/signup?plan=${code}`), code);
@@ -297,28 +300,41 @@ describe('rendered', () => {
     const html = text(r.render({ page: 'signup-busy' }));
     assert.ok(html.includes('Sign-up is busy, try again in a minute.'));
     assert.ok(html.includes('role="alert"'));
-    assert.ok(html.includes('href="#/pricing"'));
+    assert.ok(html.includes('href="/pricing"'));
   });
 
-  test('an unknown page hash still shows the home page; the busy page is a known hash', async () => {
+  test('pages come from the path; an old #/ hash still finds its page; an unknown path is not found', async () => {
     const { default: SiteLogic } = await import('../src/SiteLogic.js').catch(() => ({}));
     const realLocation = globalThis.location;
     try {
-      for (const [hash, want] of [['#/signup-busy', 'signup-busy'], ['#/starter', 'home'], ['#/pricing', 'pricing']]) {
-        globalThis.location = { hash };
+      for (const [hash, pathname, want] of [['#/signup-busy', '/', 'signup-busy'], ['#/starter', '/', 'home'], ['#/pricing', '/', 'pricing'], ['', '/pricing', 'pricing'], ['', '/about', 'about'], ['', '/starter', 'notfound']]) {
+        globalThis.location = { hash, pathname };
         const logic = r.logicWith({});
-        assert.equal(logic.readPage(), want, hash);
+        assert.equal(logic.readPage(), want, hash + ' ' + pathname);
       }
     } finally { globalThis.location = realLocation; }
   });
 
   test('every Sign in link goes to the hub sign-in once public, else to Sign in to your shop', () => {
     const html = r.render({ page: 'start', menu: true });
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in(?: to inphox Inventory)?<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
-    for (const h of hrefs) assert.equal(h, signupOpen ? 'https://home.inphox.net/login' : '#/signin');
+    for (const h of hrefs) assert.equal(h, signupOpen ? 'https://home.inphox.net/login' : '/signin');
     assert.ok(!html.includes('intake.inphox.net'));
     assert.ok(!html.includes('/web/login'), 'no direct Odoo sign-in page on the site');
+  });
+
+  // Chris 2026-11-24: on /autograding the header's Pricing, Docs and Sign in are Autograding's and say so.
+  test('on /autograding, Pricing, Docs and Sign in name Autograding and open its app, not the shop sign-in', () => {
+    const html = r.render({ page: 'autograding', menu: true });
+    const head = html.slice(0, html.indexOf('<main'));
+    assert.match(head, />Autograding pricing</);
+    assert.match(head, /href="https:\/\/autograding\.inphox\.net\/api\/docs#pricing"/);
+    assert.match(head, /href="https:\/\/autograding\.inphox\.net\/"[^>]*>Sign in to Autograding</);
+    assert.ok(!/>Sign in<\/a>/.test(head) && !/>Pricing<\/a>/.test(head), 'no bare Sign in or Pricing in the Autograding header or menu');
+    assert.match(head, /aria-current="page"[^>]*>Autograding</, 'the product switch shows Autograding as current');
+    const home = r.render({ page: 'home' });
+    assert.match(home.slice(0, home.indexOf('<main')), /aria-current="page"[^>]*>Inventory</);
   });
 
   test('Sign in to your shop: asks for the shop name on inphox.net; remembers the last one', () => {
@@ -420,7 +436,7 @@ describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () =>
 
   test('every Sign in link opens the inphox hub sign-in, never a shop\'s own Odoo page', () => {
     const html = r.render({ page: 'start', menu: true });
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in(?: to inphox Inventory)?<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
     for (const h of hrefs) assert.equal(h, 'https://home.inphox.net/login');
     assert.ok(!html.includes('/web/login') && !html.includes('intake.inphox.net'));
@@ -430,7 +446,7 @@ describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () =>
     for (const page of ['pricing', 'start']) {
       const links = planLinks(r.render({ page }));
       for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(links.includes(`https://home.inphox.net/signup?plan=${code}`), `${page} ${code}`);
-      assert.ok(links.includes('#/contact'), `${page} enterprise -> sales`);
+      assert.ok(links.includes('/contact'), `${page} enterprise -> sales`);
     }
   });
 });

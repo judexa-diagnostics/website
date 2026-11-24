@@ -27,7 +27,7 @@ export default function Industries({ v }) {
                 <span><span>{n.name}</span></span>
               </a>
             ))}
-            <a href="#/pricing" style={{ marginTop: "1.25rem", fontSize: "0.875rem", fontWeight: "600", color: "#16130F", textDecoration: "none", borderBottom: "1px solid #16130F", alignSelf: "start", paddingBottom: "2px" }}>See transparent pricing →</a>
+            <a href="/pricing" style={{ marginTop: "1.25rem", fontSize: "0.875rem", fontWeight: "600", color: "#16130F", textDecoration: "none", borderBottom: "1px solid #16130F", alignSelf: "start", paddingBottom: "2px" }}>See transparent pricing →</a>
           </div>
         </aside>
         <div>
@@ -87,8 +87,8 @@ export default function Industries({ v }) {
           ))}
         </div>
         <div style={{ marginTop: "1.75rem", display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-          <a className="hv-8" href="#/pricing" style={{ height: "2.75rem", padding: "0 1.125rem", display: "inline-flex", alignItems: "center", background: "#16130F", color: "#F6F2EA", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", textDecoration: "none" }}>Compare plans</a>
-          <a className="hv-3" href="#/contact" style={{ height: "2.75rem", padding: "0 1.125rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", color: "#16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", textDecoration: "none" }}>Talk to sales</a>
+          <a className="hv-8" href="/pricing" style={{ height: "2.75rem", padding: "0 1.125rem", display: "inline-flex", alignItems: "center", background: "#16130F", color: "#F6F2EA", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", textDecoration: "none" }}>Compare plans</a>
+          <a className="hv-3" href="/contact" style={{ height: "2.75rem", padding: "0 1.125rem", display: "inline-flex", alignItems: "center", border: "1px solid #16130F", color: "#16130F", borderRadius: "2px", fontSize: "0.875rem", fontWeight: "600", textDecoration: "none" }}>Talk to sales</a>
         </div>
       </section>
     </>

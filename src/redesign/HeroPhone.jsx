@@ -168,7 +168,7 @@ export default function HeroPhone({ goTrial, startLabel = START_FREE }) {
                     <p className="hp-p">Diagnose, erase, grade, repair, store and sell from one system. Every device is tracked by IMEI from the moment it's plugged in until it ships.</p>
                     <div className="hp-ctas">
                       <button className="hv-2 hp-join" onClick={goTrial} tabIndex={appOpen ? undefined : -1}>{startLabel}</button>
-                      <a className="hv-3 hp-price" href="#/pricing" tabIndex={appOpen ? undefined : -1}>See plans</a>
+                      <a className="hv-3 hp-price" href="/pricing" tabIndex={appOpen ? undefined : -1}>See plans</a>
                     </div>
                     <div className="hp-track"><span className="hp-dot" />IMEI 356798114520349 · tracked</div>
                   </div>

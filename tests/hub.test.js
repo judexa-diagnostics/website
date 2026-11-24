@@ -18,7 +18,7 @@ test('the hub is down (network failure): the busy page, not a browser error', as
   assert.equal(r, 'busy');
   assert.deepEqual(seen.go, []);
   assert.equal(seen.busy, 1);
-  assert.equal(BUSY_HREF, '#/signup-busy');
+  assert.equal(BUSY_HREF, '/signup-busy');
 });
 
 test('the hub does not answer in time: the busy page', async () => {

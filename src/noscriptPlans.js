@@ -8,7 +8,7 @@ export function noscriptPlans(hub = DEFAULT_HUB_URL) {
   const rows = plainPlans().map((p, i) => {
     const code = pricing.plans[i].code;
     const url = signupUrl(code, hub);
-    const link = url ? `<a href="${esc(url)}">Start with ${esc(p.name)}</a>` : '<a href="#/contact">Talk to sales</a>';
+    const link = url ? `<a href="${esc(url)}">Start with ${esc(p.name)}</a>` : '<a href="/contact">Talk to sales</a>';
     return `<li><strong>${esc(p.name)}</strong>: ${esc(p.price)}. ${esc(p.checks)}. ${esc(p.overage)}${p.note ? ' ' + esc(p.note) : ''} ${link}</li>`;
   }).join('\n');
   return `<noscript><div class="pl-noscript"><h1>inphox plans</h1><ul>\n${rows}\n</ul><p>Turn on JavaScript to see the full site.</p></div></noscript>`;

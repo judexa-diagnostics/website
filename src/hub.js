@@ -15,7 +15,7 @@ export const isPlainClick = e => !(e && (e.defaultPrevented || e.button > 0 || e
 export async function openSignup(url, {
   fetchImpl = globalThis.fetch,
   go = u => location.assign(u),
-  busy = () => { location.hash = BUSY_HREF; },
+  busy = () => { history.pushState(null, '', BUSY_HREF); dispatchEvent(new PopStateEvent('popstate')); },
   waitMs = HUB_WAIT_MS
 } = {}) {
   if (typeof fetchImpl !== 'function') { go(url); return 'go'; }

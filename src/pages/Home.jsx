@@ -5,6 +5,7 @@ import Station from '../redesign/Station.jsx';
 import PlanCard from '../components/PlanCard.jsx';
 import { FxScope } from '../redesign/fx/index.jsx';
 import { proofFacts, HOW_STEPS, VERIFIED_QUOTES, CAPS_ON_PHONE } from '../home.js';
+import { TEAM, personAlt } from '../config.js';
 import '../home.css';
 const Story = lazy(() => import('../redesign/Story.jsx'));
 
@@ -64,7 +65,7 @@ export default function Home({ v }) {
             <h2 id="hm-after">Everything that happens after the sale, too.</h2>
             <p>For your customers and your vendors.</p>
           </div>
-          <a className="hm-link" href="#/features">See every feature →</a>
+          <a className="hm-link" href="/features">See every feature →</a>
         </div>
         <ul className="hm-caps">
           {caps.map((c, j) => (
@@ -124,13 +125,35 @@ export default function Home({ v }) {
         </section>
       ) : null}
 
+      <section className="hm-wrap hm-sec" aria-labelledby="hm-founders">
+        <div className="hm-sec-head hm-sec-head-row">
+          <div>
+            <span className="hm-kicker">Founders</span>
+            <h2 id="hm-founders">The people who build inphox.</h2>
+          </div>
+          <a className="hm-link" href="/about">Meet the team →</a>
+        </div>
+        <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 15rem), 1fr))', gap: '1rem' }}>
+          {TEAM.map(p => (
+            <li key={p.name} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--pmm-surface)', border: '1px solid var(--pmm-border-soft)', borderRadius: 'var(--pmm-radius-card)', minWidth: 0 }}>
+              <img src={p.image} alt={personAlt(p)} width="64" height="64" loading="lazy" style={{ width: '4rem', height: '4rem', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+              <div style={{ minWidth: 0 }}>
+                <a href="/about" style={{ display: 'block', fontSize: '1.0625rem', fontWeight: 650, color: 'var(--pmm-text)', textDecoration: 'none' }}>{p.name}</a>
+                <span style={{ display: 'block', fontSize: '0.9375rem', color: 'var(--pmm-text-2)' }}>{p.title}</span>
+                {p.linkedin ? <a href={p.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.875rem', color: 'var(--pmm-brand-fill)' }}>LinkedIn</a> : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section className="hm-wrap hm-sec pl" aria-labelledby="hm-plans">
         <div className="hm-sec-head hm-sec-head-row">
           <div>
             <span className="hm-kicker">Plans</span>
             <h2 id="hm-plans">Start free. Move up when you need more checks.</h2>
           </div>
-          <a className="hm-link" href="#/pricing">Compare all plans →</a>
+          <a className="hm-link" href="/pricing">Compare all plans →</a>
         </div>
         <div className="hm-plans">
           {home.plans.map(t => <PlanCard key={t.code} t={t} compact headingLevel={3} />)}
@@ -142,12 +165,12 @@ export default function Home({ v }) {
           <h2 id="hm-close">Start with one station. Add locations when you're ready.</h2>
           <div className="hm-ctas">
             <button type="button" className="ix-btn is-primary hm-cta" onClick={goTrial}>{startLabel}</button>
-            <a className="ix-btn hm-cta" href="#/pricing">See plans</a>
+            <a className="ix-btn hm-cta" href="/pricing">See plans</a>
           </div>
         </div>
         <ol className="hm-steps">
           <li><span className="hm-num">01</span><span><b>Create your account</b><span>Company, locations, and who's on the team.</span></span><span className="hm-meta">~2 min</span></li>
-          <li><span className="hm-num">02</span><span><b>Pick a plan</b><span>Free, Basics, Growth, Max or Enterprise. Move up a plan when you need more checks.</span></span><a className="hm-meta" href="#/pricing">Plans →</a></li>
+          <li><span className="hm-num">02</span><span><b>Pick a plan</b><span>Free, Basics, Growth, Max or Enterprise. Move up a plan when you need more checks.</span></span><a className="hm-meta" href="/pricing">Plans →</a></li>
           <li><span className="hm-num">03</span><span><b>Plug in your first device</b><span>Install the station app on a Mac or Windows PC and connect a USB hub.</span></span><span className="hm-meta">~15 min</span></li>
         </ol>
       </section>

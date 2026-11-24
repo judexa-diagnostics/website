@@ -16,14 +16,33 @@ test('the page clips sideways so the tilted hero phone never adds a side scroll'
   assert.ok(!rule.some((r) => /overflow(-x)?\s*:\s*hidden/.test(r)), '`hidden` breaks the sticky header; use `clip`');
 });
 
-// Typed addresses (inphox.net/pricing) open the page instead of a 404: the site's pages live after `#/`.
-test('every page has a plain address that redirects to its #/ page', () => {
+// Every page is a real address (inphox.net/pricing) with its own prerendered file; old #/ links are moved in the browser.
+test('every page is a real path: a route, a prerendered file, served with clean URLs', async () => {
   const v = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
-  const logic = readFileSync(join(root, 'src/SiteLogic.js'), 'utf8');
-  const pages = JSON.parse(logic.match(/const PAGES = (\[[^\]]*\])/)[1].replace(/'/g, '"'));
-  for (const p of pages.filter((p) => !['home', 'signup-busy'].includes(p))) {
-    assert.ok(v.redirects.some((r) => r.source === `/${p}` && r.destination === `/#/${p}`), `/${p} has no redirect`);
+  assert.equal(v.cleanUrls, true);
+  assert.equal(v.trailingSlash, false);
+  assert.ok(!(v.redirects || []).some((r) => /#/.test(r.destination)), 'no redirect sends a page to a #/ address');
+  const { ROUTES, pageFromPath, pageFromHash, pathFor } = await import('../src/routes.js');
+  for (const r of ROUTES) {
+    assert.match(r.path, /^(\/es)?\/[a-z-]*$/, r.page);
+    assert.equal(pageFromPath(r.path), r.page, r.path);
+    assert.equal(pathFor(r.page, r.lang || 'en'), r.path);
+    assert.ok(r.title && r.title.length <= 70, `${r.page}: a title of at most 70 characters`);
+    assert.ok(r.description && r.description.length <= 170, `${r.page}: a description of at most 170 characters`);
   }
+  assert.equal(new Set(ROUTES.map((r) => r.title)).size, ROUTES.length, 'every title is unique');
+  assert.equal(new Set(ROUTES.map((r) => r.description)).size, ROUTES.length, 'every description is unique');
+  assert.equal(pageFromHash('#/about'), 'about', 'old #/about links still find the page');
+  assert.equal(pageFromPath('/about/'), 'about');
+  assert.equal(pageFromPath('/no-such-page'), null, 'unknown paths are not pages (404)');
+  for (const p of ['about', 'pricing', 'features', 'industries', 'security', 'careers', 'contact']) assert.ok(ROUTES.some((r) => r.page === p), `${p} is a route`);
+  // Autograding is in English and Spanish; each names the other (hreflang) and Spanish lives under /es/.
+  const { langFromPath, hasSpanish } = await import('../src/routes.js');
+  assert.equal(pathFor('autograding', 'es'), '/es/autograding');
+  assert.equal(langFromPath('/es/autograding'), 'es');
+  assert.equal(langFromPath('/autograding'), 'en');
+  assert.ok(hasSpanish('autograding') && !hasSpanish('pricing'), 'only pages with a Spanish twin offer Spanish');
+  assert.equal(pathFor('pricing', 'es'), '/pricing', 'a page with no Spanish twin keeps its English path');
 });
 
 // Plan buttons go to Contact until the hub's sign-up is public (the hub answers 401 behind its password today).
