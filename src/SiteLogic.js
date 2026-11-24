@@ -91,6 +91,7 @@ export default class SiteLogic extends DCLogic {
     // Pages are real paths (/about). An old '#/about' link lands on '/' with a hash: swap it for the path in place.
     const legacy = pageFromHash(location.hash);
     if (legacy) history.replaceState(null, '', pathFor(legacy));
+    this.setHead(this.readPage());
     this.onHash = () => { const p = pageFromHash(location.hash); if (p) { history.replaceState(null, '', pathFor(p)); this.show(p); } };
     this.onPop = () => this.show(this.readPage());
     // In-site links are plain <a href="/pricing">: crawlers follow them, and here they switch page without a reload.
