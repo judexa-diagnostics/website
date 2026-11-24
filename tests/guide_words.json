@@ -1,0 +1,4 @@
+{
+  "why": "No outside vendor or product names in our docs (shop CLAUDE.md 'Never'). Device and sign-in names a person must recognise on screen (iPhone, Android, Face ID, Touch ID, Apple ID, Google, Apple, App Store, Windows, Mac, Chrome, Edge) are allowed. guide/build.mjs fails on any of these.",
+  "never": ["Stripe", "Shippo", "Zelle", "Venmo", "Cash App", "PayPal", "NIIMBOT", "Amazon", "Zebra", "Twilio", "Cloudflare", "R2", "Heroku", "Supabase", "Odoo", "OpenAI", "Gemini", "Nuitka", "PyInstaller", "Sparkle", "libimobiledevice", "adb", "IntakeSniffer", "IntakeSnifferClient", "LauncherClient", "Judexa"]
+}
