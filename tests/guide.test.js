@@ -36,6 +36,20 @@ test('the pages Double Puff and the apps link to exist (their addresses never ch
   }
 });
 
+// Double Puff's "?" replays open these sections (double-puff help_topics.py "guide"): a renamed page or h2 id
+// would send the station's Read more to the wrong place.
+test('the sections Double Puff opens exist', () => {
+  for (const addr of ['/auto-activate/#what-you-see', '/biometrics/#how', '/diagnostic-app-iphone/#install',
+    '/plug-in-android/#no-permission', '/plug-in-android/#not-answering', '/plug-in-android/#set-up',
+    '/plug-in-android/#welcome', '/plug-in-iphone/#no-active-lot', '/plug-in-iphone/#steps',
+    '/report-an-issue/#what-to-send', '/secure-erase/#from-a-lot', '/station-updates/#strip',
+    '/station-wifi/#type-it', '/stuck-or-partial/#quick', '/trust-this-computer/#iphone']) {
+    const [, slug, id] = addr.match(/^\/([a-z0-9-]+)\/#([a-z0-9-]+)$/);
+    const html = fs.readFileSync(path.join(out, slug, 'index.html'), 'utf8');
+    assert.ok(html.includes(`id="${id}"`), addr);
+  }
+});
+
 test('the plans table is src/pricing.js', () => {
   const html = fs.readFileSync(path.join(out, 'plans', 'index.html'), 'utf8');
   for (const p of pricing.plans) {
