@@ -58,7 +58,7 @@ export default function Features({ v }) {
               <span style={{ fontSize: "0.875rem", color: "#3A342D" }}>Try a broader term, or ask us whether it's on the roadmap.</span>
               <div style={{ display: "flex", gap: "0.625rem" }}>
                 <button onClick={feat.clear} style={{ height: "2.25rem", padding: "0 0.875rem", border: "1px solid #16130F", background: "transparent", borderRadius: "2px", fontSize: "0.8125rem", fontWeight: "600", cursor: "pointer", color: "#16130F" }}>Clear filters</button>
-                <a href="#/contact" style={{ height: "2.25rem", display: "inline-flex", alignItems: "center", fontSize: "0.8125rem", fontWeight: "600", color: "#16130F" }}>Ask sales</a>
+                <a href="/contact" style={{ height: "2.25rem", display: "inline-flex", alignItems: "center", fontSize: "0.8125rem", fontWeight: "600", color: "#16130F" }}>Ask sales</a>
               </div>
             </div>
             {" "}
@@ -67,7 +67,7 @@ export default function Features({ v }) {
         {" "}
         <div style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap", paddingTop: "1rem", fontFamily: "'JetBrains Mono',monospace", fontSize: "0.75rem", color: "#6B6257" }}>
           <span>{"Showing "}<Tween value={String(feat.count)} duration={350} />{" of "}<span>{feat.total}</span>{" features"}</span>
-          <a className="fx-arrow" href="#/pricing" style={{ color: "#C2470A" }}>Compare plan prices <span className="fx-arr">→</span></a>
+          <a className="fx-arrow" href="/pricing" style={{ color: "#C2470A" }}>Compare plan prices <span className="fx-arr">→</span></a>
         </div>
       </section>
     </FxScope>

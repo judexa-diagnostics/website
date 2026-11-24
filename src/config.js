@@ -28,7 +28,7 @@ const viaPhoneIntake = !platformUrl && platformSetting.toLowerCase() !== 'off' &
 export const shopDomain = (read('VITE_SHOP_DOMAIN') || DEFAULT_SHOP_DOMAIN).replace(/^\.+|\.+$/g, '').toLowerCase();
 
 /** The site's own "Sign in to your shop" page (each shop's address, then that shop's sign-in). */
-export const SIGNIN_HREF = '#/signin';
+export const SIGNIN_HREF = '/signin';
 
 /** Endpoint the Contact form posts to, or null (platform turned off): the form stays client-side only. */
 export const leadAction = platformUrl ? `${platformUrl}/inphox/lead` : viaPhoneIntake ? `${billingBaseUrl}/billing/lead` : null;
@@ -57,7 +57,10 @@ export const FOUNDER_LINKEDIN = 'https://www.linkedin.com/in/christopher-luk-223
 export const COMPANY_LEGAL_NAME = 'inphox LLC';
 
 /** The people shown on the About Us page (founders, leadership, key staff), in this order.
- *  Add a person here and they appear on #/about. `linkedin` and `bio` are optional: empty shows nothing. */
+ *  Add a person here and they appear on /about. `linkedin` and `bio` are optional: empty shows nothing. */
+/** Alt text for a team photo: who it is and their role, so the photo says the same as the card beside it. */
+export const personAlt = p => `${p.name}, ${p.title} of inphox`;
+
 export const TEAM = [
   {
     name: FOUNDER_NAME,

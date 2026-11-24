@@ -16,7 +16,7 @@ export default function Header({ v }) {
   }, []);
   return (
     <header ref={ref} className="fx-head" style={{ position: "sticky", top: "0", zIndex: "60", height: "4rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", padding: "0 clamp(1rem,3vw,2.5rem)", background: "var(--pmm-bg)", borderBottom: "1px solid var(--pmm-border-soft)" }}>
-      <a className="fx-logo" href="#/home" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "var(--pmm-text)", flex: "none" }}>
+      <a className="fx-logo" href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "var(--pmm-text)", flex: "none" }}>
         <img src="assets/inphox-logo.png" alt="inphox" style={{ width: "2.125rem", height: "2.125rem" }} />
         <span style={{ fontSize: "1.25rem", fontWeight: "700", letterSpacing: "-.01em" }}>inphox</span>
       </a>
@@ -41,7 +41,8 @@ export default function Header({ v }) {
             </div>
           ) : null}
         </div>
-        <a className="hv-0 fx-ul" href="#/pricing" style={{ position: "relative", height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "var(--pmm-text)", textDecoration: "none", borderBottom: `2px solid ${nav.pricing}` }}>Pricing</a>
+        <a className="hv-0 fx-ul" href="/about" style={{ position: "relative", height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "var(--pmm-text)", textDecoration: "none", borderBottom: `2px solid ${nav.about}` }}>About</a>
+        <a className="hv-0 fx-ul" href="/pricing" style={{ position: "relative", height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "var(--pmm-text)", textDecoration: "none", borderBottom: `2px solid ${nav.pricing}` }}>Pricing</a>
         <a className="hv-0 fx-ul" href={loginUrl} style={{ position: "relative", height: "2.25rem", padding: "0 0.75rem", display: ui.wideFlex, alignItems: "center", color: "var(--pmm-text)", textDecoration: "none", marginRight: "0.375rem" }}>Sign in</a>
         <button type="button" className="ix-btn is-primary is-sm fx-press" onClick={goTrial} style={{ whiteSpace: "nowrap" }}>{startLabel}</button>
         <button className="hv-3 fx-press" onClick={toggleMenu} aria-label="Menu" style={{ height: "2.25rem", padding: "0 0.75rem", marginLeft: "0.375rem", background: menuBtnBg, color: menuBtnFg, border: "1px solid var(--pmm-border-soft)", borderRadius: "var(--pmm-radius)", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--pmm-font-mono)", fontSize: "0.75rem" }}>

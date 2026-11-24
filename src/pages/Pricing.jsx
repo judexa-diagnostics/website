@@ -45,7 +45,7 @@ export default function Pricing({ v }) {
       <section className="pl-wrap">
         <div className="pl-sales">
           <span>Need more than Max, or terms of your own?</span>
-          <a className="ix-btn" href="#/contact">Talk to sales</a>
+          <a className="ix-btn" href="/contact">Talk to sales</a>
         </div>
       </section>
     </div>

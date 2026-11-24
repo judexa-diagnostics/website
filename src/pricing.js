@@ -15,7 +15,7 @@ export const OVERAGE_PER_CHECK = 0.5;
 export const DEFAULT_HUB_URL = 'https://home.inphox.net';
 
 /** The page a plan button opens when the hub does not answer. */
-export const BUSY_HREF = '#/signup-busy';
+export const BUSY_HREF = '/signup-busy';
 
 /**
  * The one label for every button that starts the sign-up (the Free plan at the hub). Header, menu,
@@ -24,7 +24,7 @@ export const BUSY_HREF = '#/signup-busy';
 export const START_FREE = 'Start free';
 
 /** Where "Talk to sales" goes. */
-export const SALES_HREF = '#/contact';
+export const SALES_HREF = '/contact';
 
 /** The hub's sign-up address for a plan code. Only the codes this file sells are ever built. */
 export function signupUrl(code, hub = DEFAULT_HUB_URL) {

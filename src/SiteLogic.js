@@ -7,7 +7,7 @@ import { LOGIN_HREF, shopDomain, leadAction, hubUrl, signupOpen } from './config
 import { shopFromInput, shopLoginUrl, createThrottle, savedShop } from './shop.js';
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
-const PAGES = ['home','industries','features','pricing','contact','platform','about','careers','start','signin','signup-busy','terms','privacy','refunds','copyright','law-enforcement','subprocessors','erasure','cookies','accessibility'];
+import { PAGES, pathFor, pageFromPath, pageFromHash, routeFor, canonicalFor } from './routes.js';
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
@@ -26,7 +26,7 @@ const sc = px => px * (parseFloat(getComputedStyle(document.documentElement).fon
 
 export default class SiteLogic extends DCLogic {
   state = {
-    page:'home', menu:false, langOpen:false, lang:'EN', w:1440,
+    page: (this.props && this.props.initialPage) || 'home', menu:false, langOpen:false, lang:'EN', w:1440,
     scene:0, phase:10, mode:'anim', walk:false,
     hSel:{}, hPage:0, tenStage:[0,0,0,0,0,0,0,0,0,0], hQ:'', hStatus:'All statuses', hLoc:'All locations', hNote:'', carts:0,
     xfOn:false, ind:0, platMore:false, platCat:'All',
@@ -88,7 +88,25 @@ export default class SiteLogic extends DCLogic {
   // VERIFIED_QUOTES, with the customer's OK; the home page shows the section only when it is not empty.
 
   componentDidMount() {
-    this.onHash = () => { this.stopTen(); this.setState({ page: this.readPage(), menu:false, langOpen:false }); window.scrollTo(0,0); };
+    // Pages are real paths (/about). An old '#/about' link lands on '/' with a hash: swap it for the path in place.
+    const legacy = pageFromHash(location.hash);
+    if (legacy) history.replaceState(null, '', pathFor(legacy));
+    this.onHash = () => { const p = pageFromHash(location.hash); if (p) { history.replaceState(null, '', pathFor(p)); this.show(p); } };
+    this.onPop = () => this.show(this.readPage());
+    // In-site links are plain <a href="/pricing">: crawlers follow them, and here they switch page without a reload.
+    this.onLink = e => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+      const url = new URL(a.getAttribute('href'), location.href);
+      if (url.origin !== location.origin) return;
+      const p = pageFromPath(url.pathname);
+      if (!p || url.hash.length > 1) return;
+      e.preventDefault();
+      this.goto(p);
+    };
+    window.addEventListener('popstate', this.onPop);
+    document.addEventListener('click', this.onLink);
     this.onResize = () => this.setState({ w: window.innerWidth });
     this.onScroll = () => this.handleScroll();
     window.addEventListener('hashchange', this.onHash);
@@ -105,16 +123,37 @@ export default class SiteLogic extends DCLogic {
   }
   componentWillUnmount() {
     window.removeEventListener('hashchange', this.onHash);
+    window.removeEventListener('popstate', this.onPop);
+    document.removeEventListener('click', this.onLink);
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.onScroll);
     this.timers.forEach(clearTimeout);
     this.stopTen();
   }
-  readPage() { const h = (location.hash || '').replace(/^#\/?/, ''); return PAGES.includes(h) ? h : 'home'; }
+  readPage() { return pageFromHash(location.hash) || pageFromPath(location.pathname) || 'notfound'; }
+  show(p) {
+    this.stopTen();
+    this.setState({ page: p, menu:false, langOpen:false });
+    window.scrollTo(0,0);
+    this.setHead(p);
+  }
+  // The tab title, description and canonical follow the page (the prerendered HTML already has them for crawlers).
+  setHead(p) {
+    if (p === 'notfound') { document.title = 'Page not found | inphox'; return; }
+    const r = routeFor(p);
+    document.title = r.title;
+    const set = (sel, attr, val) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(attr, val); };
+    set('meta[name="description"]', 'content', r.description);
+    set('link[rel="canonical"]', 'href', canonicalFor(p));
+    set('meta[property="og:title"]', 'content', r.title);
+    set('meta[property="og:description"]', 'content', r.description);
+    set('meta[property="og:url"]', 'content', canonicalFor(p));
+  }
   goto(p, extra) {
     if (extra) this.setState(extra);
-    if (this.readPage() === p && location.hash) { this.setState({ menu:false }); window.scrollTo(0,0); }
-    else location.hash = '#/' + p;
+    if (!PAGES.includes(p)) p = 'home';
+    if (location.pathname !== pathFor(p)) history.pushState(null, '', pathFor(p));
+    this.show(p);
   }
   tenRes = [['PASS','#1E7A4A'],['PASS','#1E7A4A'],['PASS','#1E7A4A'],['LOCKED','#16130F'],['PASS','#1E7A4A'],['FAIL','#B3261E'],['PASS','#1E7A4A'],['PASS','#1E7A4A'],['PASS','#1E7A4A'],['PASS','#1E7A4A']];
   tenTimers = [];
@@ -213,8 +252,8 @@ export default class SiteLogic extends DCLogic {
       c39: wide ? '16.25rem minmax(0,1fr)' : 'minmax(0,1fr)',
       ruleR: wide ? '1px solid var(--pmm-border-soft)' : '0'
     };
-    const is = {}; PAGES.forEach(p => is[p] = s.page === p);
-    const nav = { pricing: s.page === 'pricing' ? 'var(--pmm-brand)' : 'transparent' };
+    const is = {}; PAGES.forEach(p => is[p] = s.page === p); is.notfound = s.page === 'notfound';
+    const nav = { pricing: s.page === 'pricing' ? 'var(--pmm-brand)' : 'transparent', about: s.page === 'about' ? 'var(--pmm-brand)' : 'transparent' };
     const langs = [['EN','English'],['ES','Español'],['FR','Français']];
 
     // hero product
@@ -339,8 +378,8 @@ export default class SiteLogic extends DCLogic {
       ui, is, nav,
       menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', menuBtnBg: s.menu ? 'var(--pmm-text)' : 'transparent', menuBtnFg: s.menu ? 'var(--pmm-bg)' : 'var(--pmm-text)',
       toggleMenu: () => this.setState({ menu: !s.menu, langOpen:false }),
-      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record'],['About us','about','Who we are, our founder and our team']]
-        .map(([label,p,desc]) => ({ label, desc, href:'#/' + p, path:'/' + p, bg: s.page === p ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)' })),
+      menuItems: [['Industries','industries','Refurbishers, repair shops, buy and sell shops, retail chains, individual operators'],['Features','features','Every module, listed plainly'],['Pricing','pricing',`${FREE.name}, ${BASICS.name}, ${GROWTH.name}, ${MAX.name} and Enterprise`],['Contact','contact','Talk to sales about volume and locations'],['Learn more','platform','How it is built and the device record'],['About us','about','Who we are, our founders and our team'],['Security','security','Encryption, access, erasure and how long data is kept']]
+        .map(([label,p,desc]) => ({ label, desc, href: pathFor(p), path: pathFor(p), bg: s.page === p ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)' })),
       langOpen: s.langOpen, langCode: s.lang, langName: (langs.find(l => l[0] === s.lang) || langs[0])[1],
       toggleLang: () => this.setState({ langOpen: !s.langOpen }),
       langs: langs.map(([code,name]) => ({ code, name, bg: code === s.lang ? 'var(--pmm-brand-soft)' : 'var(--pmm-surface)', pick: () => this.setState({ lang:code, langOpen:false }) })),
@@ -426,7 +465,7 @@ export default class SiteLogic extends DCLogic {
   }
   pageVals(s) {
     const ind = {
-      nav: this.industries.map((r,i) => ({ k:'0'+(i+1), name:r[0], href:'#/industries', fg: i === s.ind ? '#16130F' : '#6B6257', num: i === s.ind ? '#EB5E12' : '#B9AE9E', fw: i === s.ind ? '600' : '500',
+      nav: this.industries.map((r,i) => ({ k:'0'+(i+1), name:r[0], href:'/industries', fg: i === s.ind ? '#16130F' : '#6B6257', num: i === s.ind ? '#EB5E12' : '#B9AE9E', fw: i === s.ind ? '600' : '500',
         go: e => { e.preventDefault(); const el = document.querySelectorAll('[data-ind]')[i]; if (el) window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - sc(72), behavior:'smooth' }); } })),
       panels: this.industries.map(([name,h,b,flow,mods,plan],i) => ({ k:'0'+(i+1), name, h, b, plan, flow: flow.map((t,j) => ({ t, n:'0'+(j+1) })), mods: mods.map(t => ({t})) })),
       ladder: this.ladder.map(([t,d,p],i) => ({ k:'0'+(i+1), t, d, p }))

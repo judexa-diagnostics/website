@@ -1,6 +1,6 @@
 import { FxScope } from '../redesign/fx/index.jsx';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
-import { TEAM, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, FOUNDER_NAME, FOUNDER_TITLE, FOUNDER_EMAIL } from '../config.js';
+import { personAlt, TEAM, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, FOUNDER_NAME, FOUNDER_TITLE, FOUNDER_EMAIL } from '../config.js';
 
 const mono = "'JetBrains Mono',monospace";
 const label = { fontFamily: mono, fontSize: '0.6875rem', letterSpacing: '.06em', textTransform: 'uppercase', color: '#6B6257' };
@@ -61,7 +61,7 @@ function HeroCluster() {
         >
           <img
             src={TEAM[0]?.image}
-            alt={TEAM[0]?.name}
+            alt={TEAM[0] ? personAlt(TEAM[0]) : ''}
             style={{
               width: '8.5rem',
               height: '8.5rem',
@@ -87,7 +87,7 @@ function HeroCluster() {
         >
           <img
             src={TEAM[1]?.image}
-            alt={TEAM[1]?.name}
+            alt={TEAM[1] ? personAlt(TEAM[1]) : ''}
             style={{
               width: '6.75rem',
               height: '6.75rem',
@@ -113,7 +113,7 @@ function HeroCluster() {
         >
           <img
             src={TEAM[2]?.image}
-            alt={TEAM[2]?.name}
+            alt={TEAM[2] ? personAlt(TEAM[2]) : ''}
             style={{
               width: '6.75rem',
               height: '6.75rem',
@@ -162,7 +162,7 @@ function Person({ p }) {
         {p.image ? (
           <img
             src={p.image}
-            alt={p.name}
+            alt={personAlt(p)}
             style={{
               width: '4.75rem',
               height: '4.75rem',
@@ -247,7 +247,7 @@ export default function About({ v }) {
           {TEAM.map(p => <Person key={p.name} p={p} />)}
         </div>
         <p data-fx="" style={{ margin: 0, fontSize: '1rem', lineHeight: 1.6, color: '#3A342D' }}>
-          We are hiring. See <a href="#/careers" style={{ color: '#16130F', textDecoration: 'underline' }}>Careers</a> for open roles, or write to <a href={`mailto:${FOUNDER_EMAIL}`} style={{ color: '#16130F', textDecoration: 'underline' }}>{FOUNDER_EMAIL}</a>.
+          We are hiring. See <a href="/careers" style={{ color: '#16130F', textDecoration: 'underline' }}>Careers</a> for open roles, or write to <a href={`mailto:${FOUNDER_EMAIL}`} style={{ color: '#16130F', textDecoration: 'underline' }}>{FOUNDER_EMAIL}</a>.
         </p>
       </section>
     </FxScope>

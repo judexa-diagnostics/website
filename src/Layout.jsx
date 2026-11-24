@@ -13,6 +13,8 @@ import Start from './pages/Start.jsx';
 import Signin from './pages/Signin.jsx';
 import SignupBusy from './pages/SignupBusy.jsx';
 import Legal from './pages/Legal.jsx';
+import Security from './pages/Security.jsx';
+import NotFound from './pages/NotFound.jsx';
 import Footer from './components/Footer.jsx';
 
 export default function Layout({ v }) {
@@ -44,6 +46,8 @@ export default function Layout({ v }) {
         {is.erasure ? <Legal doc="erasure" /> : null}
         {is.cookies ? <Legal doc="cookies" /> : null}
         {is.accessibility ? <Legal doc="accessibility" /> : null}
+        {is.security ? <Security /> : null}
+        {is.notfound ? <NotFound /> : null}
       </main>
       <Footer v={v} />
     </div>

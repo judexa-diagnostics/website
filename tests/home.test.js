@@ -101,7 +101,7 @@ describe('home rendered', () => {
     const plans = html.slice(html.indexOf('id="hm-plans"'), html.indexOf('id="hm-close"'));
     assert.deepEqual([...plans.matchAll(/class="pl-name">([^<]+)</g)].map(m => m[1]), ['Always Free', 'Basics', 'Growth']);
     for (const [code, price] of [['free', '$0'], ['basics', '$30'], ['growth', '$150']]) {
-      assert.ok(plans.includes(signupOpen ? `href="https://home.inphox.net/signup?plan=${code}"` : 'href="#/contact"'), code);
+      assert.ok(plans.includes(signupOpen ? `href="https://home.inphox.net/signup?plan=${code}"` : 'href="/contact"'), code);
       assert.ok(plans.includes(`<b>${price}</b>`), price);
     }
     assert.ok(plans.includes('Compare all plans'));

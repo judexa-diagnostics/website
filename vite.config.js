@@ -11,6 +11,6 @@ const plansWithoutScript = () => ({
 
 export default defineConfig({
   plugins: [react(), plansWithoutScript()],
-  // Relative asset paths so the built site works from any folder or subpath.
-  base: './',
+  // Absolute asset paths: pages are real paths now (/about), so assets must not resolve relative to the page.
+  base: '/',
 });

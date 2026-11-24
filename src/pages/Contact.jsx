@@ -119,7 +119,7 @@ export default function Contact({ v }) {
             <button className="hv-2 fx-press" type="submit" disabled={ct.sending} style={{ height: "3rem", padding: "0 1.375rem", background: "#EB5E12", color: "#16130F", border: "0", borderRadius: "2px", fontSize: "0.9375rem", fontWeight: "600", cursor: "pointer" }}><span>{ct.submitLabel}</span></button>
           </div>
           <p style={{ gridColumn: "1 / -1", margin: "0.25rem 0 0", fontSize: "0.75rem", lineHeight: 1.5, color: "#6B6257" }}>
-            We use what you send only to reply to you. See our <a href="#/privacy" style={{ color: "#C2470A" }}>Privacy Policy</a>.
+            We use what you send only to reply to you. See our <a href="/privacy" style={{ color: "#C2470A" }}>Privacy Policy</a>.
           </p>
         </form>
       ) : null}

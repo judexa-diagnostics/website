@@ -41,15 +41,15 @@ const WHEELS_UP = { name: 'Locations', title: 'Wheels up.', body: 'The order is 
 // One call to action per step: the primary always starts the sign-up, the
 // quiet link fits the step.
 const CTA = [
-  ['See the platform →', '#/platform'],
-  ['See what it reads →', '#/features'],
-  ['See pricing →', '#/pricing'],
-  ['See every feature →', '#/features'],
-  ['Built for your industry →', '#/industries'],
-  ['Talk to sales →', '#/contact'],
-  ['See how offers work →', '#/features']
+  ['See the platform →', '/platform'],
+  ['See what it reads →', '/features'],
+  ['See pricing →', '/pricing'],
+  ['See every feature →', '/features'],
+  ['Built for your industry →', '/industries'],
+  ['Talk to sales →', '/contact'],
+  ['See how offers work →', '/features']
 ];
-const CTA_AIR = ['See pricing →', '#/pricing'];
+const CTA_AIR = ['See pricing →', '/pricing'];
 const LEAD = 0.6; // idle band before the first beat (viewport heights)
 const BAND = [LEAD, ...BEATS.map(b => b[3])];
 const BAND_CUM = BAND.reduce((a, w, i) => (a.push(a[i] + w), a), [0]);
@@ -59,7 +59,7 @@ const SCENE_FIRST_BEAT = [0, 2, 3, 4, 5, 8, 10];
 const bandAt = f => { const x = f * BAND_TOTAL; let i = 0; while (i < BAND.length - 1 && x >= BAND_CUM[i + 1]) i++; return i - 1; }; // -1 = idle
 const bandMid = beat => (BAND_CUM[beat + 1] + BAND[beat + 1] * 0.5) / BAND_TOTAL;
 
-const defaultTrial = () => { location.hash = '#/start'; };
+const defaultTrial = () => { history.pushState(null, '', '/start'); dispatchEvent(new PopStateEvent('popstate')); };
 
 export default function Story({ goTrial = defaultTrial } = {}) {
   const rootRef = useRef(null), stageRef = useRef(null), canvasRef = useRef(null), worldRef = useRef(null);

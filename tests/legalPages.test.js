@@ -22,7 +22,7 @@ test('each legal page exists, is dated and shows nothing internal', () => {
 });
 
 test('the pages are routable (in PAGES) and dispatched in Layout', () => {
-  const site = read('src/SiteLogic.js');
+  const site = read('src/routes.js');
   const layout = read('src/Layout.jsx');
   for (const slug of PAGES) {
     assert.ok(site.includes(`'${slug}'`), `${slug}: in the PAGES list`);
@@ -33,7 +33,7 @@ test('the pages are routable (in PAGES) and dispatched in Layout', () => {
 test('the footer links to each page', () => {
   const footer = read('src/components/Footer.jsx');
   for (const slug of PAGES) {
-    assert.ok(footer.includes(`href="#/${slug}"`), `footer links to #/${slug}`);
+    assert.ok(footer.includes(`href="/${slug}"`), `footer links to /${slug}`);
   }
 });
 

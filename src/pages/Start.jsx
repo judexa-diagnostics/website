@@ -22,7 +22,7 @@ export default function Start({ v }) {
             </div>
           ))}
         </div>
-        <p className="pl-note">Already have an account? <a href={st.loginUrl}>Sign in</a>. <a href="#/pricing">Compare plans</a></p>
+        <p className="pl-note">Already have an account? <a href={st.loginUrl}>Sign in</a>. <a href="/pricing">Compare plans</a></p>
       </section>
     </div>
   );
