@@ -1,0 +1,18 @@
+<!-- title: Biometrics | summary: Double Puff listens for Face ID or Touch ID on every phone it reads. Unlock the phone whenever you like; there is nothing to press. -->
+<h2 id="how">How it works</h2>
+<p>As soon as a phone is read, its button on the station shows <b>Waiting…</b>: the station is listening for as long as the phone stays plugged in. Look at the phone (Face ID) or touch the Home button (Touch ID) whenever you like. Intake and the other phones carry on meanwhile.</p>
+<p>The <b>✕</b> on Waiting… (or the Escape key) stops listening and marks it <b>Not tested</b>; press the button to try again. Unplugging stops it; plugging back in starts listening again.</p>
+<h2 id="results">What the button says</h2>
+<div class="g-table"><table>
+<thead><tr><th scope="col">Station</th><th scope="col">Intake website</th><th scope="col">What it means</th></tr></thead>
+<tbody>
+<tr><th scope="row">Face ID passed / Touch ID passed (green)</th><td>Works</td><td>The sensor works. A face or finger that isn't set up on the phone still counts: the hardware answered.</td></tr>
+<tr><th scope="row">No unlock seen (grey)</th><td>Not confirmed</td><td>The station stopped listening without seeing an unlock. Not a fail: click it and unlock within 20 seconds.</td></tr>
+<tr><th scope="row">Couldn't read (grey)</th><td>Couldn't read</td><td>This phone doesn't let the station read it. Not a fail.</td></tr>
+<tr><th scope="row">Face ID failed (red)</th><td>Failed</td><td>Only for a real fault the phone itself reports, like Face ID disabled. Click to test again.</td></tr>
+</tbody></table></div>
+<p>Grey results and <b>Not tested</b> never block a purchase and are never shown as a problem on the card. A real failure shows a red <b>Biometrics — Failed</b> line under parts.</p>
+<h2 id="app-wins">The diagnostic app's result wins</h2>
+<p>If the inphox diagnostic app ran its own Face ID or Touch ID test on the phone, its result is the one kept (<a href="/diagnostic-app-iphone/">iPhone</a>, <a href="/diagnostic-app-android/">Android</a>).</p>
+<h2 id="android">Android fingerprint</h2>
+<p>On Android the fingerprint and face unlock are tested by the inphox test app, not by the station listening over the cable.</p>

@@ -1,0 +1,21 @@
+{
+  "groups": [
+    { "title": "Start here", "pages": ["sign-in", "home-inphox", "add-your-people", "plans", "when-a-screen-says-it-cant"] },
+    { "title": "Double Puff station", "pages": [
+      "double-puff", "install-double-puff", "plug-in-iphone", "plug-in-android", "trust-this-computer",
+      "biometrics", "station-wifi", "station-settings", "auto-activate", "secure-erase", "mdm-and-locks",
+      "stuck-or-partial", "diagnostic-app-android", "diagnostic-app-iphone", "station-updates", "cables-and-hubs"
+    ] },
+    { "title": "Buy phones in", "pages": [
+      "create-a-lot", "grade-a-phone", "labels", "customer-view", "add-the-customer", "bill-of-sale",
+      "sync-to-inventory", "station-phones"
+    ] },
+    { "title": "Inventory", "pages": [
+      "scan-phones-in", "enter-details", "find-phones", "one-phone", "upload-inventory", "export-data",
+      "export-location", "locations"
+    ] },
+    { "title": "Sell", "pages": ["sell-at-the-counter", "sell-online", "customers", "card-payments", "shipping-labels"] },
+    { "title": "Plans and billing", "pages": ["sign-up-and-pay", "checks", "repairs-add-on", "payments-and-cancel"] },
+    { "title": "Help", "pages": ["try-these-first", "report-an-issue", "what-we-look-after"] }
+  ]
+}

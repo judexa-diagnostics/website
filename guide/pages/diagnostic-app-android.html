@@ -1,0 +1,20 @@
+<!-- title: The diagnostic app on Android | summary: Double Puff installs the inphox test app on the phone, runs it and removes it. Here is what it checks and what to do when it doesn't open or doesn't report. -->
+<h2 id="how">How it gets on the phone</h2>
+<ul>
+  <li><b>A phone that is set up:</b> once USB debugging is allowed (<a href="/trust-this-computer/#android">Allow this computer</a>), the station installs the app, pairs it, opens it, waits for the result and removes it, with no taps.</li>
+  <li><b>A phone at the Welcome screen:</b> tap an empty spot 6 times and scan your shop's inphox agent QR code. The agent runs the tests (and the erase, if you ask for one).</li>
+</ul>
+<p>The card says <b>Testing</b> while it runs: keep the phone plugged in. The app removes itself when the result is in.</p>
+<h2 id="results">Where the results go</h2>
+<p>Live, under <b>Diagnostics</b> in the phone's grading window on the lot. Failed or skipped tests go into Notes / Issues when <b>Write Diagnostic Results Into Notes</b> is on (<a href="/station-settings/#my-settings">My Settings</a>); a real failure is a red flag either way.</p>
+<h2 id="wont-open">It doesn't open or doesn't report</h2>
+<ol>
+  <li>Keep the phone unlocked and the screen on until the test starts.</li>
+  <li>Unplug the cable and plug it back in; tap <b>Allow</b> if it asks.</li>
+  <li>On the station card, <b>Retry scan</b>.</li>
+  <li>Still nothing: grade it yourself and note what you tested by hand. Nothing blocks the purchase.</li>
+</ol>
+<h2 id="pair-by-hand">Pair it by hand</h2>
+<p>In the grading window: <b>Diagnostics › Pair device</b> shows a QR code and a 6-character code. Open the inphox app on the phone, scan the code (or type it) and follow the tests on screen. Code stopped working? Press <b>Pair device</b> again.</p>
+<h2 id="locks">Locks</h2>
+<p>The app never removes a Google account lock (FRP). A locked phone is reported as locked.</p>
