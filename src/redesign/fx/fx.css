@@ -45,6 +45,20 @@
 
 /* Route change: Layout keys <main> by page, so each page fades in fresh. */
 .fx-page { animation: fx-fade 360ms ease backwards; overflow-x: clip; }
+/* Switching product (inphox Inventory ⇄ Autograding) slides like a swiper: Autograding sits to the right. */
+.fx-page.fx-swipe-l { animation: fx-swipe-l 460ms var(--fx-ease) backwards; }
+.fx-page.fx-swipe-r { animation: fx-swipe-r 460ms var(--fx-ease) backwards; }
+@keyframes fx-swipe-l { from { opacity: 0; transform: translate3d(6%, 0, 0); } }
+@keyframes fx-swipe-r { from { opacity: 0; transform: translate3d(-6%, 0, 0); } }
+
+/* The product switch in the header and the menu: two segments, the current product filled. */
+.fx-prod { align-items: center; gap: 2px; margin-left: 0.75rem; padding: 3px; border: 1px solid var(--pmm-border-soft); border-radius: 999px; background: var(--pmm-surface); }
+.fx-prod.is-block { display: flex; margin-left: 0; }
+.fx-prod.is-block .fx-prod-opt { flex: 1; justify-content: center; height: 2.5rem; }
+.fx-prod-opt { display: inline-flex; align-items: center; height: 2rem; padding: 0 0.875rem; border-radius: 999px; font-size: 0.9375rem; font-weight: 600; color: var(--pmm-text-2); text-decoration: none; white-space: nowrap; transition: background 200ms ease, color 200ms ease; }
+.fx-prod-opt:hover { color: var(--pmm-text); background: var(--pmm-surface-2); }
+.fx-prod-opt.is-on { background: var(--pmm-text); color: var(--pmm-bg); }
+.fx-prod-opt:focus-visible { outline: 2px solid var(--pmm-brand); outline-offset: 2px; }
 
 /* Mounted-in pieces: step forms, success cards, menus, error messages. */
 .fx-mount { animation: fx-rise 520ms var(--fx-ease) backwards; }

@@ -67,7 +67,7 @@ export default function Story({ goTrial = defaultTrial } = {}) {
   const [P, setP] = useState(0);
   const [ready, setReady] = useState(false);
   const [webgl, setWebgl] = useState(true);
-  const Pref = useRef(0), target = useRef(-1), clock = useRef(0), waitingRef = useRef(false), jumpRef = useRef(null), skipRef = useRef(null);
+  const Pref = useRef(0), target = useRef(-1), clock = useRef(0), waitingRef = useRef(false), jumpRef = useRef(null), skipRef = useRef(null), leaveRef = useRef(null);
   const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
@@ -162,6 +162,15 @@ export default function Story({ goTrial = defaultTrial } = {}) {
     const busy = () => !!playing;
     const finishBeat = () => { if (!playing) return; Pref.current = BEATS[playing.i][1]; done = playing.i; playing = null; };
     skipRef.current = finishBeat;
+    // Skip the walkthrough: stop the beat that is playing, count every beat as seen (so the frame loop has nothing
+    // to hold the page for) and jump past the story at once. A smooth scroll here was pulled back to the next beat.
+    leaveRef.current = () => {
+      if (gestureTimer) { clearTimeout(gestureTimer); gestureTimer = null; }
+      gestureDir = 0; consumed = false; jumpRef.current = null;
+      playing = null; done = BEATS.length - 1; Pref.current = BEATS[done][1]; target.current = done;
+      const r = rootRef.current.getBoundingClientRect();
+      window.scrollTo({ top: Math.round(window.scrollY + r.bottom - HEAD()), behavior: 'instant' });
+    };
     // Past the last beat, going down releases the page. Going up mirrors it:
     // on the first beat (finished or still playing) or the idle lead-in there
     // is nothing earlier to show, so the page scrolls back up to the hero.
@@ -257,7 +266,11 @@ export default function Story({ goTrial = defaultTrial } = {}) {
     setTimeout(() => { jumpRef.current = null; }, 2500);
     window.scrollTo({ top: window.scrollY + r.top + bandMid(SCENE_FIRST_BEAT[i]) * total, behavior: 'smooth' });
   };
-  const skip = () => { const r = rootRef.current.getBoundingClientRect(); window.scrollTo({ top: window.scrollY + r.bottom - 64, behavior: 'smooth' }); };
+  const skip = () => {
+    if (leaveRef.current) return leaveRef.current();
+    const r = rootRef.current.getBoundingClientRect();   // 3D never started: nothing is holding the page
+    window.scrollTo({ top: window.scrollY + r.bottom - 64, behavior: 'instant' });
+  };
 
   // globe drag
   const dragRef = useRef(null);

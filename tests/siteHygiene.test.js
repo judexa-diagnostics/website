@@ -78,6 +78,7 @@ test('the About Us page lists the founder and team, and the footer and menu link
   assert.match(read('src/Layout.jsx'), /is\.about \? <About/);
   assert.match(read('src/SiteLogic.js'), /'about'/);
   const footer = read('src/components/Footer.jsx');
-  assert.match(footer, /href="\/about"[^>]*>About us</);
+  assert.match(footer, /href="\/about"[^>]*>\{f\.aboutUs\}</);
+  assert.match(read('src/chrome.js'), /aboutUs: 'About us'/);
   assert.ok(!/christoper@/.test(footer + read('src/config.js') + read('src/pages/Contact.jsx')), 'founder email is spelled christopher@');
 });

@@ -16,6 +16,8 @@ import Legal from './pages/Legal.jsx';
 import Security from './pages/Security.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Footer from './components/Footer.jsx';
+import { Suspense } from 'react';
+import * as agSlot from './pages/autogradingSlot.js';
 
 export default function Layout({ v }) {
   const { is, menuOpen } = v;
@@ -25,8 +27,11 @@ export default function Layout({ v }) {
       <a href="#main" className="fx-skip-link" style={{ position: "absolute", left: "-9999px", top: 0, zIndex: 1000, padding: "0.5rem 1rem", background: "var(--pmm-brand)", color: "white", borderRadius: "0 0 0.25rem 0" }} onFocus={(e)=>{e.target.style.left="0";}} onBlur={(e)=>{e.target.style.left="-9999px";}}>Skip to main content</a>
       <Header v={v} />
       {menuOpen ? <SiteMenu v={v} /> : null}
-      <main id="main" key={page} className="fx-page" style={{ flex: "1" }}>
+      <main id="main" key={page} className={"fx-page" + (v.chrome.swipe ? " " + v.chrome.swipe : "")} style={{ flex: "1" }}>
         {is.home ? <Home v={v} /> : null}
+        {/* Its own chunk: the browser fetches Autograding only on /autograding (agSlot is a live binding, so the build
+            prerender can hand in the page itself). */}
+        {is.autograding ? <Suspense fallback={<div style={{ minHeight: "100vh" }} />}><agSlot.AutogradingPage v={v} /></Suspense> : null}
         {is.industries ? <Industries v={v} /> : null}
         {is.features ? <Features v={v} /> : null}
         {is.pricing ? <Pricing v={v} /> : null}

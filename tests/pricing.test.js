@@ -161,6 +161,9 @@ async function renderWith(envFile) {
   const { renderToStaticMarkup } = await import('react-dom/server');
   const { default: SiteLogic } = await server.ssrLoadModule('/src/SiteLogic.js');
   const { default: Layout } = await server.ssrLoadModule('/src/Layout.jsx');
+  // Like the build prerender: hand the lazy Autograding page in directly, so it renders synchronously.
+  const { default: Autograding } = await server.ssrLoadModule('/src/pages/Autograding.jsx');
+  (await server.ssrLoadModule('/src/pages/autogradingSlot.js')).setEagerAutograding(Autograding);
   /** A SiteLogic whose setState applies directly, for driving handlers without a browser. */
   const logicWith = state => {
     const logic = new SiteLogic({ showPromo: false });
@@ -314,11 +317,24 @@ describe('rendered', () => {
 
   test('every Sign in link goes to the hub sign-in once public, else to Sign in to your shop', () => {
     const html = r.render({ page: 'start', menu: true });
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in(?: to inphox Inventory)?<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
     for (const h of hrefs) assert.equal(h, signupOpen ? 'https://home.inphox.net/login' : '/signin');
     assert.ok(!html.includes('intake.inphox.net'));
     assert.ok(!html.includes('/web/login'), 'no direct Odoo sign-in page on the site');
+  });
+
+  // Chris 2026-11-24: on /autograding the header's Pricing, Docs and Sign in are Autograding's and say so.
+  test('on /autograding, Pricing, Docs and Sign in name Autograding and open its app, not the shop sign-in', () => {
+    const html = r.render({ page: 'autograding', menu: true });
+    const head = html.slice(0, html.indexOf('<main'));
+    assert.match(head, />Autograding pricing</);
+    assert.match(head, /href="https:\/\/autograding\.inphox\.net\/api\/docs#pricing"/);
+    assert.match(head, /href="https:\/\/autograding\.inphox\.net\/"[^>]*>Sign in to Autograding</);
+    assert.ok(!/>Sign in<\/a>/.test(head) && !/>Pricing<\/a>/.test(head), 'no bare Sign in or Pricing in the Autograding header or menu');
+    assert.match(head, /aria-current="page"[^>]*>Autograding</, 'the product switch shows Autograding as current');
+    const home = r.render({ page: 'home' });
+    assert.match(home.slice(0, home.indexOf('<main')), /aria-current="page"[^>]*>Inventory</);
   });
 
   test('Sign in to your shop: asks for the shop name on inphox.net; remembers the last one', () => {
@@ -420,7 +436,7 @@ describe('rendered, sign-up open (the go-live build: VITE_SIGNUP_OPEN=1)', () =>
 
   test('every Sign in link opens the inphox hub sign-in, never a shop\'s own Odoo page', () => {
     const html = r.render({ page: 'start', menu: true });
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in<\/a>/g)].map(m => m[1]);
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]*)"[^>]*>Sign in(?: to inphox Inventory)?<\/a>/g)].map(m => m[1]);
     assert.equal(hrefs.length, 4); // header, menu, Start tab, footer
     for (const h of hrefs) assert.equal(h, 'https://home.inphox.net/login');
     assert.ok(!html.includes('/web/login') && !html.includes('intake.inphox.net'));

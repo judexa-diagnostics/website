@@ -1,0 +1,200 @@
+/* inphox Autograding page (from the approved Claude Design board; scoped to .ag). */
+/* inphox Autograding page: shared by Main.dc.html (desktop) and Mobile.dc.html (390 px). Brand: paper #F6F2EA, ink #16130F,
+   orange #C67139 (fills / lines), #b05a26 (orange text and buttons with white text, 4.8:1). No glows, no gradient washes. */
+.ag *{box-sizing:border-box}
+.ag a:focus-visible,.ag button:focus-visible,.ag [tabindex]:focus-visible{outline:2px solid #16130F;outline-offset:3px}
+.ag-mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* exploded device */
+.ag-stage{perspective:2000px}
+.ag-lift{transform:translateY(-24px) scale(1.06)}
+.ag-iso{transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-34deg)}
+.ag-layer{position:absolute;left:0;top:0;width:240px;height:480px;transform-style:preserve-3d}
+.ag-l1{transform:translateZ(240px)}.ag-l2{transform:translateZ(160px)}.ag-l3{transform:translateZ(80px)}.ag-l4{transform:translateZ(0)}
+
+/* identify (dark) */
+.ag-scan{top:96%}.ag-scanned{height:92%}
+
+/* endless lifecycle strip */
+@keyframes agMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ag-marquee{display:flex;width:max-content;animation:agMarquee 70s linear infinite}
+.ag-marquee-wrap:hover .ag-marquee,.ag-marquee-wrap:focus-within .ag-marquee{animation-play-state:paused}
+
+/* feature card loops */
+@keyframes agType{0%,8%{opacity:0}14%,100%{opacity:1}}
+@keyframes agBlink{50%{opacity:0}}
+@keyframes agGone{0%,40%{opacity:1;transform:scale(1)}55%,100%{opacity:0;transform:scale(.6)}}
+@keyframes agDone{0%,55%{opacity:0}65%,100%{opacity:1}}
+@keyframes agBar{0%,15%{width:30%}45%,70%{width:78%}100%{width:30%}}
+@keyframes agTravel{0%{left:0%}100%{left:calc(100% - 10px)}}
+@keyframes agHop{0%{left:2%}100%{left:94%}}
+@keyframes agCycle{0%,30%{opacity:1}36%,100%{opacity:0}}
+@keyframes agRing{from{stroke-dashoffset:176}to{stroke-dashoffset:0}}
+@keyframes agCount{0%{content:"1"}}
+.ag-t1{animation:agType 6s steps(1) infinite}.ag-t2{animation:agType 6s .6s steps(1) infinite}.ag-t3{animation:agType 6s 1.2s steps(1) infinite}.ag-t4{animation:agType 6s 1.8s steps(1) infinite}
+.ag-cur{animation:agBlink 1s steps(1) infinite}
+.ag-gone1{animation:agGone 5s ease infinite}.ag-gone2{animation:agGone 5s .15s ease infinite}.ag-gone3{animation:agGone 5s .3s ease infinite}
+.ag-done{animation:agDone 5s ease infinite}
+.ag-bar{animation:agBar 6s ease-in-out infinite}
+.ag-dot{animation:agTravel 3.2s ease-in-out infinite alternate}
+.ag-hop{animation:agHop 5s linear infinite}
+.ag-c1{animation:agCycle 6s infinite}.ag-c2{animation:agCycle 6s 2s infinite;opacity:0}.ag-c3{animation:agCycle 6s 4s infinite;opacity:0}
+.ag-ring{stroke-dasharray:176;animation:agRing 7s linear infinite}
+
+@supports (animation-timeline: view()){
+@keyframes agE1{from{transform:translateZ(16px)}to{transform:translateZ(240px)}}
+@keyframes agE2{from{transform:translateZ(11px)}to{transform:translateZ(160px)}}
+@keyframes agE3{from{transform:translateZ(5px)}to{transform:translateZ(80px)}}
+@keyframes agLift{from{transform:translateY(90px) scale(.78)}to{transform:translateY(-24px) scale(1.06)}}
+@keyframes agFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes agRise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes agScan{from{top:4%}to{top:96%}}
+@keyframes agScanned{from{height:0}to{height:92%}}
+@keyframes agShow{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.ag-lift{animation:agLift linear both;animation-timeline:view();animation-range:cover 10% cover 50%}
+.ag-l1{animation:agE1 linear both;animation-timeline:view();animation-range:cover 22% cover 55%}
+.ag-l2{animation:agE2 linear both;animation-timeline:view();animation-range:cover 22% cover 55%}
+.ag-l3{animation:agE3 linear both;animation-timeline:view();animation-range:cover 22% cover 55%}
+.ag-lab{animation:agFade linear both;animation-timeline:view();animation-range:cover 45% cover 58%}
+.ag-rise{animation:agRise linear both;animation-timeline:view();animation-range:entry 0% cover 25%}
+.ag-scan{animation:agScan linear both;animation-timeline:view();animation-range:cover 22% cover 72%}
+.ag-scanned{animation:agScanned linear both;animation-timeline:view();animation-range:cover 22% cover 72%}
+.ag-m1,.ag-m2,.ag-m3,.ag-m4,.ag-m5,.ag-m6,.ag-m7,.ag-m8{transform-box:fill-box;transform-origin:center;animation:agShow linear both;animation-timeline:view()}
+.ag-m1{animation-range:cover 27% cover 30%}.ag-m2{animation-range:cover 31% cover 34%}.ag-m3{animation-range:cover 36% cover 39%}
+.ag-m4{animation-range:cover 42% cover 45%}.ag-m5{animation-range:cover 48% cover 51%}.ag-m6{animation-range:cover 55% cover 58%}
+.ag-m7{animation-range:cover 61% cover 64%}.ag-m8{animation-range:cover 67% cover 70%}
+.ag-k{animation:agFade linear both;animation-timeline:view();animation-range:cover 30% cover 70%}
+}
+@media (prefers-reduced-motion: reduce){
+.ag *{animation:none!important}
+.ag-marquee{width:auto;overflow-x:auto}
+.ag-c2,.ag-c3{display:none}
+}
+
+/* page never scrolls sideways; our own scrollbars (thin, orange on paper) */
+.ag{overflow-x:clip}
+.ag{scrollbar-width:thin;scrollbar-color:#C67139 #efe9de}
+.ag ::-webkit-scrollbar{width:8px;height:8px}
+.ag ::-webkit-scrollbar-track{background:#efe9de}
+.ag ::-webkit-scrollbar-thumb{background:#C67139;border-radius:0}
+
+/* hero background: a workflow lane, then an endless line of devices through the scan gate */
+@keyframes agLane{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ag-lane{display:flex;width:max-content;animation:agLane 38s linear infinite}
+.ag-lane.fast{animation-duration:16s}
+.ag-lane.slow{animation-duration:60s}
+.ag-span2{grid-column:span 2}
+
+/* header: desktop links vs the site's menu sheet */
+.ag-mob{display:none}
+@keyframes agItem{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.ag-sheet a,.ag-sheet .ag-sheet-row{animation:agItem .28s ease both;animation-delay:calc(var(--i) * 40ms)}
+
+/* exploded labels: beside the device on wide screens, a list under it on phones */
+.ag-labs-list{display:none}
+
+@media (max-width: 760px){
+.ag-desk{display:none!important}
+.ag-mob{display:flex}
+.ag-span2{grid-column:span 1}
+.ag-stage{height:560px!important}
+.ag-lift-wrap{transform:scale(.72)}
+.ag-lab{display:none}
+.ag-labs-list{display:grid}
+.ag-flow-l{font-size:12px!important;overflow-wrap:anywhere}
+.ag-hero-bg{opacity:.55}
+}
+@media (prefers-reduced-motion: reduce){.ag-lane{animation:none!important}}
+
+/* hero background: a field of devices; a scan wave grades them, hover scans one */
+.ag-field{position:absolute;inset:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));grid-auto-rows:78px;gap:10px;padding:14px;
+  -webkit-mask-image:radial-gradient(ellipse 46% 42% at 50% 46%,transparent 55%,#000 100%);mask-image:radial-gradient(ellipse 46% 42% at 50% 46%,transparent 55%,#000 100%)}
+.ag-tile{position:relative;border:1.5px solid rgba(22,19,15,.18);border-radius:8px;background:#fbf8f2;pointer-events:auto;transition:transform .2s ease,border-color .2s ease}
+.ag-tile::before{content:"";position:absolute;left:38%;right:38%;top:5px;height:3px;border-radius:2px;background:rgba(22,19,15,.18)}
+.ag-tile b{position:absolute;inset:auto 0 8px 0;text-align:center;font:700 12px ui-monospace,Menlo,monospace;opacity:0;transition:opacity .2s}
+@keyframes agWave{0%,6%{background:#fbf8f2;border-color:rgba(22,19,15,.18)}9%{background:#fbf8f2;border-color:#C67139;box-shadow:inset 0 -3px 0 #C67139}14%,60%{background:var(--g);border-color:var(--gb);box-shadow:none}70%,100%{background:#fbf8f2;border-color:rgba(22,19,15,.18)}}
+@keyframes agWaveTxt{0%,10%{opacity:0}14%,60%{opacity:1}70%,100%{opacity:0}}
+.ag-tile{animation:agWave 9s linear infinite;animation-delay:var(--d)}
+.ag-tile b{animation:agWaveTxt 9s linear infinite;animation-delay:var(--d);color:var(--gt)}
+.ag-tile:hover{transform:translateY(-4px) scale(1.06);border-color:#C67139;animation-play-state:paused}
+.ag-tile:hover b{opacity:1;animation-play-state:paused}
+
+/* ZDR: photos removed one by one */
+@keyframes agZ{0%,15%{opacity:1;transform:none;filter:none}25%{opacity:1;transform:none}32%,100%{opacity:0;transform:translateY(-14px) scale(.7)}}
+.ag-z1{animation:agZ 8s ease infinite}.ag-z2{animation:agZ 8s .5s ease infinite}.ag-z3{animation:agZ 8s 1s ease infinite}.ag-z4{animation:agZ 8s 1.5s ease infinite}.ag-z5{animation:agZ 8s 2s ease infinite}.ag-z6{animation:agZ 8s 2.5s ease infinite}
+@keyframes agStrike{0%,12%{width:0}22%,100%{width:100%}}
+.ag-zs{animation:agStrike 8s ease infinite;animation-delay:inherit}
+@keyframes agZcount{0%,50%{opacity:0}58%,95%{opacity:1}100%{opacity:0}}
+.ag-zc{animation:agZcount 8s ease infinite}
+
+/* normalization: your lens sweeps over the seller's report */
+@keyframes agLens{0%,12%{clip-path:inset(0 100% 0 0)}45%,80%{clip-path:inset(0 0 0 0)}95%,100%{clip-path:inset(0 100% 0 0)}}
+@keyframes agLensEdge{0%,12%{left:0}45%,80%{left:100%}95%,100%{left:0}}
+.ag-lens{animation:agLens 8s cubic-bezier(.6,0,.3,1) infinite}
+.ag-lens-edge{animation:agLensEdge 8s cubic-bezier(.6,0,.3,1) infinite}
+
+/* inventory workflow board: cards move column to column */
+@keyframes agCard1{0%,14%{transform:translateX(0)}20%,34%{transform:translateX(100%)}40%,54%{transform:translateX(200%)}60%,74%{transform:translateX(300%)}80%,100%{transform:translateX(400%)}}
+.ag-mv{animation:agCard1 12s cubic-bezier(.6,0,.3,1) infinite}
+@media (max-width: 760px){.ag-field{grid-template-columns:repeat(auto-fill,minmax(40px,1fr));grid-auto-rows:60px;gap:8px}}
+@media (prefers-reduced-motion: reduce){.ag-tile{animation:none!important}.ag-lens{clip-path:none}}
+.ag-hero-c a,.ag-hero-c button{pointer-events:auto}
+
+/* hero film: the life of one device. 7 chapters x 5 s; the camera rides with the device, the world pans past */
+@keyframes hfWorld{0%{transform:translateX(0)}10.857%{transform:translateX(0px)}14.286%{transform:translateX(-1440px)}25.143%{transform:translateX(-1440px)}28.571%{transform:translateX(-2880px)}39.429%{transform:translateX(-2880px)}42.857%{transform:translateX(-4320px)}53.714%{transform:translateX(-4320px)}57.143%{transform:translateX(-5760px)}68.000%{transform:translateX(-5760px)}71.429%{transform:translateX(-7200px)}82.286%{transform:translateX(-7200px)}85.714%{transform:translateX(-8640px)}96.571%{transform:translateX(-8640px)}100.000%{transform:translateX(-10080px)}}
+@keyframes hfBack{0%{transform:translateX(0)}10.857%{transform:translateX(0px)}14.286%{transform:translateX(-648px)}25.143%{transform:translateX(-648px)}28.571%{transform:translateX(-1296px)}39.429%{transform:translateX(-1296px)}42.857%{transform:translateX(-1944px)}53.714%{transform:translateX(-1944px)}57.143%{transform:translateX(-2592px)}68.000%{transform:translateX(-2592px)}71.429%{transform:translateX(-3240px)}82.286%{transform:translateX(-3240px)}85.714%{transform:translateX(-3888px)}96.571%{transform:translateX(-3888px)}100.000%{transform:translateX(-4536px)}}
+@keyframes hfCam{0%,71.429%{transform:scale(1)}74.857%,81.143%{transform:scale(1.16)}82.857%,100%{transform:scale(1)}}
+@keyframes hfSlot{0%{opacity:0}1%,13.2%{opacity:1}14.28%,100%{opacity:0}}
+@keyframes hfProg{from{width:0}to{width:100%}}
+/* chapter-local beats, timed from the start of the chapter's slot (slot = 0.6 s before its hold) */
+@keyframes hfScan{0%,2.6%{transform:translateY(0);opacity:0}3%{opacity:1}10%{transform:translateY(232px);opacity:1}11%,100%{transform:translateY(232px);opacity:0}}
+@keyframes hfMark1{0%,3.6%{opacity:0;transform:scale(.4)}4.2%,13%{opacity:1;transform:none}14%,100%{opacity:0}}@keyframes hfMark2{0%,4.8%{opacity:0;transform:scale(.4)}5.4%,13%{opacity:1;transform:none}14%,100%{opacity:0}}@keyframes hfMark3{0%,6.0%{opacity:0;transform:scale(.4)}6.6%,13%{opacity:1;transform:none}14%,100%{opacity:0}}@keyframes hfMark4{0%,7.2%{opacity:0;transform:scale(.4)}7.8%,13%{opacity:1;transform:none}14%,100%{opacity:0}}@keyframes hfMark5{0%,8.4%{opacity:0;transform:scale(.4)}9.0%,13%{opacity:1;transform:none}14%,100%{opacity:0}}
+@keyframes hfDraw{0%,3%{stroke-dashoffset:60}11%,13%{stroke-dashoffset:0}14%,100%{stroke-dashoffset:60}}
+@keyframes hfPop{0%,9.6%{opacity:0;transform:translateY(8px)}10.4%,13.2%{opacity:1;transform:none}14.28%,100%{opacity:0}}
+
+@keyframes hfDrop{0%,3%{transform:translate(-90px,-170px) rotate(-30deg);opacity:0}3.4%{opacity:1}6%{transform:translate(0,0) rotate(6deg)}6.6%{transform:translate(0,-10px) rotate(-2deg)}7.2%,13%{transform:none;opacity:1}14%,100%{opacity:0}}
+@keyframes hfArm{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+@keyframes hfBlink{0%,100%{opacity:.35}50%{opacity:1}}
+.hf-world{animation:hfWorld 35s cubic-bezier(.65,0,.35,1) infinite}
+.hf-back{animation:hfBack 35s cubic-bezier(.65,0,.35,1) infinite}
+.hf-cam{transform-box:view-box;transform-origin:720px 340px;animation:hfCam 35s ease-in-out infinite}
+.hf-slot{opacity:0;animation:hfSlot 35s linear infinite;animation-delay:var(--sd)}
+.hf-prog{animation:hfProg 35s linear infinite;animation-delay:-34.4s}
+.hf-scan{animation:hfScan 35s linear infinite;animation-delay:var(--sd)}
+.hf-mark{transform-box:fill-box;transform-origin:center;animation:hfMark1 35s linear infinite;animation-delay:var(--sd)}.hf-mark.m2{animation-name:hfMark2}.hf-mark.m3{animation-name:hfMark3}.hf-mark.m4{animation-name:hfMark4}.hf-mark.m5{animation-name:hfMark5}
+.hf-draw{stroke-dasharray:60;animation:hfDraw 35s linear infinite;animation-delay:var(--sd)}
+@keyframes hfCard{0%,2.4%{opacity:0}3%,13.2%{opacity:1}14.28%,100%{opacity:0}}
+.hf-card{animation:hfCard 35s linear infinite;animation-delay:var(--sd)}
+.hf-pop{animation:hfPop 35s linear infinite;animation-delay:var(--sd)}
+@keyframes hfTimer{0%,2.6%{transform:scaleX(0)}10%,13%{transform:scaleX(1)}14%,100%{transform:scaleX(0)}}
+.hf-timer{transform-box:fill-box;transform-origin:0 50%;animation:hfTimer 35s linear infinite;animation-delay:var(--sd)}
+.hf-drop{transform-box:fill-box;transform-origin:center;animation:hfDrop 35s cubic-bezier(.5,0,.6,1) infinite;animation-delay:var(--sd)}
+.hf-arm{transform-box:fill-box;transform-origin:0% 100%;animation:hfArm 2.4s ease-in-out infinite}
+.hf-arm.r{animation-delay:-1.2s}
+.hf-led{animation:hfBlink 1.2s ease-in-out infinite}
+.hf-chip-row{display:flex;gap:4px}
+.hf-seg{flex:1 1 0;min-width:0}
+@media (max-width: 760px){.hf-seg-l{display:none}.hf-top-r{display:none}.hf-cta-l{display:none}}
+@media (prefers-reduced-motion: reduce){
+.hf-world,.hf-back,.hf-cam,.hf-prog,.hf-scan,.hf-draw,.hf-arm,.hf-led,.hf-timer{animation:none!important}.hf-scan{opacity:0}
+.hf-world{transform:translateX(-7200px)}.hf-back{transform:translateX(-3240px)}
+.hf-slot,.hf-mark,.hf-pop,.hf-card,.hf-drop{animation:none!important;opacity:0}
+.hf-s5,.hf-s5 .hf-mark,.hf-s5 .hf-pop,.hf-s5 .hf-card{opacity:1!important}.hf-drop{opacity:1}.hf-prog{width:78%}
+}
+
+/* hero: the film is the background; the headline sits on a paper card over it. Desktop frames the device at 64%. */
+.hx{min-height:clamp(600px,50vw,740px)}
+.hx-film{position:absolute;top:0;bottom:0;left:0;width:128%}
+.hx-chap{position:absolute;right:calc(28% / 1.28 + 24px);top:22px;display:flex;gap:10px;align-items:center;margin:0}
+.hx-say{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:min(30%,560px);margin:0;text-align:center}
+.hx-say span{display:inline;padding:4px 10px;background:rgba(14,12,10,.78);font-size:clamp(15px,1.5vw,20px);line-height:1.6;font-weight:600;color:#F6F2EA;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hx-wrap{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:56px 20px;min-height:inherit;display:flex;align-items:center;pointer-events:none}
+.hx-card{pointer-events:auto;width:min(100%,540px);background:#F6F2EA;border-radius:2px;padding:clamp(24px,3vw,40px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+@media (max-width: 760px){
+.hx{min-height:0}
+.hx-film{bottom:auto;width:100%;height:500px}
+.hx-chap{right:auto;left:16px;top:16px}
+.hx-say{bottom:auto;top:56px;width:calc(100% - 32px)}
+.hx-wrap{min-height:0;padding:430px 16px 28px;display:block}
+.hx-card{width:100%}
+}

@@ -24,9 +24,9 @@ test('every page is a real path: a route, a prerendered file, served with clean 
   assert.ok(!(v.redirects || []).some((r) => /#/.test(r.destination)), 'no redirect sends a page to a #/ address');
   const { ROUTES, pageFromPath, pageFromHash, pathFor } = await import('../src/routes.js');
   for (const r of ROUTES) {
-    assert.match(r.path, /^\/[a-z-]*$/, r.page);
+    assert.match(r.path, /^(\/es)?\/[a-z-]*$/, r.page);
     assert.equal(pageFromPath(r.path), r.page, r.path);
-    assert.equal(pathFor(r.page), r.path);
+    assert.equal(pathFor(r.page, r.lang || 'en'), r.path);
     assert.ok(r.title && r.title.length <= 70, `${r.page}: a title of at most 70 characters`);
     assert.ok(r.description && r.description.length <= 170, `${r.page}: a description of at most 170 characters`);
   }
@@ -36,6 +36,13 @@ test('every page is a real path: a route, a prerendered file, served with clean 
   assert.equal(pageFromPath('/about/'), 'about');
   assert.equal(pageFromPath('/no-such-page'), null, 'unknown paths are not pages (404)');
   for (const p of ['about', 'pricing', 'features', 'industries', 'security', 'careers', 'contact']) assert.ok(ROUTES.some((r) => r.page === p), `${p} is a route`);
+  // Autograding is in English and Spanish; each names the other (hreflang) and Spanish lives under /es/.
+  const { langFromPath, hasSpanish } = await import('../src/routes.js');
+  assert.equal(pathFor('autograding', 'es'), '/es/autograding');
+  assert.equal(langFromPath('/es/autograding'), 'es');
+  assert.equal(langFromPath('/autograding'), 'en');
+  assert.ok(hasSpanish('autograding') && !hasSpanish('pricing'), 'only pages with a Spanish twin offer Spanish');
+  assert.equal(pathFor('pricing', 'es'), '/pricing', 'a page with no Spanish twin keeps its English path');
 });
 
 // Plan buttons go to Contact until the hub's sign-up is public (the hub answers 401 behind its password today).
