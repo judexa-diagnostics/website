@@ -433,7 +433,7 @@ export default class SiteLogic extends DCLogic {
     };
 
     const mods = ['All', ...Array.from(new Set(this.features.map(f => f[0])))];
-    // Every plan includes every feature: plans differ only in checks, stations, users and support.
+    // The feature list (search and module filter); which plan has what is the pricing ladder (src/pricing.js), never this.
     const fq = s.fQ.trim().toLowerCase();
     const frows = this.features.filter(f => (s.fMod === 'All' || f[0] === s.fMod) && (!fq || (f[0]+' '+f[1]+' '+f[2]).toLowerCase().includes(fq)));
     const feat = {
