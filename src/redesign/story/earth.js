@@ -79,13 +79,13 @@ export function buildEarth(renderer, onReady) {
 
   const sunDir = new THREE.Vector3(-0.6, 0.35, 0.75).normalize();
   const earthMat = new THREE.ShaderMaterial({
-    uniforms: { dayTex: { value: tex('assets/earth/earth_atmos_2048.jpg') }, nightTex: { value: tex('assets/earth/earth_lights_2048.png') }, specTex: { value: tex('assets/earth/earth_specular_2048.jpg', false) }, sunDir: { value: sunDir }, boost: { value: 1 } },
+    uniforms: { dayTex: { value: tex('/assets/earth/earth_atmos_2048.jpg') }, nightTex: { value: tex('/assets/earth/earth_lights_2048.png') }, specTex: { value: tex('/assets/earth/earth_specular_2048.jpg', false) }, sunDir: { value: sunDir }, boost: { value: 1 } },
     vertexShader: earthVert, fragmentShader: earthFrag
   });
   const group = new THREE.Group(); group.rotation.order = 'XYZ'; scene.add(group);
   const earth = new THREE.Mesh(new THREE.SphereGeometry(R, 128, 96), earthMat); group.add(earth);
 
-  const clouds = new THREE.Mesh(new THREE.SphereGeometry(R * 1.009, 96, 72), new THREE.MeshLambertMaterial({ map: tex('assets/earth/earth_clouds_1024.png'), transparent: true, opacity: 0.55, depthWrite: false }));
+  const clouds = new THREE.Mesh(new THREE.SphereGeometry(R * 1.009, 96, 72), new THREE.MeshLambertMaterial({ map: tex('/assets/earth/earth_clouds_1024.png'), transparent: true, opacity: 0.55, depthWrite: false }));
   group.add(clouds);
   const sun = new THREE.DirectionalLight('#fff6e8', 2.2); sun.position.copy(sunDir).multiplyScalar(500); scene.add(sun);
   scene.add(new THREE.AmbientLight('#334', 0.5));

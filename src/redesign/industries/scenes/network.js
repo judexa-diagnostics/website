@@ -161,7 +161,7 @@ export default async function create(ctx) {
   const rim = new THREE.DirectionalLight('#9fb4ff', 0.55); rim.position.set(30, 25, -60); world.add(rim);
 
   // ---------- terrain from the land mask ----------
-  const img = await new THREE.ImageLoader().loadAsync(asset('assets/earth/earth_specular_2048.jpg'));
+  const img = await new THREE.ImageLoader().loadAsync(asset('/assets/earth/earth_specular_2048.jpg'));
   const FW = 744, FH = 336;
   const mc = document.createElement('canvas'); mc.width = FW; mc.height = FH;
   const mctx = mc.getContext('2d', { willReadFrequently: true });

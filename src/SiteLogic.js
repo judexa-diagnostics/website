@@ -107,7 +107,8 @@ export default class SiteLogic extends DCLogic {
       const p = pageFromPath(url.pathname);
       if (!p || url.hash.length > 1) return;
       e.preventDefault();
-      this.goto(p, null, langFromPath(url.pathname));
+      // Links keep the visitor's language: from a Spanish page, /pricing opens /es/pricing (the picker switches back).
+      this.goto(p, null, langFromPath(url.pathname) === 'es' || this.state.lang === 'ES' ? 'es' : 'en');
     };
     window.addEventListener('popstate', this.onPop);
     document.addEventListener('click', this.onLink);
@@ -158,7 +159,7 @@ export default class SiteLogic extends DCLogic {
     set('meta[property="og:title"]', 'content', r.title);
     set('meta[property="og:description"]', 'content', r.description);
     set('meta[property="og:url"]', 'content', canonicalFor(p, l));
-    set('meta[property="og:locale"]', 'content', l === 'es' ? 'es_ES' : 'en_US');
+    set('meta[property="og:locale"]', 'content', l === 'es' ? 'es_LA' : 'en_US');
     set('meta[name="twitter:title"]', 'content', r.title);
     set('meta[name="twitter:description"]', 'content', r.description);
   }
@@ -272,7 +273,7 @@ export default class SiteLogic extends DCLogic {
     };
     const is = {}; PAGES.forEach(p => is[p] = s.page === p); is.notfound = s.page === 'notfound';
     const nav = { pricing: s.page === 'pricing' ? 'var(--pmm-brand)' : 'transparent', about: s.page === 'about' ? 'var(--pmm-brand)' : 'transparent' };
-    // Languages: a page offers the picker only when it has a Spanish twin (today /autograding); the rest is English.
+    // Languages: every page is in English and Spanish (src/i18n); the URL carries the language (/es/...).
     const langs = [['EN','English'],['ES','Español']];
     const lc = s.lang === 'ES' && hasSpanish(s.page) ? 'es' : 'en', cw = CHROME[lc];
     const product = productOf(s.page), isAg = product === 'ag';
@@ -281,7 +282,7 @@ export default class SiteLogic extends DCLogic {
     const chrome = {
       c: cw, lc, product, isAg, showLang: hasSpanish(s.page), swipe: s.swipe,
       switcher: [
-        { key: 'inv', label: cw.inv, long: cw.invLong, desc: cw.invDesc, href: '/', on: !isAg },
+        { key: 'inv', label: cw.inv, long: cw.invLong, desc: cw.invDesc, href: pathFor('home', lc), on: !isAg },
         { key: 'ag', label: cw.ag, long: cw.agLong, desc: cw.agDesc, href: pathFor('autograding', lc), on: isAg }
       ],
       agStart: agStartUrl('header', lc, agRef), agStartMenu: agStartUrl('menu', lc, agRef), agStartFooter: agStartUrl('footer', lc, agRef)

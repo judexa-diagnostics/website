@@ -1,0 +1,95 @@
+/about
+/contact
+/features
+/industries
+/platform
+/pricing
+/security
+AT&T
+Autograding
+Basics
+Blue
+Burgundy
+Christopher Luk
+Christopher Luk, Sri Vatsa Vuddanti, Iniyan Kannappan
+Cream
+D. Chen
+Dallas, TX
+Deep Purple
+Elm st
+Enterprise
+F2LZK3XQ0D
+Find My
+Galaxy S22 Ultra
+Galaxy S23
+Galaxy Z Flip5
+Graphite
+Growth
+Hong Kong
+IMEI
+IMEI 356798114520349 · SN F2LXK9QWPLJ7
+Iniyan Kannappan
+Lavender
+LinkedIn
+Los Angeles, CA
+M. Ortiz
+Miami, FL
+Midnight
+Northgate Wireless · Dallas
+Obsidian
+Ortega Mobile Wholesale
+Phantom Black
+Phone Intake
+Pixel 7
+Pixel 7 obsid.
+Pixel 8 Pro
+S22 Ultra 256
+S23 lavender
+Sam P.
+Silver
+Space Black
+Space Gray
+Sri Vatsa Vuddanti
+T-Mobile
+Verizon
+WH-A
+WH-A / 01-A1
+WH-A / 01-A3
+WH-A / 02-C4
+WH-A / 03-A4
+WH-A / 03-B2
+WH-A / 03-B3
+WH-A / 04-A1
+WH-A / 05-B1
+WIN-BENCH-04
+Wi-Fi
+christopher
+christopher@inphox.net
+export_station_B04.csv
+https://
+iPad Air (5th)
+iPh 11 64 wht
+iPh 12 64 blue
+iPh 13 128 blk
+iPh 14 Pro 256
+iPhone 11
+iPhone 12
+iPhone 13
+iPhone 14 Pro
+iPhone 14 Pro · 256 GB · Deep Purple
+iPhone 14 Pro · A2650
+imei,model,grade,result
+inphox
+inphox Autograding
+inphox Diagnostics
+inphox Inventory
+inphox LLC
+inphox LLC · 375 S 9th Street, Joe West Hall, San Jose, CA 95112 · 916-582-9140
+inphox Station
+inphox.net
+psst: ↑↑↓↓←→←→BA
+yourshop.com
+· cv.pdf
+· cv_FINAL_final.pdf
+· cv_final_v2.pdf
+English

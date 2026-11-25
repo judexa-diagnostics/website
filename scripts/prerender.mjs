@@ -12,7 +12,7 @@ const dist = path.resolve('dist');
 const ssrEntry = ['entry-server.js', 'entry-server.mjs'].map(f => path.resolve('dist-ssr', f)).find(f => fs.existsSync(f));
 if (!ssrEntry) throw new Error('prerender: dist-ssr/entry-server.js missing; run vite build --ssr src/entry-server.jsx --outDir dist-ssr first');
 const ssr = await import(pathToFileURL(ssrEntry).href);
-const { ROUTES, SITE, SITE_NAME, canonicalFor, TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, pricing } = ssr;
+const { ROUTES, SITE, SITE_NAME, canonicalFor, TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN, pricing } = ssr;
 
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 if (!template.includes('<div id="root"></div>')) throw new Error('prerender: index.html has no empty #root');
@@ -49,7 +49,8 @@ const organization = {
   ...(COMPANY_POSTAL_ADDRESS ? { address: postal(COMPANY_POSTAL_ADDRESS) } : {}),
   ...(COMPANY_PHONE ? { telephone: '+1-' + COMPANY_PHONE } : {}),
   contactPoint: [{ '@type': 'ContactPoint', contactType: 'sales', url: SITE + '/contact', ...(COMPANY_PHONE ? { telephone: '+1-' + COMPANY_PHONE } : {}), areaServed: 'US', availableLanguage: ['English', 'Spanish'] }],
-  // sameAs: no company profile pages exist yet; add them here (LinkedIn company page, etc.) once they do.
+  // The company's profiles elsewhere (search engines tie them to this organization).
+  ...(COMPANY_LINKEDIN ? { sameAs: [COMPANY_LINKEDIN] } : {}),
   founder: founders.map(p => ({ '@id': p['@id'] }))
 };
 const website = { '@type': 'WebSite', '@id': SITE + '/#website', url: SITE + '/', name: SITE_NAME, inLanguage: ['en', 'es'], publisher: { '@id': ORG_ID } };
@@ -90,15 +91,16 @@ function page(html, { title, description, canonical, noindex, graph, lang = 'en'
   set(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${esc(title)}">`);
   set(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${esc(description)}">`);
   set(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${esc(canonical || SITE + '/')}">`);
-  set(/<meta property="og:locale" content="[^"]*">/, `<meta property="og:locale" content="${lang === 'es' ? 'es_ES' : 'en_US'}">`);
+  set(/<meta property="og:locale" content="[^"]*">/, `<meta property="og:locale" content="${lang === 'es' ? 'es_LA' : 'en_US'}">`);
   set(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${esc(title)}">`);
   set(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${esc(description)}">`);
+  if (lang === 'es') set(/<meta name="keywords" content="[^"]*">/, '<meta name="keywords" content="software para probar teléfonos, borrado de datos, NIST 800-88, diagnóstico de dispositivos, revisión de IMEI, lista negra, calificación cosmética, inventario de teléfonos usados, software para reacondicionadores, software para talleres de reparación, canje de teléfonos">');
   set(/<meta name="robots" content="[^"]*">/, `<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}">`);
   const extra = [
     canonical ? `<link rel="canonical" href="${esc(canonical)}">` : '',
     // A page with a Spanish twin names both, plus x-default, so search shows each reader their language.
     ...(alternates ? [
-      `<meta property="og:locale:alternate" content="${lang === 'es' ? 'en_US' : 'es_ES'}">`,
+      `<meta property="og:locale:alternate" content="${lang === 'es' ? 'en_US' : 'es_LA'}">`,
       ...alternates.map(([l, href]) => `<link rel="alternate" hreflang="${l}" href="${esc(href)}">`)
     ] : []),
     graph ? `<script type="application/ld+json">${json(graph)}</script>` : ''
@@ -110,7 +112,8 @@ const written = [];
 const twinOf = r => ROUTES.find(x => x.page === r.page && x !== r);
 for (const r of ROUTES) {
   const lang = r.lang || 'en', twin = twinOf(r);
-  const app = ssr.render(r.page, lang);
+  // Spanish pages: the same render, with every string swapped for its translation (src/i18n).
+  const app = lang === 'es' ? ssr.translateHtml(ssr.render(r.page, lang)) : ssr.render(r.page, lang);
   const body = template.replace('<div id="root"></div>', `<div id="root">${app}</div>`);
   const en = lang === 'en' ? r : twin;
   const alternates = twin ? [['en', canonicalFor(r.page, 'en')], ['es', canonicalFor(r.page, 'es')], ['x-default', canonicalFor(en.page, 'en')]] : null;
@@ -131,7 +134,10 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = ROUTES.filter(r => r.index !== false).map(r => {
   const twin = twinOf(r), loc = canonicalFor(r.page, r.lang || 'en');
   const alt = twin ? ['en', 'es'].map(l => `\n    <xhtml:link rel="alternate" hreflang="${l}" href="${esc(canonicalFor(r.page, l))}"/>`).join('') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(canonicalFor(r.page, 'en'))}"/>` : '';
-  return `  <url><loc>${esc(loc)}</loc><lastmod>${today}</lastmod>${alt}${alt ? '\n  ' : ''}</url>`;
+  // changefreq and priority as the device-software sites list them: product pages weekly, policies monthly.
+  const legalPage = ['terms', 'privacy', 'refunds', 'copyright', 'law-enforcement', 'subprocessors', 'erasure', 'cookies', 'accessibility'].includes(r.page);
+  const prio = r.page === 'home' ? '1.0' : legalPage ? '0.3' : '0.8';
+  return `  <url><loc>${esc(loc)}</loc><lastmod>${today}</lastmod><changefreq>${legalPage ? 'monthly' : 'weekly'}</changefreq><priority>${prio}</priority>${alt}${alt ? '\n  ' : ''}</url>`;
 });
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);
 written.push('sitemap.xml');

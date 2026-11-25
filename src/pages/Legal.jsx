@@ -8,6 +8,9 @@ import erasure from '../legal/erasure.txt?raw';
 import cookies from '../legal/cookies.txt?raw';
 import accessibility from '../legal/accessibility.txt?raw';
 import { parseLegal } from '../legalDoc.js';
+// Spanish versions (src/legal/es): a translation for reading; each one says the English text governs.
+const ES_FILES = import.meta.glob('../legal/es/*.txt', { query: '?raw', import: 'default', eager: true });
+const DOCS_ES = Object.fromEntries(Object.entries(ES_FILES).map(([f, t]) => [f.replace(/^.*\/|\.txt$/g, ''), parseLegal(t)]));
 import ObfuscatedEmail from '../components/ObfuscatedEmail.jsx';
 
 const DOCS = {
@@ -26,8 +29,8 @@ const mono = "'JetBrains Mono',monospace";
 const HEAD = /^(\d+\. [^.]+\.)\s+/;
 const para = p => { const m = p.match(HEAD); return m ? [<strong key="h" style={{ color: '#16130F' }}>{m[1]}</strong>, ' ' + p.slice(m[0].length)] : p; };
 
-export default function Legal({ doc }) {
-  const d = DOCS[doc] || DOCS.terms;
+export default function Legal({ doc, lang = 'en' }) {
+  const d = (lang === 'es' && DOCS_ES[doc]) || DOCS[doc] || DOCS.terms;
   const other = doc === 'privacy' ? ['/terms', 'Terms of Service'] : ['/privacy', 'Privacy Policy'];
   // A page whose Version line says Draft shows a plain banner (website#20 / odm#1333). Published pages carry a plain date.
   const isDraft = /\bDraft\b/i.test(d.version || '');

@@ -1,0 +1,14 @@
+Version: 2026-11-14
+Title: Accesibilidad
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+Queremos que todas las personas puedan usar inphox, incluidas las que usan lectores de pantalla, navegación con teclado, ampliación u otras tecnologías de asistencia.
+
+1. Nuestro estándar. Trabajamos hacia las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.2 en el nivel AA. Eso incluye tamaños de texto legibles, uso completo con teclado, un enlace para saltar al contenido principal, etiquetas en cada control y un color que nunca es la única forma de mostrar un significado.
+
+2. Movimiento. Las animaciones decorativas siguen la configuración de reducir movimiento de tu dispositivo y pueden desactivarse en el sitio web.
+
+3. Limitaciones conocidas. Algunas demostraciones interactivas del sitio web son recorridos visuales; la misma información está en el texto que las rodea. Si algo es difícil de usar, avísanos y lo arreglaremos o te daremos la información de otra forma.
+
+4. Contacto. Escribe a support@inphox.net con la página y lo que te dificultó el uso. Procuramos responder en un plazo de dos días hábiles.

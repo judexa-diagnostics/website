@@ -159,8 +159,8 @@ function narrowStance(clip, B, ang) {
 
 export async function loadPeople(loadGLTF, { asset = p => p } = {}) {
   const [body, clipsJSON] = await Promise.all([
-    loadGLTF(asset('assets/people/body.glb')),
-    fetch(asset('assets/people/clips.json')).then(r => { if (!r.ok) throw new Error('clips ' + r.status); return r.json(); })
+    loadGLTF(asset('/assets/people/body.glb')),
+    fetch(asset('/assets/people/clips.json')).then(r => { if (!r.ok) throw new Error('clips ' + r.status); return r.json(); })
   ]);
   body.scene.updateMatrixWorld(true);
   const B = bonesOf(body.scene);

@@ -692,7 +692,7 @@ export default async function create(ctx) {
   const homePhone = makePhone(PHONE_STYLES[1], soldScreen.tex); homePhone.scale.setScalar(0.01); house.add(homePhone);
 
   // small shipping box with four flaps
-  const kraft = await new Promise(res => new THREE.TextureLoader().load('assets/story/kraft.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; res(track(t)); }, undefined, () => res(null)));
+  const kraft = await new Promise(res => new THREE.TextureLoader().load('/assets/story/kraft.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; res(track(t)); }, undefined, () => res(null)));
   const boxM = M({ map: kraft, color: '#d8b07c', roughness: 0.9 });
   const BX = 0.22, BY = 0.08, BZ = 0.15, BT = 0.004;
   const box = new THREE.Group(); house.add(box);

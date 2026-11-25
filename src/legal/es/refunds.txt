@@ -1,0 +1,18 @@
+Version: 2026-11-14
+Title: Política de reembolsos
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+Esta página explica los reembolsos en palabras sencillas. Nuestros Términos del servicio (secciones 7, 8 y 9) son el texto vinculante y, si algo aquí difiere, prevalecen los Términos.
+
+1. Planes y revisiones. Los planes de pago se cobran cada mes por adelantado y se renuevan hasta que cancelas. Todas las tarifas son no reembolsables, incluidos los meses parciales, las revisiones no usadas, los usuarios no usados, los cambios a un plan menor y las cancelaciones, salvo cuando la ley exija un reembolso. Los créditos quedan a nuestra discreción y no tienen valor en efectivo.
+
+2. Cancelación. Puedes cancelar en cualquier momento en la página de Facturación. Tu plan sigue hasta el final del periodo que pagaste y luego se detiene. Cancelar detiene los cargos futuros; lo que ya se debe, como las revisiones adicionales usadas ese mes, sigue pendiente y se muestra en tu página de Facturación.
+
+3. Errores de facturación. Si crees que te cobramos por error, escribe a support@inphox.net dentro de los 30 días posteriores al cargo con la fecha y el monto. Si te cobramos por error, reembolsamos ese cargo a tu tarjeta.
+
+4. Compras en el Marketplace. inphox no es el comprador ni el vendedor y nunca retiene tu dinero. El reembolso de una venta del Marketplace sale de la propia cuenta de pagos del vendedor, como lo describe la sección 9 de los Términos. La comisión de plataforma del 2% se devuelve solo cuando no hubo venta.
+
+5. Tus propios clientes. Cómo reembolsas a quienes compran en tu tienda depende de la política de devoluciones de tu tienda, que defines en la configuración de tu tienda y que se imprime en tus recibos y facturas. inphox te da las herramientas (reembolsar una venta, registrar una devolución, nota de crédito), pero no retiene ni mueve el dinero de tus clientes.
+
+6. Contacto. Escribe a support@inphox.net. Procuramos responder en un plazo de dos días hábiles.

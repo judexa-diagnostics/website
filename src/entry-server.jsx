@@ -12,7 +12,8 @@ setEagerAutograding(Autograding);
 
 export { ROUTES, SITE, SITE_NAME, canonicalFor } from './routes.js';
 export { pricing } from './pricing.js';
-export { TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE } from './config.js';
+export { translateHtml } from './i18n/translate.js';
+export { TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN } from './config.js';
 
 export function render(page, lang = 'en') {
   return renderToString(<LogicHost logic={SiteLogic} view={Layout} startMode="Scroll animation" initialPage={page} initialLang={lang} />);

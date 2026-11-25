@@ -17,7 +17,7 @@ export function whenLogo(cb) {
   if (!logoImg) {
     logoImg = new Image();
     logoImg.onload = () => logoWaiters.splice(0).forEach(f => f(logoImg));
-    logoImg.src = 'assets/inphox-logo.png';
+    logoImg.src = '/assets/inphox-logo.png';
   }
 }
 

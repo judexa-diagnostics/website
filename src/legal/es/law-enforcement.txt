@@ -1,0 +1,20 @@
+Version: 2026-11-14
+Title: Solicitudes de las autoridades
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+Esta página es para organismos de gobierno y autoridades que solicitan información sobre usuarios de inphox. No crea derechos para nadie.
+
+1. Cómo hacer una solicitud. Envía las solicitudes desde una dirección de correo oficial del gobierno a support@inphox.net con "Law Enforcement" en el asunto, o por correo postal a inphox LLC, Attn: Law Enforcement Requests, a la dirección postal que aparece al final de cada página. Incluye el organismo, el nombre del agente y su número de placa o identificación, una forma de verificar la solicitud y los identificadores de la cuenta o del dispositivo a los que se refiere.
+
+2. Lo que exigimos. Divulgamos información de usuarios solo en respuesta a un proceso legal válido emitido conforme a la ley aplicable: una citación para información básica de la cuenta, una orden judicial para otros registros que no sean contenido y una orden de cateo para el contenido de los registros de un usuario, como lo exige la Stored Communications Act (18 U.S.C. 2701 y siguientes). Revisamos cada solicitud y podemos rechazar o acotar una que sea demasiado amplia, poco clara o no válida legalmente. Las solicitudes desde fuera de los Estados Unidos deben llegar mediante un tratado de asistencia jurídica mutua o un proceso similar.
+
+3. Conservación. Ante una solicitud de conservación válida (18 U.S.C. 2703(f)) guardamos una copia de los registros descritos durante 90 días, prorrogable una vez, mientras obtienes el proceso legal.
+
+4. Aviso a los usuarios. Nuestra práctica es avisar a los usuarios sobre las solicitudes de su información antes de divulgarla, salvo que la ley lo prohíba o un tribunal nos haya ordenado no hacerlo, o cuando avisarles crearía un riesgo de muerte o de lesiones físicas graves o la solicitud se refiera a una emergencia.
+
+5. Emergencias. Si hay una emergencia con peligro de muerte o de lesiones físicas graves, podemos divulgar información sin proceso legal cuando creamos de buena fe que es necesario para evitar ese daño (18 U.S.C. 2702). Marca el correo como "Emergency" y explica la emergencia.
+
+6. Dispositivos robados. Los resultados de las revisiones de dispositivos pueden mostrar que un dispositivo fue reportado como perdido o robado. Para reportar un dispositivo robado, comunícate con el operador o el fabricante y con tu policía local; no podemos cambiar el estado que reportan esas fuentes.
+
+7. Costos. Podemos pedir el reembolso de los costos razonables de responder una solicitud cuando la ley lo permita (18 U.S.C. 2706).
