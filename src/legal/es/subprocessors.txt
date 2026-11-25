@@ -1,0 +1,22 @@
+Version: 2026-11-14
+Title: Subencargados
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+inphox usa un pequeño número de proveedores de servicios ("subencargados") para operar el Servicio. Cada uno puede manejar información personal solo para hacer su trabajo para nosotros, y solo bajo un contrato escrito que le exige protegerla al nivel de nuestros Términos del servicio (sección 20) y nuestra Política de privacidad. Seguimos siendo responsables de su trabajo.
+
+1. Alojamiento y bases de datos. Proveedores de alojamiento en la nube y de bases de datos en los Estados Unidos que guardan y sirven el Servicio y sus respaldos.
+
+2. Pagos. Un procesador de pagos con tarjeta que maneja los cargos de suscripción, las verificaciones de tarjeta y los pagos del Marketplace. Nunca vemos ni guardamos el número completo de tu tarjeta.
+
+3. Correos y mensajes de texto. Proveedores que entregan enlaces de inicio de sesión, códigos de un solo uso, recibos y mensajes del servicio.
+
+4. Envíos. Proveedores de paquetería y etiquetas, usados solo cuando compras o imprimes una etiqueta de envío. Reciben los nombres y direcciones de ese envío.
+
+5. Verificación de direcciones. Fuentes de datos de direcciones usadas para verificar y completar direcciones mientras las escribes.
+
+6. Fuentes de datos de dispositivos. Bases de datos de operadores, fabricantes y de la industria usadas para las revisiones de dispositivos. Reciben el identificador del dispositivo (como el IMEI o el número de serie), nunca tu nombre ni el de tus clientes.
+
+7. Mapas. Un servicio de mapas público que proporciona las imágenes del mapa en la prueba de ubicación de la app de diagnóstico. Ve la zona del mapa y la dirección de internet del teléfono.
+
+8. Cambios. Avisamos a las tiendas con al menos 30 días de anticipación, por correo electrónico o en el Servicio, antes de que un nuevo subencargado empiece a manejar la información personal de sus clientes. Una tienda puede oponerse escribiendo a support@inphox.net dentro de ese plazo; si no podemos atender razonablemente la objeción, la tienda puede dejar de usar la función afectada o cerrar su cuenta. Las tiendas pueden pedir la lista actual de proveedores escribiendo a support@inphox.net.

@@ -84,9 +84,9 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   const fill = new THREE.DirectionalLight('#a9c4ff', 0.45); fill.position.set(-300, 200, -100); scene.add(fill);
 
   const loader = new THREE.TextureLoader();
-  const concrete = loader.load('assets/story/concrete.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; });
+  const concrete = loader.load('/assets/story/concrete.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; });
   concrete.wrapS = concrete.wrapT = THREE.RepeatWrapping; concrete.repeat.set(60, 60); concrete.anisotropy = 8;
-  const kraft = loader.load('assets/story/kraft.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; });
+  const kraft = loader.load('/assets/story/kraft.jpg', t => { t.colorSpace = THREE.SRGBColorSpace; });
 
   // ---- floor ----
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000), new THREE.MeshStandardMaterial({ map: concrete, color: '#8d857b', roughness: 0.78, metalness: 0.05 }));
@@ -133,7 +133,7 @@ export function createWorld(canvas, { onEarthReady } = {}) {
   // ---- hand ----
   const handGrip = new THREE.Group(); scene.add(handGrip);
   let hand = null;
-  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('assets/story/hand.glb', g => {
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('/assets/story/hand.glb', g => {
     hand = g.scene; const s = 13;
     hand.scale.setScalar(s);
     hand.traverse(o => { if (o.isMesh) { o.castShadow = true; o.material.roughness = 0.55; } });

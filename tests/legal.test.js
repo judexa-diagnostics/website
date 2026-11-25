@@ -30,7 +30,7 @@ test('terms and privacy are pages, linked from the footer, with clean URLs', () 
   const routes = read('src/routes.js');
   assert.ok(routes.includes("path: '/terms'") && routes.includes("path: '/privacy'"), 'terms and privacy are routes with real paths');
   const layout = read('src/Layout.jsx');
-  assert.ok(layout.includes('<Legal doc="terms" />') && layout.includes('<Legal doc="privacy" />'));
+  assert.ok(/<Legal doc="terms"[ />]/.test(layout) && /<Legal doc="privacy"[ />]/.test(layout));
   const footer = read('src/components/Footer.jsx');
   assert.ok(footer.includes('href="/privacy"') && footer.includes('href="/terms"'));
   assert.ok(!/href="\/"[^>]*>(Privacy|Terms)</.test(footer));

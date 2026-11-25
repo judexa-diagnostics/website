@@ -1,0 +1,16 @@
+Version: 2026-11-14
+Title: Cookies
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+Esta página cubre el sitio web de inphox (inphox.net). Las apps de inphox y el servicio de inicio de sesión usan solo las cookies necesarias para iniciar tu sesión y mantener segura tu cuenta, como dice nuestra Política de privacidad.
+
+1. Lo que guarda este sitio web. El sitio web no usa cookies. Guarda algunos ajustes pequeños en el almacenamiento local de tu navegador para funcionar como lo dejaste: la última dirección de tienda en la que iniciaste sesión, si desactivaste las animaciones, si saltaste el recorrido y tu mejor puntuación en el juego del teléfono. Se quedan en tu dispositivo y nunca se nos envían.
+
+2. Sin rastreo. No usamos cookies de publicidad, de analítica ni de rastreo entre sitios, y ninguna otra empresa recopila información sobre tu actividad en este sitio web. Como no te rastreamos, una señal de No rastrear o de Control Global de Privacidad no cambia nada aquí. Si eso cambia, primero actualizaremos esta página y respetaremos esas señales.
+
+3. Fuentes y archivos. Las fuentes y archivos del sitio web se sirven desde nuestros propios servidores, así que cargar una página no le dice a ninguna otra empresa que la visitaste.
+
+4. Tu control. Puedes borrar el almacenamiento local desde la configuración de tu navegador en cualquier momento; el sitio web sigue funcionando y simplemente olvida esos ajustes.
+
+5. Más información. Consulta la Política de privacidad para saber cómo manejamos la información personal, y la página de Subencargados para ver los servicios de los que dependemos.

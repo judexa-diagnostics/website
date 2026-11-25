@@ -5,10 +5,9 @@ export const SITE = 'https://www.inphox.net';
 export const SITE_NAME = 'inphox';
 
 // index: false keeps a page out of the sitemap and adds noindex (account doors and the busy page are not content).
-export const ROUTES = [
+const EN_ROUTES = [
   { page: 'home', path: '/', title: 'Used phone testing, data erasure and inventory software | inphox', description: 'Test, erase, grade, track and sell used phones, tablets and laptops. inphox is one platform for intake, diagnostics, certified erasure, inventory, repairs and sales.' },
-  { page: 'autograding', path: '/autograding', title: 'AI device grading for phones, tablets and laptops | inphox Autograding', description: 'Automated cosmetic grading for used phones, tablets, laptops and watches. Photos in, a consistent A to D grade with every flaw measured. Open API, zero data retention.', lang: 'en', alt: '/es/autograding' },
-  { page: 'autograding', path: '/es/autograding', title: 'Calificación de dispositivos con IA en 7 segundos | inphox Autograding', description: 'Calificación cosmética automática de teléfonos, tabletas, laptops y relojes usados. Fotos de entrada, una calificación A a D constante con cada defecto medido.', lang: 'es', alt: '/autograding' },
+  { page: 'autograding', path: '/autograding', title: 'AI device grading for phones, tablets and laptops | inphox Autograding', description: 'Automated cosmetic grading for used phones, tablets, laptops and watches. Photos in, a consistent A to D grade with every flaw measured. Open API, zero data retention.' },
   { page: 'about', path: '/about', title: 'About inphox: founders and company', description: 'inphox LLC builds software for businesses that buy, fix and resell used electronics. Founder & CEO Christopher Luk; co-founders Sri Vatsa Vuddanti and Iniyan Kannappan.' },
   { page: 'features', path: '/features', title: 'Features: testing, erasure, grading and inventory | inphox', description: 'Every inphox feature: device diagnostics, certified erasure, grading, inventory by location, repairs, orders, price lists and the marketplace.' },
   { page: 'pricing', path: '/pricing', title: 'Pricing and plans | inphox', description: 'inphox plans from Free to Enterprise. Device checks, stations, seats and marketplace fees, with prices shown up front.' },
@@ -31,7 +30,41 @@ export const ROUTES = [
   { page: 'accessibility', path: '/accessibility', title: 'Accessibility | inphox', description: 'inphox works toward WCAG 2.2 AA: readable text, full keyboard use, labels on every control and reduce-motion support.' }
 ];
 
-// A page can have a Spanish twin at /es/<path> (lang: 'es'); every other route is English.
+// Every page in Spanish too, at /es/<path> (home: /es), with its own title and description (Chris 2026-11-24).
+const ES_META = {
+  home: ['Software para probar, borrar e inventariar teléfonos usados | inphox', 'Prueba, borra, califica y vende teléfonos, tabletas y laptops usados. Una plataforma para recepción, diagnóstico, borrado certificado, inventario y reparaciones.'],
+  autograding: ['Calificación de dispositivos con IA en 7 segundos | inphox Autograding', 'Calificación cosmética automática de teléfonos, tabletas, laptops y relojes usados. Fotos de entrada, una calificación A a D constante con cada defecto medido.'],
+  about: ['Sobre inphox: fundadores y empresa', 'inphox LLC crea software para negocios de electrónicos usados. Fundador y CEO Christopher Luk; cofundadores Sri Vatsa Vuddanti e Iniyan Kannappan.'],
+  features: ['Funciones: pruebas, borrado, calificación e inventario | inphox', 'Todas las funciones de inphox: diagnóstico, borrado certificado, calificación, inventario por ubicación, reparaciones, pedidos, listas de precios y marketplace.'],
+  pricing: ['Precios y planes | inphox', 'Planes de inphox desde Gratis hasta Enterprise. Revisiones de dispositivos, estaciones, usuarios y comisiones del marketplace, con los precios a la vista.'],
+  industries: ['Industrias: reacondicionadores, talleres y tiendas de canje | inphox', 'inphox para reacondicionadores e ITAD, talleres de reparación independientes, tiendas de compra, venta y canje, cadenas con varias sucursales y vendedores en línea.'],
+  platform: ['La plataforma inphox: hecha en casa, un registro por dispositivo', 'La plataforma inphox está hecha en casa, de principio a fin: pruebas, borrado, inventario, reparaciones y ventas en un solo registro por dispositivo.'],
+  security: ['Seguridad en inphox', 'Cómo inphox protege cuentas y datos: cifrado en tránsito, credenciales con hash, registro de accesos, mínimo privilegio, borrado certificado y retención clara.'],
+  careers: ['Empleo en inphox', 'Vacantes abiertas en inphox y cómo postularte.'],
+  contact: ['Contacta a ventas y soporte de inphox', 'Habla con inphox sobre planes, volúmenes empresariales, estaciones y soporte.'],
+  start: ['Empieza con inphox', 'Abre tu tienda inphox y elige un plan.'],
+  signin: ['Entra a tu tienda | inphox', 'Entra a tu tienda inphox.'],
+  'signup-busy': ['El registro está ocupado | inphox', 'El registro está ocupado en este momento. Inténtalo de nuevo en un momento.'],
+  terms: ['Términos del servicio | inphox', 'Los términos para usar inphox.'],
+  privacy: ['Política de privacidad | inphox', 'Qué recopila inphox, por qué, cuánto tiempo se guarda y tus opciones.'],
+  refunds: ['Política de reembolsos | inphox', 'Cómo funcionan los planes, los pagos y los reembolsos en inphox.'],
+  copyright: ['Derechos de autor y DMCA | inphox', 'Cómo enviar a inphox un aviso de derechos de autor.'],
+  'law-enforcement': ['Solicitudes de las autoridades | inphox', 'Cómo atiende inphox las solicitudes de las autoridades.'],
+  subprocessors: ['Subencargados | inphox', 'Los proveedores de servicios que inphox usa para operar el servicio.'],
+  erasure: ['Certificados de borrado | inphox', 'Qué significa un certificado de borrado de inphox, el método NIST SP 800-88 que sigue y sus límites.'],
+  cookies: ['Política de cookies | inphox', 'El sitio web de inphox no usa cookies. Qué guarda en el almacenamiento local y por qué.'],
+  accessibility: ['Accesibilidad | inphox', 'inphox trabaja hacia WCAG 2.2 AA: texto legible, uso completo con teclado, etiquetas en cada control y soporte para reducir el movimiento.']
+};
+export const ROUTES = [
+  ...EN_ROUTES,
+  ...EN_ROUTES.map(r => {
+    const m = ES_META[r.page];
+    if (!m) throw new Error('routes: no Spanish title for ' + r.page);
+    return { ...r, path: r.path === '/' ? '/es' : '/es' + r.path, title: m[0], description: m[1], lang: 'es', enPath: r.path };
+  })
+];
+
+// Each page exists in English and Spanish (lang: 'es', at /es/<path>).
 export const PAGES = [...new Set(ROUTES.map(r => r.page))];
 const langOf = r => r.lang || 'en';
 const BY_PAGE = Object.fromEntries(ROUTES.filter(r => langOf(r) === 'en').map(r => [r.page, r]));

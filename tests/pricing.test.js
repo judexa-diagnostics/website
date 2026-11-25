@@ -290,7 +290,7 @@ describe('rendered', () => {
   test('Platform: the page header carries the inphox logo above the headline', () => {
     const html = r.render({ page: 'platform' });
     const main = html.slice(html.indexOf('<main'));
-    const logo = main.indexOf('src="assets/inphox-logo.png"');
+    const logo = main.indexOf('src="/assets/inphox-logo.png"');
     assert.ok(logo > 0, 'the logo is in the Platform page itself, not only the site bar');
     assert.ok(logo < main.indexOf('<h1'), 'above the headline');
     assert.ok(main.includes('inphox platform'));

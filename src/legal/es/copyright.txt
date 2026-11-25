@@ -1,0 +1,18 @@
+Version: 2026-11-14
+Title: Derechos de autor y abuso
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+inphox respeta los derechos de autor y espera que sus usuarios hagan lo mismo. Esta página explica cómo reportar contenido en inphox, como una publicación o foto del Marketplace, que consideres que infringe tus derechos de autor, conforme a la Digital Millennium Copyright Act (17 U.S.C. 512).
+
+1. Enviar un aviso. Envía un aviso por escrito a nuestro agente de derechos de autor (sección 5) que incluya: (a) tu firma física o electrónica; (b) la obra protegida que dices que se infringe; (c) el material que dices que la infringe y detalles suficientes para encontrarlo, como el enlace de la publicación; (d) tu nombre, dirección, número de teléfono y correo electrónico; (e) una declaración de que crees de buena fe que el uso no está autorizado por el titular de los derechos, su agente o la ley; y (f) una declaración de que el aviso es exacto y, bajo pena de perjurio, de que eres el titular o estás autorizado para actuar en su nombre. Es posible que no actuemos sobre un aviso al que le falten estos elementos.
+
+2. Lo que hacemos. Cuando recibimos un aviso completo, quitamos o deshabilitamos el acceso al material y avisamos a la persona que lo publicó.
+
+3. Contranotificación. Si tu material fue retirado y crees que fue un error o una identificación equivocada, envía a nuestro agente una contranotificación que incluya: (a) tu firma física o electrónica; (b) el material retirado y dónde aparecía antes; (c) una declaración bajo pena de perjurio de que crees de buena fe que se retiró por error o identificación equivocada; y (d) tu nombre, dirección y número de teléfono, y una declaración de que aceptas la jurisdicción del tribunal federal de distrito de tu domicilio (o, si estás fuera de los Estados Unidos, de cualquier distrito donde se encuentre inphox) y aceptarás la notificación de la persona que envió el aviso. Salvo que esa persona nos informe dentro de 10 días hábiles que presentó una acción judicial, podemos restaurar el material entre 10 y 14 días hábiles después de recibir la contranotificación.
+
+4. Infractores reincidentes. Suspendemos o cerramos las cuentas de los usuarios que infringen repetidamente. Enviar avisos o contranotificaciones falsos puede hacerte responsable de daños (17 U.S.C. 512(f)).
+
+5. Agente de derechos de autor. Envía los avisos por correo electrónico a support@inphox.net con "Copyright" en el asunto, o por correo postal a inphox LLC, Attn: Copyright Agent, a la dirección postal que aparece al final de cada página.
+
+6. Otros abusos. Para reportar un fraude, un dispositivo robado, acoso u otro mal uso de inphox, escribe a support@inphox.net con los detalles. Revisamos cada reporte y podemos quitar contenido o suspender cuentas conforme a nuestros Términos del servicio.

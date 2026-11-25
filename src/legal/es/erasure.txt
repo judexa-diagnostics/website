@@ -1,0 +1,14 @@
+Version: 2026-11-14
+Title: Certificados de borrado
+
+Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
+
+Esta página explica qué respalda las palabras "Borrado certificado" y "NIST 800-88" donde inphox las usa.
+
+1. Qué significa un certificado. Cuando inphox borra un dispositivo, registra el identificador del dispositivo (IMEI o número de serie), el método de borrado, el estándar que sigue, el resultado y la fecha y hora, y guarda un registro firmado. El certificado se adjunta al registro del dispositivo en la tienda y puede compartirse con el comprador.
+
+2. NIST SP 800-88. La Publicación Especial 800-88 del NIST, Guidelines for Media Sanitization (Revisión 2, septiembre de 2025), describe tres niveles: limpiar, purgar y destruir. inphox borra los dispositivos compatibles mediante borrado criptográfico, que la guía considera un método de purga: el almacenamiento del dispositivo está cifrado y el borrado destruye la clave, así que los datos no pueden volver a leerse. El certificado indica el método usado. El NIST publica la guía; no certifica productos, y no afirmamos tener una certificación del NIST.
+
+3. Límites. El borrado solo funciona en un dispositivo compatible con la operación. Si un dispositivo está bloqueado, tiene una falla o no puede verificarse después del borrado, inphox no emite un certificado, y el registro del dispositivo indica que el borrado no se completó.
+
+4. Preguntas. Para preguntar por un certificado específico, escribe a support@inphox.net con el ID del certificado o el IMEI del dispositivo.

@@ -21,7 +21,7 @@ export default function Header({ v }) {
   return (
     <header ref={ref} className="fx-head" style={{ position: "sticky", top: "0", zIndex: "60", height: "4rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", padding: "0 clamp(1rem,3vw,2.5rem)", background: "var(--pmm-bg)", borderBottom: "1px solid var(--pmm-border-soft)" }}>
       <a className="fx-logo" href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "var(--pmm-text)", flex: "none" }}>
-        <img src="assets/inphox-logo.png" alt="inphox" style={{ width: "2.125rem", height: "2.125rem" }} />
+        <img src="/assets/inphox-logo.png" alt="inphox" style={{ width: "2.125rem", height: "2.125rem" }} />
         <span style={{ fontSize: "1.25rem", fontWeight: "700", letterSpacing: "-.01em" }}>inphox</span>
       </a>
       {/* The two inphox products. Plain links (crawlable); in the browser they swap pages without a reload. */}

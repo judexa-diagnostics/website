@@ -22,9 +22,9 @@ export function proofFacts() {
 
 /** "How it works": three steps of the walkthrough, each with a still from its 3D stage. */
 export const HOW_STEPS = [
-  { n: '01', t: 'Plug it in', d: 'The device fills its own record: identity, storage, carrier, locks, battery and parts. No typing.', img: 'assets/home/how-plug-in.jpg', alt: 'A phone on the bench with its device record filled in' },
-  { n: '02', t: 'Test, erase and grade', d: 'A dozen at a time, side by side. Each device gets a card with its result and a label to print.', img: 'assets/home/how-test-grade.jpg', alt: 'A station screen testing twelve phones at once' },
-  { n: '03', t: 'Sell and ship', d: 'Results pick the next lane: repair, stock or an order. Orders are packed by scan and shipped.', img: 'assets/home/how-ship.jpg', alt: 'A packed order on the conveyor with its shipping card' }
+  { n: '01', t: 'Plug it in', d: 'The device fills its own record: identity, storage, carrier, locks, battery and parts. No typing.', img: '/assets/home/how-plug-in.jpg', alt: 'A phone on the bench with its device record filled in' },
+  { n: '02', t: 'Test, erase and grade', d: 'A dozen at a time, side by side. Each device gets a card with its result and a label to print.', img: '/assets/home/how-test-grade.jpg', alt: 'A station screen testing twelve phones at once' },
+  { n: '03', t: 'Sell and ship', d: 'Results pick the next lane: repair, stock or an order. Orders are packed by scan and shipped.', img: '/assets/home/how-ship.jpg', alt: 'A packed order on the conveyor with its shipping card' }
 ];
 
 /** How many "after the sale" cards a phone shows before "See every feature". */

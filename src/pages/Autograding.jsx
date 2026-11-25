@@ -17,7 +17,12 @@ const readRef = () => {
   return ref;
 };
 
-export const autogradingHtml = (lang, ref = '') => renderMain(mainVals(lang, ref), renderHero(heroVals(lang, ref)));
+// On the Spanish page, links into the site open its Spanish pages (/es/contact, /es/pricing).
+const esLinks = html => html.replace(/href="\/(contact|pricing)([?"])/g, 'href="/es/$1$2');
+export const autogradingHtml = (lang, ref = '') => {
+  const html = renderMain(mainVals(lang, ref), renderHero(heroVals(lang, ref)));
+  return lang === 'es' ? esLinks(html) : html;
+};
 
 export default function Autograding({ v }) {
   const lang = v && v.langCode === 'ES' ? 'es' : 'en';
@@ -39,5 +44,6 @@ export default function Autograding({ v }) {
     return () => range.removeEventListener('input', move);
   }, [html]);
 
-  return <div ref={root} className="ag" lang={lang} dangerouslySetInnerHTML={{ __html: html }} />;
+  // data-no-tr: this page has its own Spanish copy; the site-wide translation layer (src/i18n) leaves it alone.
+  return <div ref={root} className="ag" lang={lang} data-no-tr="" dangerouslySetInnerHTML={{ __html: html }} />;
 }

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useReveal } from '../redesign/fx/index.jsx';
-import { COMPANY_POSTAL_ADDRESS, COMPANY_PHONE } from '../config.js';
+import { COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN } from '../config.js';
 import { AG_APP, AG_DOCS, AG_PRICING } from '../chrome.js';
 
 export default function Footer({ v }) {
@@ -15,7 +15,7 @@ export default function Footer({ v }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(10.625rem,1fr))", gap: "1.75rem" }}>
         <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.625rem", gridColumn: v.ui.wideBlock === "block" ? "span 2" : "1 / -1", minWidth: "0" }}>
           <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "var(--pmm-text)" }}>
-            <img src="assets/inphox-logo.png" alt="" style={{ width: "1.875rem", height: "1.875rem" }} />
+            <img src="/assets/inphox-logo.png" alt="" style={{ width: "1.875rem", height: "1.875rem" }} />
             <span style={{ fontSize: "1.125rem", fontWeight: "700" }}>inphox</span>
           </a>
           <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.55", color: "var(--pmm-text-2)", maxWidth: "20rem" }}>
@@ -47,6 +47,7 @@ export default function Footer({ v }) {
           <a className="fx-ul fx-ul-tight" href="/about" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{f.aboutUs}</a>
           <a className="fx-ul fx-ul-tight" href="/security" style={L}>{f.security}</a>
           <a className="fx-ul fx-ul-tight" href="/careers" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{f.careers}</a>
+          <a className="fx-ul fx-ul-tight" href={COMPANY_LINKEDIN} rel="me noopener" target="_blank" style={L}>LinkedIn</a>
           <a className="fx-ul fx-ul-tight" href="/contact" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{f.contact}</a>
           <a className="fx-ul fx-ul-tight" href="/privacy" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{f.privacy}</a>
           <a className="fx-ul fx-ul-tight" href="/terms" style={{ color: "var(--pmm-text)", textDecoration: "none", alignSelf: "flex-start" }}>{f.terms}</a>
