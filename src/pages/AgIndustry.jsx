@@ -12,9 +12,9 @@ import '../autograding/industry.css';
 
 const UI = {
   en: { home: 'Autograding', ex: 'Example', does: 'What it does', doesnt: 'What it does not do', faq: 'Questions', meta: ['Phones, tablets, laptops and smartwatches', 'Cosmetic grading from photos', 'Prepaid, no contract'],
-    illus: 'Illustrative', docs: 'API docs', pricing: 'Pricing', grade: 'Grade' },
+    illus: 'Illustrative', docs: 'API docs', pricing: 'Pricing', grade: 'Grade', real: 'See a real graded device' },
   es: { home: 'Autograding', ex: 'Ejemplo', does: 'Qué hace', doesnt: 'Qué no hace', faq: 'Preguntas', meta: ['Teléfonos, tabletas, laptops y relojes', 'Evaluación estética con fotos', 'Prepago, sin contrato'],
-    illus: 'Ilustrativo', docs: 'Documentación de la API', pricing: 'Precios', grade: 'Calificación' }
+    illus: 'Ilustrativo', docs: 'Documentación de la API', pricing: 'Precios', grade: 'Calificación', real: 'Ve un dispositivo calificado real' }
 };
 
 function Example({ kind, x, t, u }) {
@@ -139,6 +139,7 @@ export default function AgIndustry({ v, page }) {
             <div style={{ marginTop: 16 }}><Example kind={ind.example} x={t.example} t={t} u={u} /></div>
           </div>
           <p className="agi-note">{t.example.note}</p>
+          <p style={{ marginTop: 14 }}><a className="agi-btn is-ghost" href={href({ to: 'sample' }, 'example')}>{u.real} &rarr;</a></p>
         </div>
       </section>
 

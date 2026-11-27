@@ -17,7 +17,7 @@ export const INDUSTRIES = {
       cta: { primary: { label: 'Grade a device', to: 'start' }, secondary: { label: 'Discuss a buyback integration', to: 'contact' } },
       flow: { k: 'Where it fits', h: 'A photo record between the quote and the receiving bench.', steps: [
         ['Seller or staff take photos', 'Front, back and edges, with a phone. One photo per side, cropped to the device.'],
-        ['A grade in about 7–8 seconds', 'A 0-100 score, an A to D grade and the findings on each side.'],
+        ['A grade in about 7–8 seconds', 'For the whole device, every side: a 0-100 score, an A to D grade and the findings on each side.'],
         ['Your standard decides the grade', 'Your points per scratch, dent and crack, your grade cut-offs.'],
         ['Receiving compares', 'The device in hand is checked against the photo record, side by side.']
       ] },
@@ -36,7 +36,7 @@ export const INDUSTRIES = {
         ] },
       fit: { k: 'Boundaries', h: 'What the photo grade is, and what it is not.',
         does: ['Grades visible cosmetic condition from photos of phones, tablets, laptops and smartwatches.', 'Keeps the photos, findings and standard version behind every grade.', 'Lets a person report what photos cannot show.'],
-        doesnt: ['It is not a final quote or a promise that receiving will agree.', 'No functional tests, IMEI, carrier or blacklist checks.', 'It does not value the device: your pricing stays yours.'] },
+        doesnt: ['It is not a final quote or a promise that receiving will agree.', 'No functional tests, IMEI, carrier or blacklist checks.', 'The grade does not set a price: market data and price recommendations are in inphox Inventory.'] },
       evaluate: { k: 'Evaluate', h: 'Test it on devices you have already graded.', steps: ['Pick 20 to 50 devices your team graded recently, across your grades.', 'Photograph them as a seller would, and grade them on a copy of your standard.', 'Compare the photo grades with your team’s, device by device, and decide whether the difference matters to your offers.'] },
       faq: [
         { q: 'Can sellers grade their own device before shipping?', a: 'Through the API, yes: your trade-in flow collects the photos and sends them. There is no ready-made seller page yet; talk to us if you want to plan that integration.' },
@@ -52,7 +52,7 @@ export const INDUSTRIES = {
       cta: { primary: { label: 'Califica un dispositivo', to: 'start' }, secondary: { label: 'Habla de una integración de recompra', to: 'contact' } },
       flow: { k: 'Dónde encaja', h: 'Un registro con fotos entre la cotización y la mesa de recepción.', steps: [
         ['El vendedor o tu personal toma fotos', 'Frente, reverso y bordes, con un teléfono. Una foto por lado, recortada al dispositivo.'],
-        ['Una calificación en 7–8 segundos', 'Una puntuación de 0 a 100, una calificación de la A a la D y los hallazgos de cada lado.'],
+        ['Una calificación en 7–8 segundos', 'Para todo el dispositivo, todos sus lados: una puntuación de 0 a 100, una calificación de la A a la D y los hallazgos de cada lado.'],
         ['Tu estándar decide la calificación', 'Tus puntos por rayón, abolladura y grieta, y tus límites entre calificaciones.'],
         ['Recepción compara', 'El dispositivo en mano se revisa contra el registro con fotos, lado por lado.']
       ] },
@@ -71,7 +71,7 @@ export const INDUSTRIES = {
         ] },
       fit: { k: 'Alcance', h: 'Qué es la calificación por fotos y qué no es.',
         does: ['Califica el estado estético visible a partir de fotos de teléfonos, tabletas, laptops y relojes.', 'Guarda las fotos, los hallazgos y la versión del estándar detrás de cada calificación.', 'Permite que una persona reporte lo que las fotos no muestran.'],
-        doesnt: ['No es una cotización final ni promete que recepción estará de acuerdo.', 'No hace pruebas funcionales ni revisiones de IMEI, operador o lista negra.', 'No valúa el dispositivo: tus precios siguen siendo tuyos.'] },
+        doesnt: ['No es una cotización final ni promete que recepción estará de acuerdo.', 'No hace pruebas funcionales ni revisiones de IMEI, operador o lista negra.', 'La calificación no fija un precio: los datos de mercado y los precios recomendados están en inphox Inventory.'] },
       evaluate: { k: 'Evaluación', h: 'Pruébalo con dispositivos que ya calificaste.', steps: ['Elige de 20 a 50 dispositivos que tu equipo calificó hace poco, de todas tus calificaciones.', 'Fotografíalos como lo haría un vendedor y califícalos con una copia de tu estándar.', 'Compara, dispositivo por dispositivo, las calificaciones por fotos con las de tu equipo y decide si la diferencia importa para tus ofertas.'] },
       faq: [
         { q: '¿Los vendedores pueden calificar su propio dispositivo antes de enviarlo?', a: 'Con la API, sí: tu flujo de canje recoge las fotos y las envía. Todavía no hay una página lista para vendedores; escríbenos si quieres planear esa integración.' },
@@ -112,11 +112,11 @@ export const INDUSTRIES = {
         ] },
       fit: { k: 'Boundaries', h: 'Cosmetic grading is one step, not the whole disposition.',
         does: ['Grades visible cosmetic condition of phones, tablets, laptops and smartwatches.', 'Returns your references with each result, through the API, webhooks and CSV.', 'Applies your grading standard and records which version graded each device.'],
-        doesnt: ['No data sanitization or erasure certificates.', 'No functional diagnostics, IMEI or blacklist checks.', 'No asset valuation, chain-of-custody or compliance certification.'] },
+        doesnt: ['No data sanitization or erasure certificates.', 'No functional diagnostics, IMEI or blacklist checks.', 'No chain-of-custody or compliance certification. Valuation from market data is in inphox Inventory.'] },
       evaluate: { k: 'Evaluate', h: 'A side-by-side calibration on your own inventory.', steps: ['Share your grading standard with us, or build it yourself as a copy of the inphox Standard.', 'Grade a sample of devices your team has already graded, with their asset IDs as external_id.', 'Export both sets and compare grade variation, photo time per device and the exceptions people still had to handle.'] },
       faq: [
         { q: 'Does this replace our ITAD platform?', a: 'No. It adds a cosmetic grade to the records you already keep, through the API, webhooks or CSV export.' },
-        { q: 'Can we keep photos out of storage?', a: 'Zero data retention, where photos are deleted as soon as each device is graded, is an account setting that is being rolled out. Check the data section of the API docs for its current availability.' },
+        { q: 'Can we keep photos out of storage?', a: 'Yes. Turn on zero data retention and photos are deleted as soon as each device is graded; the findings and the grade remain. It is an account setting, and a grade made with it can still be compared, but it has no public share page.' },
         { q: 'What does a pilot measure?', a: 'Grade variation against your graders, capture time per device, operator workload and rework. We do not promise a result before it is measured on your devices.' }
       ],
       close: { h: 'Bring a sample of your inventory.', p: 'Tell us your grading standard and volume, and we will set up a side-by-side evaluation.' }
@@ -149,11 +149,11 @@ export const INDUSTRIES = {
         ] },
       fit: { k: 'Alcance', h: 'La evaluación estética es un paso, no toda la disposición final.',
         does: ['Califica el estado estético visible de teléfonos, tabletas, laptops y relojes.', 'Devuelve tus referencias con cada resultado, por API, webhooks y CSV.', 'Aplica tu estándar y registra qué versión calificó cada dispositivo.'],
-        doesnt: ['No hace sanitización ni emite certificados de borrado.', 'No hace diagnóstico funcional ni revisiones de IMEI o lista negra.', 'No valúa activos ni certifica cadena de custodia o cumplimiento.'] },
+        doesnt: ['No hace sanitización ni emite certificados de borrado.', 'No hace diagnóstico funcional ni revisiones de IMEI o lista negra.', 'No certifica cadena de custodia ni cumplimiento. La valuación con datos de mercado está en inphox Inventory.'] },
       evaluate: { k: 'Evaluación', h: 'Una calibración lado a lado con tu propio inventario.', steps: ['Compártenos tu estándar de calificación, o constrúyelo tú como copia del inphox Standard.', 'Califica una muestra de dispositivos que tu equipo ya calificó, con sus ID de activo como external_id.', 'Exporta ambos conjuntos y compara la variación de calificaciones, el tiempo de fotos por dispositivo y las excepciones que siguieron requiriendo a una persona.'] },
       faq: [
         { q: '¿Esto reemplaza nuestra plataforma ITAD?', a: 'No. Suma una calificación estética a los registros que ya llevas, por API, webhooks o exportación CSV.' },
-        { q: '¿Podemos evitar que se guarden las fotos?', a: 'La retención cero, en la que las fotos se borran en cuanto se califica cada dispositivo, es un ajuste de la cuenta que se está habilitando. Revisa la sección de datos de la documentación de la API para ver su disponibilidad actual.' },
+        { q: '¿Podemos evitar que se guarden las fotos?', a: 'Sí. Activa la retención cero y las fotos se borran en cuanto se califica cada dispositivo; los hallazgos y la calificación se conservan. Es un ajuste de la cuenta, y una calificación hecha así se puede comparar, pero no tiene página pública.' },
         { q: '¿Qué mide una prueba piloto?', a: 'La variación frente a tus evaluadores, el tiempo de captura por dispositivo, la carga de los operadores y el retrabajo. No prometemos un resultado antes de medirlo con tus dispositivos.' }
       ],
       close: { h: 'Trae una muestra de tu inventario.', p: 'Cuéntanos tu estándar de calificación y tu volumen, y preparamos una evaluación lado a lado.' }
@@ -166,10 +166,10 @@ export const INDUSTRIES = {
       kicker: 'Autograding for repair shops',
       h1: ['Professional cosmetic grading', 'without a complicated setup.'],
       intro: 'Open an account, take photos of a device with the phone in your pocket, and get a grade with the reasons behind it. You pay for the devices you grade from prepaid credits. No new hardware, no contract, and nothing to switch in your repair or point-of-sale software.',
-      cta: { primary: { label: 'Start grading free', to: 'start' }, secondary: { label: 'See an example result', to: 'example' } },
+      cta: { primary: { label: 'Start grading free', to: 'start' }, secondary: { label: 'See a real graded device', to: 'sample' } },
       flow: { k: 'How it works', h: 'Three steps, the first time and every time.', steps: [
         ['Photograph', 'The app’s camera walks you round the device: front, back and edges.'],
-        ['Read the grade', 'A score, a grade and what was found on each side, in about 7–8 seconds.'],
+        ['Read the grade', 'A score, a grade and what was found on each side, in about 7–8 seconds for the whole device.'],
         ['Use it', 'Show the customer, send a share link, or note the grade on your ticket.']
       ] },
       sections: [
@@ -183,7 +183,7 @@ export const INDUSTRIES = {
         result: { grade: 'B', score: '84', standard: 'inphox Standard, version 1', sides: [['Front', 'A', '93', 'Light scratches on the glass'], ['Back', 'B', '84', 'Noticeable wear on the housing']] } },
       fit: { k: 'Boundaries', h: 'Good to know before your first device.',
         does: ['Phones, tablets, laptops and smartwatches.', 'Cosmetic condition from photos: scratches, scuffs, dents, cracks, chips, discoloration.', 'You answer the battery-swelling question by hand; the grade waits for it.'],
-        doesnt: ['No functional or battery-health tests.', 'No IMEI, carrier or blacklist checks.', 'No price for the device: what you pay or charge is up to you.'] },
+        doesnt: ['No functional or battery-health tests.', 'No IMEI, carrier or blacklist checks.', 'The grade is not a price: market data and price recommendations are in inphox Inventory.'] },
       evaluate: { k: 'Try it', h: 'Your first grade, on your own.', steps: ['Sign up with your name and email.', 'Grade a device you know well, and see if the grade matches what you would say.', 'Grade the next five that come in, and decide whether it saves you an argument.'] },
       faq: [
         { q: 'Do I need special lights or a booth?', a: 'No. Soft, even light and a clean, case-free device matter more than equipment. The app tells you when a photo cannot be judged.' },
@@ -196,10 +196,10 @@ export const INDUSTRIES = {
       kicker: 'Autograding para talleres de reparación',
       h1: ['Evaluación estética profesional de dispositivos,', 'sin configuraciones complicadas.'],
       intro: 'Abre una cuenta, toma fotos de un dispositivo con el teléfono que llevas en el bolsillo y recibe una calificación con sus motivos. Pagas los dispositivos que calificas con créditos prepagados. Sin equipo nuevo, sin contrato y sin cambiar tu software de reparación o punto de venta.',
-      cta: { primary: { label: 'Empieza a calificar gratis', to: 'start' }, secondary: { label: 'Ve un resultado de ejemplo', to: 'example' } },
+      cta: { primary: { label: 'Empieza a calificar gratis', to: 'start' }, secondary: { label: 'Ve un dispositivo calificado real', to: 'sample' } },
       flow: { k: 'Cómo funciona', h: 'Tres pasos, la primera vez y siempre.', steps: [
         ['Fotografía', 'La cámara de la app te guía alrededor del dispositivo: frente, reverso y bordes.'],
-        ['Lee la calificación', 'Una puntuación, una calificación y lo que se encontró en cada lado, en 7–8 segundos.'],
+        ['Lee la calificación', 'Una puntuación, una calificación y lo que se encontró en cada lado, en 7–8 segundos por dispositivo completo.'],
         ['Úsala', 'Muéstrala al cliente, envía un enlace o anótala en tu orden de servicio.']
       ] },
       sections: [
@@ -213,7 +213,7 @@ export const INDUSTRIES = {
         result: { grade: 'B', score: '84', standard: 'inphox Standard, versión 1', sides: [['Frente', 'A', '93', 'Rayones leves en el vidrio'], ['Reverso', 'B', '84', 'Desgaste notable en la carcasa']] } },
       fit: { k: 'Alcance', h: 'Bueno saberlo antes de tu primer dispositivo.',
         does: ['Teléfonos, tabletas, laptops y relojes inteligentes.', 'Estado estético a partir de fotos: rayones, roces, abolladuras, grietas, despostilladuras, decoloración.', 'Tú respondes a mano la pregunta de batería inflada; la calificación la espera.'],
-        doesnt: ['No hace pruebas funcionales ni de salud de batería.', 'No revisa IMEI, operador ni lista negra.', 'No le pone precio al dispositivo: lo que pagas o cobras lo decides tú.'] },
+        doesnt: ['No hace pruebas funcionales ni de salud de batería.', 'No revisa IMEI, operador ni lista negra.', 'La calificación no es un precio: los datos de mercado y los precios recomendados están en inphox Inventory.'] },
       evaluate: { k: 'Pruébalo', h: 'Tu primera calificación, por tu cuenta.', steps: ['Regístrate con tu nombre y correo.', 'Califica un dispositivo que conozcas bien y mira si coincide con lo que tú dirías.', 'Califica los siguientes cinco que lleguen y decide si te ahorra una discusión.'] },
       faq: [
         { q: '¿Necesito luces especiales o una cabina?', a: 'No. Importan más la luz suave y pareja y un dispositivo limpio y sin funda que el equipo. La app te avisa cuando una foto no se puede juzgar.' },
@@ -242,7 +242,7 @@ export const INDUSTRIES = {
         { k: '02', h: 'Asynchronous by design', p: 'Nothing stays open while grading runs. Subscribe an endpoint and receive grade.completed, grade.failed, grade.needs_retake, grade.cancelled and batch.completed, signed per the Standard Webhooks spec and retried on a published schedule, with every delivery listed and re-sendable. Or poll every few seconds.' },
         { k: '03', h: 'Profiles your users control', p: 'A profile (grading standard) sets points per condition, caps for damage like cracked glass, how findings stack and where each grade starts. Profiles are versioned, and every result names the version that made it. View as re-reads a finished grade under another profile, free, without new photos.' },
         { k: '04', h: 'Built for retries and volume', p: 'Send an Idempotency-Key on POST /v1/grades and /v1/batches: a retry returns the first answer, never a second job or charge. Batches take any number of devices; results come paged as JSON or as CSV. Errors are plain JSON, a failed job carries a code for what went wrong, and every response has an X-Trace-Id.', list: ['Idempotency-Key on every create', 'Batches with JSON or CSV results', 'Drafts that reopen a refused side'] },
-        { k: '05', h: 'Data handling', p: 'Photos and results are never sold. Accounts can opt out of improvement use. Zero data retention, where photos are deleted as soon as each device is graded, is an account setting being rolled out: the data section of the docs says what is available today and what remains (the findings and the grade).' },
+        { k: '05', h: 'Data handling', p: 'Photos and results are never sold. Accounts can opt out of improvement use. Turn on zero data retention and photos are deleted as soon as each device is graded; the findings and the grade remain. A zero-retention job only goes to grading capacity whose own zero retention is verified, and if none is available it fails and is refunded rather than going anywhere else.' },
         { k: '06', h: 'Usage and pricing', p: 'Prepaid credits, the same in the app and the API: on the starting tier, at most $0.10 a device, lower with volume. A failed or cancelled device is refunded. GET /v1/pricing returns the current numbers and GET /v1/balance your balance. Auto-refill keeps an integration from stalling. There is no published uptime SLA; the status page shows live component health.' }
       ],
       example: { k: 'Example', h: 'A request and its result.', note: 'From the published API docs. Replace the key and upload ids with your own.',
@@ -275,7 +275,7 @@ export const INDUSTRIES = {
         { k: '02', h: 'Asíncrona por diseño', p: 'Nada queda abierto mientras se califica. Suscribe un endpoint y recibe grade.completed, grade.failed, grade.needs_retake, grade.cancelled y batch.completed, firmados según la especificación Standard Webhooks y reintentados según un calendario publicado, con cada entrega listada y reenviable. O consulta cada pocos segundos.' },
         { k: '03', h: 'Perfiles que controlan tus usuarios', p: 'Un perfil (estándar de calificación) define los puntos por condición, topes para daños como vidrio roto, cómo se acumulan los hallazgos y dónde empieza cada calificación. Los perfiles tienen versiones y cada resultado nombra la versión que lo produjo. View as relee una calificación terminada con otro perfil, sin costo y sin fotos nuevas.' },
         { k: '04', h: 'Hecha para reintentos y volumen', p: 'Envía un Idempotency-Key en POST /v1/grades y /v1/batches: un reintento devuelve la primera respuesta, nunca un segundo trabajo ni un segundo cobro. Los lotes aceptan cualquier cantidad de dispositivos; los resultados llegan paginados en JSON o en CSV. Los errores son JSON simple, un trabajo fallido trae un código de lo que salió mal y cada respuesta tiene un X-Trace-Id.', list: ['Idempotency-Key en cada creación', 'Lotes con resultados en JSON o CSV', 'Borradores que reabren un lado rechazado'] },
-        { k: '05', h: 'Manejo de datos', p: 'Las fotos y los resultados nunca se venden. Las cuentas pueden excluirse del uso para mejoras. La retención cero, en la que las fotos se borran en cuanto se califica cada dispositivo, es un ajuste de la cuenta que se está habilitando: la sección de datos de la documentación dice qué está disponible hoy y qué se conserva (los hallazgos y la calificación).' },
+        { k: '05', h: 'Manejo de datos', p: 'Las fotos y los resultados nunca se venden. Las cuentas pueden excluirse del uso para mejoras. Activa la retención cero y las fotos se borran en cuanto se califica cada dispositivo; los hallazgos y la calificación se conservan. Un trabajo con retención cero solo va a capacidad de calificación cuya propia retención cero está verificada, y si no hay disponible falla y se reembolsa en lugar de ir a otro lado.' },
         { k: '06', h: 'Uso y precios', p: 'Créditos prepagados, iguales en la app y en la API: en el nivel inicial, como máximo $0.10 por dispositivo, menos con volumen. Un dispositivo fallido o cancelado se reembolsa. GET /v1/pricing devuelve los números actuales y GET /v1/balance tu saldo. La recarga automática evita que una integración se detenga. No hay un SLA de disponibilidad publicado; la página de estado muestra la salud de cada componente en vivo.' }
       ],
       example: { k: 'Ejemplo', h: 'Una solicitud y su resultado.', note: 'Tomado de la documentación pública de la API. Sustituye la clave y los upload_id por los tuyos.',
@@ -316,7 +316,7 @@ export const INDUSTRIES = {
         sides: [['Supplier’s grade', 'A', 'Their standard, which you never see.'], ['Your grade', 'B · 84', 'Your standard, applied to the same findings: light scratches on the glass, noticeable wear on the back.']] },
       fit: { k: 'Boundaries', h: 'What the comparison can and cannot tell you.',
         does: ['Re-reads a supplier’s inspection under your standard, free.', 'Grades your own samples in batches, with CSV export.', 'Keeps labels for supplier, lot and manifest grade.'],
-        doesnt: ['It cannot see what the supplier did not photograph.', 'No functional, IMEI or blacklist checks.', 'It does not price the lot or guarantee the supplier’s photos match the units shipped.'] },
+        doesnt: ['It cannot see what the supplier did not photograph.', 'No functional, IMEI or blacklist checks.', 'It cannot prove the supplier’s photos match the units shipped. Lot pricing from market data is in inphox Inventory.'] },
       evaluate: { k: 'Evaluate', h: 'Start with one supplier and one lot.', steps: ['Write your buying standard as a copy of the inphox Standard.', 'Grade a sample from a recent lot, tagged with the manifest grade.', 'Export and compare: how often did the manifest grade match yours?'] },
       faq: [
         { q: 'Does the supplier need an account?', a: 'Yes, to grade and share. You need one to compare: a comparison requires an API key or a signed-in session.' },
@@ -346,7 +346,7 @@ export const INDUSTRIES = {
         sides: [['Calificación del proveedor', 'A', 'Su estándar, que nunca ves.'], ['Tu calificación', 'B · 84', 'Tu estándar, aplicado a los mismos hallazgos: rayones leves en el vidrio y desgaste notable en el reverso.']] },
       fit: { k: 'Alcance', h: 'Lo que la comparación puede decirte y lo que no.',
         does: ['Relee la inspección de un proveedor con tu estándar, sin costo.', 'Califica tus propias muestras por lotes, con exportación CSV.', 'Guarda etiquetas de proveedor, lote y calificación del manifiesto.'],
-        doesnt: ['No puede ver lo que el proveedor no fotografió.', 'No hace revisiones funcionales, de IMEI ni de lista negra.', 'No pone precio al lote ni garantiza que las fotos correspondan a las unidades enviadas.'] },
+        doesnt: ['No puede ver lo que el proveedor no fotografió.', 'No hace revisiones funcionales, de IMEI ni de lista negra.', 'No puede probar que las fotos del proveedor correspondan a las unidades enviadas. El precio del lote con datos de mercado está en inphox Inventory.'] },
       evaluate: { k: 'Evaluación', h: 'Empieza con un proveedor y un lote.', steps: ['Escribe tu estándar de compra como copia del inphox Standard.', 'Califica una muestra de un lote reciente, etiquetada con la calificación del manifiesto.', 'Exporta y compara: ¿cuántas veces coincidió la calificación del manifiesto con la tuya?'] },
       faq: [
         { q: '¿El proveedor necesita una cuenta?', a: 'Sí, para calificar y compartir. Tú necesitas una para comparar: una comparación requiere una clave de API o una sesión iniciada.' },

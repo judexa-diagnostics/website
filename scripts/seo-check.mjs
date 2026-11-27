@@ -71,6 +71,15 @@ const robotsTxt = fs.existsSync(path.join(dist, 'robots.txt')) ? read('robots.tx
 if (!robotsTxt.includes(`Sitemap: ${SITE}/sitemap.xml`)) fail('robots.txt', 'does not name the sitemap');
 if (/^Disallow:\s*\/\s*$/m.test(robotsTxt)) fail('robots.txt', 'disallows the whole site');
 
+// A page whose name is also a folder (/es with es/, /autograding with autograding/buyback.html) needs a rewrite to its
+// .html in vercel.json: with a folder of the same name, a clean URL is not guaranteed to reach the file (2026-11-27).
+const vercel = JSON.parse(fs.readFileSync(path.resolve(dist, '..', 'vercel.json'), 'utf8'));
+const rewrites = new Map((vercel.rewrites || []).map(r => [r.source, r.destination]));
+for (const r of ROUTES) {
+  if (r.path === '/' || !fs.existsSync(path.join(dist, r.path)) || !fs.statSync(path.join(dist, r.path)).isDirectory()) continue;
+  if (rewrites.get(r.path) !== r.path + '.html') fail('vercel.json', `${r.path} is also a folder: add the rewrite ${r.path} -> ${r.path}.html`);
+}
+
 // The 404 page is never indexed.
 if (!fs.existsSync(path.join(dist, '404.html')) || !/<meta name="robots" content="noindex/.test(read('404.html'))) fail('404.html', 'missing or indexable');
 

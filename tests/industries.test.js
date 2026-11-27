@@ -87,7 +87,7 @@ test('calls to action go somewhere real, keep the visitor\'s campaign and name t
     for (const c of [cta.primary, cta.secondary]) {
       assert.ok(CTA_DESTINATIONS.includes(c.to), `${slug} ${lang}: ${c.to}`);
       const href = ctaHref(c, lang, 'w2-sellmac', `${slug}-hero`);
-      if (['start', 'developers', 'contact'].includes(c.to)) {
+      if (['start', 'developers', 'sample', 'contact'].includes(c.to)) {
         const q = new URLSearchParams(href.split('?')[1]);
         assert.equal(q.get('via'), `${slug}-hero`, href);
         assert.equal(q.get('ref'), 'w2-sellmac', href);
@@ -95,6 +95,7 @@ test('calls to action go somewhere real, keep the visitor\'s campaign and name t
       }
       if (c.to === 'contact') assert.ok(href.startsWith(lang === 'es' ? '/es/contact?' : '/contact?'), href);
       if (c.to === 'start') assert.ok(href.startsWith('https://autograding.inphox.net/?'), href);
+      if (c.to === 'sample') assert.ok(href.startsWith('https://autograding.inphox.net/s/'), href);
     }
   }
   assert.throws(() => ctaHref({ to: 'nowhere' }, 'en', '', 'x'), /unknown destination/);

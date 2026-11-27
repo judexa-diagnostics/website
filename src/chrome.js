@@ -5,6 +5,9 @@
 export const AG_APP = 'https://autograding.inphox.net';
 export const AG_DOCS = AG_APP + '/api/docs';
 export const AG_PRICING = AG_DOCS + '#pricing';
+// A real graded device, shared as a public report (founder, 2026-11-27). Share links expire (at most 30 days): when
+// this one is replaced, change it here and nowhere else.
+export const AG_SAMPLE = AG_APP + '/s/DVjBbzR1FhVhZvSOlz9FxnyR';
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 const TAGS_KEY = 'inphox_ag_utm', REF_KEY = 'inphox_ag_ref';
 const cleanTag = v => (/^[A-Za-z0-9_.-]{1,120}$/.test(v || '') ? v : '');
