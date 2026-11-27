@@ -32,6 +32,7 @@ export default function Footer({ v }) {
         <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "1rem" }}>
           <span style={H}>{f.autograding}</span>
           <a className="fx-ul fx-ul-tight" href={agHome} style={L}>{f.agOverview}</a>
+          <a className="fx-ul fx-ul-tight" href={agHome + '#industries'} style={L}>{f.agIndustries}</a>
           <a className="fx-ul fx-ul-tight" href={AG_PRICING} style={L}>{f.agPricing}</a>
           <a className="fx-ul fx-ul-tight" href={AG_DOCS} style={L}>{f.agDocs}</a>
           <a className="fx-ul fx-ul-tight" href={AG_APP + '/'} style={L}>{f.agSignin}</a>

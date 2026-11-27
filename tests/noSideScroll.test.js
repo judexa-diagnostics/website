@@ -24,7 +24,8 @@ test('every page is a real path: a route, a prerendered file, served with clean 
   assert.ok(!(v.redirects || []).some((r) => /#/.test(r.destination)), 'no redirect sends a page to a #/ address');
   const { ROUTES, pageFromPath, pageFromHash, pathFor } = await import('../src/routes.js');
   for (const r of ROUTES) {
-    assert.match(r.path, /^(\/es)?(\/[a-z-]*)?$/, r.page);
+    // One level more for Autograding by industry (/autograding/buyback, /es/autograding/buyback), 2026-11-27.
+    assert.match(r.path, /^(\/es)?(\/[a-z-]*|\/autograding\/[a-z-]+)?$/, r.page);
     assert.equal(pageFromPath(r.path), r.page, r.path);
     assert.equal(pathFor(r.page, r.lang || 'en'), r.path);
     assert.ok(r.title && r.title.length <= 70, `${r.page}: a title of at most 70 characters`);

@@ -5,12 +5,15 @@ import { LogicHost } from './lib/dcLogic.jsx';
 import SiteLogic from './SiteLogic.js';
 import Layout from './Layout.jsx';
 import Autograding from './pages/Autograding.jsx';
-import { setEagerAutograding } from './pages/autogradingSlot.js';
+import AgIndustry from './pages/AgIndustry.jsx';
+import { setEagerAutograding, setEagerIndustry } from './pages/autogradingSlot.js';
 
 // The prerender writes the whole Autograding page into /autograding.html (crawlers get the words, not a loader).
 setEagerAutograding(Autograding);
+setEagerIndustry(AgIndustry);
 
 export { ROUTES, SITE, SITE_NAME, canonicalFor } from './routes.js';
+export { industryMeta } from './autograding/industryMeta.js';
 export { pricing } from './pricing.js';
 export { translateHtml } from './i18n/translate.js';
 export { TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN } from './config.js';

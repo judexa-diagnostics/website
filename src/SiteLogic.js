@@ -8,7 +8,7 @@ import { shopFromInput, shopLoginUrl, createThrottle, savedShop } from './shop.j
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 import { PAGES, pathFor, pageFromPath, pageFromHash, routeFor, canonicalFor, langFromPath, hasSpanish, productOf } from './routes.js';
-import { CHROME, agStartUrl } from './chrome.js';
+import { CHROME, agStartUrl, visitorRef } from './chrome.js';
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
@@ -277,8 +277,7 @@ export default class SiteLogic extends DCLogic {
     const langs = [['EN','English'],['ES','Español']];
     const lc = s.lang === 'ES' && hasSpanish(s.page) ? 'es' : 'en', cw = CHROME[lc];
     const product = productOf(s.page), isAg = product === 'ag';
-    let agRef = '';
-    if (isAg && typeof window !== 'undefined') { try { const r = sessionStorage.getItem('inphox_ag_ref') || ''; if (/^[A-Za-z0-9_-]{1,32}$/.test(r)) agRef = r; } catch (e) { /* private window */ } }
+    const agRef = isAg ? visitorRef() : '';
     const chrome = {
       c: cw, lc, product, isAg, showLang: hasSpanish(s.page), swipe: s.swipe,
       switcher: [

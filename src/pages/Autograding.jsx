@@ -2,20 +2,14 @@ import { useEffect, useMemo, useRef } from 'react';
 import '../autograding/ag.css';
 import { renderHero, renderMain } from '../autograding/template.js';
 import { heroVals, mainVals } from '../autograding/vals.js';
+import { visitorRef } from '../chrome.js';
+import IndustryIndex from '../autograding/IndustryIndex.jsx';
 
 // inphox Autograding: its own product, on its own page of this site. Loaded lazily (Layout), so the inphox Inventory
 // pages never download it. The markup comes from the approved Claude Design board (src/autograding/*, generated), and
 // is rendered to a string so the build prerender gives crawlers the same page a visitor sees.
-const REF_KEY = 'inphox_ag_ref';
-const cleanRef = r => (/^[A-Za-z0-9_-]{1,32}$/.test(r || '') ? r : '');
-// An incoming ?ref= is kept for the visit, so every button on the page passes it on to the sign-up.
-const readRef = () => {
-  if (typeof window === 'undefined') return '';
-  let ref = '';
-  try { ref = cleanRef(new URLSearchParams(location.search).get('ref')); } catch (e) { /* old browser */ }
-  try { if (ref) sessionStorage.setItem(REF_KEY, ref); else ref = cleanRef(sessionStorage.getItem(REF_KEY)); } catch (e) { /* private window */ }
-  return ref;
-};
+// An incoming ?ref= is kept for the visit (chrome.js, from whichever page the visitor landed on), so every button on
+// the page passes it on to the sign-up.
 
 // On the Spanish page, links into the site open its Spanish pages (/es/contact, /es/pricing).
 const esLinks = html => html.replace(/href="\/(contact|pricing)([?"])/g, 'href="/es/$1$2');
@@ -26,7 +20,7 @@ export const autogradingHtml = (lang, ref = '') => {
 
 export default function Autograding({ v }) {
   const lang = v && v.langCode === 'ES' ? 'es' : 'en';
-  const ref = useMemo(readRef, []);
+  const ref = useMemo(visitorRef, []);
   const html = useMemo(() => autogradingHtml(lang, ref), [lang, ref]);
   const root = useRef(null);
 
@@ -45,5 +39,10 @@ export default function Autograding({ v }) {
   }, [html]);
 
   // data-no-tr: this page has its own Spanish copy; the site-wide translation layer (src/i18n) leaves it alone.
-  return <div ref={root} className="ag" lang={lang} data-no-tr="" dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <>
+      <div ref={root} className="ag" lang={lang} data-no-tr="" dangerouslySetInnerHTML={{ __html: html }} />
+      <IndustryIndex lang={lang} />
+    </>
+  );
 }
