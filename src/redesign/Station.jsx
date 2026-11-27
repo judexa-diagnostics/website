@@ -17,7 +17,7 @@ const MAC_PORT = { x: 1044.5, y: 471.6 };
 const MAX_PHONES = 12;
 const PORTS = 12;
 const HOST = 'WIN-BENCH-04';
-const LOGO = '/assets/inphox-logo.png';
+const LOGO = '/assets/inphox-logo-144.png'; // a DOM <img> at most 64 px wide: the 512 px original is 10x the bytes
 const EASE = [0.2, 0.8, 0.2, 1];
 const NARROW_MQ = '(max-width: 899px)';
 

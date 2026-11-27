@@ -1,4 +1,4 @@
-import { Fragment, Suspense, lazy } from 'react';
+import { Fragment, Suspense, lazy, useEffect, useRef, useState } from 'react';
 import HeroConsole from '../redesign/HeroConsole.jsx';
 import HeroPhone from '../redesign/HeroPhone.jsx';
 import Station from '../redesign/Station.jsx';
@@ -8,6 +8,23 @@ import { proofFacts, HOW_STEPS, VERIFIED_QUOTES, CAPS_ON_PHONE } from '../home.j
 import { TEAM, personAlt } from '../config.js';
 import '../home.css';
 const Story = lazy(() => import('../redesign/Story.jsx'));
+
+// The 3D walkthrough (three.js, ~2.4 MB of textures) is well below the fold: fetch and start it only when its place
+// comes within half a screen below the viewport (still off screen, so the swap shifts nothing visible). Until then
+// the stills stand in, exactly as the prerendered page shows them.
+// Measured 2026-11-27 (Lighthouse, mobile): loading it with the page put home LCP at 14.6 s and blocking time at 7.9 s.
+function WhenNear({ children, fallback }) {
+  const ref = useRef(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    if (near) return undefined;
+    if (typeof IntersectionObserver !== 'function') { setNear(true); return undefined; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } }, { rootMargin: '0px 0px 50% 0px' });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [near]);
+  return <div ref={ref}>{near ? children : fallback}</div>;
+}
 
 // Home: hero with one call to action, proof, a short feature story, plan cards, then the close.
 // Every colour, radius and font is a template token (tokens.css, home.css). The 3D walkthrough
@@ -52,9 +69,11 @@ export default function Home({ v }) {
       {/* The walkthrough plays on its own; with the animation off (or reduced motion) the stills stand in. */}
       <div ref={walkRef}>
         {home.walk ? (
-          <Suspense fallback={<HowStills />}>
-            <Story goTrial={goTrial} />
-          </Suspense>
+          <WhenNear fallback={<HowStills />}>
+            <Suspense fallback={<HowStills />}>
+              <Story goTrial={goTrial} />
+            </Suspense>
+          </WhenNear>
         ) : <section className="hm-wrap" aria-label="The walkthrough as stills"><HowStills /></section>}
       </div>
 

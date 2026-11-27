@@ -36,9 +36,16 @@ test('the hub answers (any status): go to the plan\'s sign-up address, asking on
   assert.equal(seen.busy, 0);
 });
 
+// fetchImpl: undefined would fall back to the default (globalThis.fetch) and call the real hub, so the test passed
+// with network and failed without it. Remove fetch itself, the way an old browser lacks it.
 test('no fetch available: still go to the hub', async () => {
-  const seen = [];
-  assert.equal(await openSignup(URL_, { fetchImpl: undefined, go: u => seen.push(u), busy: () => seen.push('busy') }), 'go');
+  const seen = [], realFetch = globalThis.fetch;
+  delete globalThis.fetch;
+  try {
+    assert.equal(await openSignup(URL_, { go: u => seen.push(u), busy: () => seen.push('busy') }), 'go');
+  } finally {
+    globalThis.fetch = realFetch;
+  }
   assert.deepEqual(seen, [URL_]);
 });
 

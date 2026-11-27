@@ -129,7 +129,8 @@ const notFound = page(template.replace('<div id="root"></div>', `<div id="root">
 fs.writeFileSync(path.join(dist, '404.html'), notFound);
 written.push('404.html');
 
-const today = new Date().toISOString().slice(0, 10);
+// No <lastmod>: the build date on every URL says every page changed on every deploy, and Google ignores lastmod that is
+// not accurate (and changefreq/priority altogether). Bing still reads changefreq/priority, so they stay (2026-11-27).
 // Each URL once; a page with a Spanish twin lists both languages as xhtml:link alternates (Google's sitemap form).
 const urls = ROUTES.filter(r => r.index !== false).map(r => {
   const twin = twinOf(r), loc = canonicalFor(r.page, r.lang || 'en');
@@ -137,7 +138,7 @@ const urls = ROUTES.filter(r => r.index !== false).map(r => {
   // changefreq and priority as the device-software sites list them: product pages weekly, policies monthly.
   const legalPage = ['terms', 'privacy', 'refunds', 'copyright', 'law-enforcement', 'subprocessors', 'erasure', 'cookies', 'accessibility'].includes(r.page);
   const prio = r.page === 'home' ? '1.0' : legalPage ? '0.3' : '0.8';
-  return `  <url><loc>${esc(loc)}</loc><lastmod>${today}</lastmod><changefreq>${legalPage ? 'monthly' : 'weekly'}</changefreq><priority>${prio}</priority>${alt}${alt ? '\n  ' : ''}</url>`;
+  return `  <url><loc>${esc(loc)}</loc><changefreq>${legalPage ? 'monthly' : 'weekly'}</changefreq><priority>${prio}</priority>${alt}${alt ? '\n  ' : ''}</url>`;
 });
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);
 written.push('sitemap.xml');

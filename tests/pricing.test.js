@@ -133,21 +133,6 @@ describe('plan data', async () => {
   });
 });
 
-describe('JavaScript off', async () => {
-  const P = await import('../src/pricing.js');
-  const { noscriptPlans } = await import('../src/noscriptPlans.js');
-
-  test('the noscript block reads every plan, price, included checks and the overage sentence, from pricing.js', () => {
-    const html = noscriptPlans();
-    for (const p of P.pricing.plans) {
-      const c = P.planCard(p);
-      for (const s of [p.name, c.priceStr, c.checks, c.overage]) assert.ok(html.includes(s), `${p.code}: ${s}`);
-    }
-    for (const code of ['free', 'basics', 'growth', 'max']) assert.ok(html.includes(`href="https://home.inphox.net/signup?plan=${code}"`), code);
-    assert.ok(html.startsWith('<noscript>') && html.endsWith('</noscript>'));
-  });
-});
-
 /** Start Vite in SSR mode with the given .env contents and return render helpers for the real pages. */
 async function renderWith(envFile) {
   const { createServer } = await import('vite');
@@ -290,10 +275,16 @@ describe('rendered', () => {
   test('Platform: the page header carries the inphox logo above the headline', () => {
     const html = r.render({ page: 'platform' });
     const main = html.slice(html.indexOf('<main'));
-    const logo = main.indexOf('src="/assets/inphox-logo.png"');
+    const logo = main.indexOf('src="/assets/inphox-logo-144.png"');
     assert.ok(logo > 0, 'the logo is in the Platform page itself, not only the site bar');
     assert.ok(logo < main.indexOf('<h1'), 'above the headline');
     assert.ok(main.includes('inphox platform'));
+  });
+
+  // The 512 px logo is 221 KB and was on every page for a 34 px mark (Lighthouse, 2026-11-27). Pages and the favicon (Google: a multiple of 48 px) use the 144 px
+  // copy; the original stays for the JSON-LD logo (Google wants at least 112 px) and the 3D textures.
+  test('no page shows the 512 px logo in an <img>', () => {
+    for (const page of PAGES) assert.ok(!r.render({ page }).includes('src="/assets/inphox-logo.png"'), page);
   });
 
   test('the hub being down lands on "Sign-up is busy, try again in a minute"', () => {

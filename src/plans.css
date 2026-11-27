@@ -50,5 +50,4 @@
 .pl-row p{margin:.125rem 0 0;font-size:.8125rem;color:var(--pmm-text-2);line-height:1.45}
 .pl-busy{max-width:36rem;margin:0 auto;padding:clamp(3rem,10vw,6rem) clamp(1rem,3vw,2.5rem);display:grid;gap:1rem}
 .pl-busy h1{margin:0;font-size:clamp(1.5rem,3vw,2rem);line-height:1.15;font-weight:700}
-.pl-noscript{padding:1rem clamp(1rem,3vw,2.5rem);font-family:sans-serif}
 @media(prefers-reduced-motion:reduce){.pl *{transition:none!important;animation:none!important}}

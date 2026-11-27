@@ -9,7 +9,7 @@ export default function Signin({ v }) {
     <FxScope>
     <section style={{ display: "grid", gridTemplateColumns: ui.c57, minHeight: "calc(100vh - 4rem)", borderBottom: "1px solid #D9D0C2" }}>
       <div style={{ background: "#16130F", color: "#F6F2EA", padding: "clamp(2rem,5vw,4rem) clamp(1rem,3vw,2.5rem)", display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <img data-fx="scale" src="/assets/inphox-logo.png" alt="" style={{ width: "4rem", height: "4rem" }} />
+        <img data-fx="scale" src="/assets/inphox-logo-144.png" alt="" style={{ width: "4rem", height: "4rem" }} />
         <h1 data-fx="" style={{ margin: "0", fontSize: "clamp(1.75rem,2.8vw,2.5rem)", lineHeight: "1.06", fontWeight: "650", fontStretch: "104%", letterSpacing: "-.015em", textWrap: "balance" }}>Sign in to your shop.</h1>
         <p data-fx="" style={{ margin: "0", fontSize: "0.9375rem", lineHeight: "1.6", color: "#D9D0C2", maxWidth: "26.25rem" }}>
           Every shop has its own inphox address. It's in your welcome email, and it's the address you sign in at every day.
