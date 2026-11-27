@@ -479,7 +479,7 @@ function MacStation({ t, show }) {
                         <div className="ls">{d.storage} · {d.color} · {d.carrier}</div>
                         <Barcode seed={parseInt(d.imei.slice(-6), 10)} />
                         <div className="lm">IMEI {d.imei}</div>
-                        <div className="lb"><span>{d.kind === 'pass' ? 'Tested 42/42 · Erased' : d.result}</span><img src="/assets/inphox-logo-144.png" alt="" /></div>
+                        <div className="lb"><span>{d.kind === 'pass' ? 'Tested 42/42 · Erased' : d.result}</span><img src="/assets/inphox-logo-144.png" alt="inphox logo" /></div>
                       </div>
                     ) : null}
                   </div>

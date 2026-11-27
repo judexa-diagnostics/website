@@ -15,7 +15,7 @@ export default function Footer({ v }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(10.625rem,1fr))", gap: "1.75rem" }}>
         <div data-fx="" data-fx-gap="90" style={{ display: "flex", flexDirection: "column", gap: "0.625rem", gridColumn: v.ui.wideBlock === "block" ? "span 2" : "1 / -1", minWidth: "0" }}>
           <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none", color: "var(--pmm-text)" }}>
-            <img src="/assets/inphox-logo-144.png" alt="" style={{ width: "1.875rem", height: "1.875rem" }} />
+            <img src="/assets/inphox-logo-144.png" alt="inphox logo" style={{ width: "1.875rem", height: "1.875rem" }} />
             <span style={{ fontSize: "1.125rem", fontWeight: "700" }}>inphox</span>
           </a>
           <p style={{ margin: "0", fontSize: "1rem", lineHeight: "1.55", color: "var(--pmm-text-2)", maxWidth: "20rem" }}>

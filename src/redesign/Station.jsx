@@ -174,7 +174,7 @@ function PhoneScreen({ spec, st }) {
   if (st.ph === 'boot') {
     return (
       <span className="st-scr st-scr-boot">
-        <img src={LOGO} alt="" />
+        <img src={LOGO} alt="inphox logo" />
         <span className="st-bootbar"><span style={{ width: `${Math.min(100, ((st.e - BOOT) / (TEST - BOOT)) * 100)}%` }} /></span>
       </span>
     );
@@ -514,7 +514,7 @@ function Bench({ goTrial }) {
   const app = (
     <div className="st-app">
       <div className="st-app-h">
-        <img src={LOGO} alt="" onClick={narrow ? clickMac : undefined} />
+        <img src={LOGO} alt="inphox logo" onClick={narrow ? clickMac : undefined} />
         <span className="st-app-t"><b>inphox Station</b><span className="st-app-st"> · {HOST} · <span className="st-tab">{connected}</span> connected</span></span>
         <span className={`st-live${turbo ? ' st-live-t' : ''}`}>{turbo ? 'Turbo' : 'Live'}</span>
       </div>

@@ -71,7 +71,7 @@ export default function HomeScreen({ onOpenApp, onOpenGame, focusFirst }) {
       aria-label={key === 'inphox' ? 'Open inphox' : key === 'game' ? 'Play Box it' : label}
     >
       <span className="hs-tile" style={bg ? { background: bg, color: fg } : undefined}>
-        {key === 'inphox' ? <img src="/assets/inphox-logo-144.png" alt="" /> : GLYPH[key]}
+        {key === 'inphox' ? <img src="/assets/inphox-logo-144.png" alt="inphox logo" /> : GLYPH[key]}
         {key === 'buyers' ? <i className="hs-badge">3</i> : null}
       </span>
       {dock ? null : <span className="hs-name">{label}</span>}

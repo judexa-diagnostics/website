@@ -40,6 +40,8 @@ for (const r of ROUTES) {
   for (const block of one(html, /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(block); } catch (e) { fail(where, 'JSON-LD does not parse: ' + e.message); }
   }
+  // Every image says what it is: Bing reports a missing or empty alt, even on a logo beside its own name (2026-11-27).
+  for (const img of html.match(/<img\b[^>]*>/g) || []) if (!/\balt="[^"]+"/.test(img)) fail(where, `image without alt text: ${img.slice(0, 90)}`);
   // Every same-site link goes to a page that exists or a file that is deployed (no crawl into a 404).
   for (const href of one(html, /<a [^>]*href="([^"]*)"/g)) {
     const local = href.startsWith(SITE) ? href.slice(SITE.length) || '/' : href;
