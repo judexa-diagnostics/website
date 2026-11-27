@@ -87,7 +87,9 @@ export default function AgIndustry({ v, page }) {
   const ref = useMemo(visitorRef, []);
   const href = (cta, spot) => ctaHref(cta, lang, ref, `${meta.slug}-${spot}`);
   const home = lang === 'es' ? '/es/autograding' : '/autograding';
-  const CTAs = ({ spot }) => (
+  // A plain function, not a component: a component declared here would be a new type on every render and remount
+  // (and drop keyboard focus from) the buttons whenever the page re-renders.
+  const ctas = spot => (
     <div className="agi-ctas">
       <a className="agi-btn is-primary" href={href(t.cta.primary, spot)}>{t.cta.primary.label}</a>
       <a className="agi-btn is-ghost" href={href(t.cta.secondary, spot)}>{t.cta.secondary.label}</a>
@@ -101,7 +103,7 @@ export default function AgIndustry({ v, page }) {
           <span className="agi-k agi-mono">{t.kicker}</span>
           <h1 id="agi-h1">{t.h1[0]} <em>{t.h1[1]}</em></h1>
           <p className="agi-intro">{t.intro}</p>
-          <CTAs spot="hero" />
+          {ctas('hero')}
           <div className="agi-meta agi-mono">{u.meta.map(m => <span key={m}>{m}</span>)}<a href={AG_DOCS} style={{ color: 'inherit' }}>{u.docs}</a><a href={AG_PRICING} style={{ color: 'inherit' }}>{u.pricing}</a></div>
         </div>
       </section>
@@ -170,7 +172,7 @@ export default function AgIndustry({ v, page }) {
         <div className="agi-wrap">
           <h2 id="agi-close-h">{t.close.h}</h2>
           <p>{t.close.p}</p>
-          <CTAs spot="close" />
+          {ctas('close')}
         </div>
       </section>
 
