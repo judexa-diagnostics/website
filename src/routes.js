@@ -1,6 +1,8 @@
 // One table for every public page: its path, title and description. The router (SiteLogic), the build-time
 // prerender (scripts/prerender.mjs), the sitemap and each page's <title>, description and canonical tag all read
 // from here, so a page can never have a path the sitemap does not know or a title the browser tab does not show.
+import { INDUSTRY_META, isIndustryPage } from './autograding/industryMeta.js';
+
 export const SITE = 'https://www.inphox.net';
 export const SITE_NAME = 'inphox';
 
@@ -55,10 +57,14 @@ const ES_META = {
   cookies: ['Política de cookies | inphox', 'El sitio web de inphox no usa cookies. Qué guarda en el almacenamiento local y por qué.'],
   accessibility: ['Accesibilidad | inphox', 'inphox trabaja hacia WCAG 2.2 AA: texto legible, uso completo con teclado, etiquetas en cada control y soporte para reducir el movimiento.']
 };
+// Autograding by industry (/autograding/buyback ...): their titles live with the industry list (industryMeta.js).
+const IND_EN = INDUSTRY_META.map(m => ({ page: m.page, path: m.path, title: m.en.title, description: m.en.description }));
+const IND_ES = Object.fromEntries(INDUSTRY_META.map(m => [m.page, [m.es.title, m.es.description]]));
+const ALL_EN = [...EN_ROUTES, ...IND_EN];
 export const ROUTES = [
-  ...EN_ROUTES,
-  ...EN_ROUTES.map(r => {
-    const m = ES_META[r.page];
+  ...ALL_EN,
+  ...ALL_EN.map(r => {
+    const m = ES_META[r.page] || IND_ES[r.page];
     if (!m) throw new Error('routes: no Spanish title for ' + r.page);
     return { ...r, path: r.path === '/' ? '/es' : '/es' + r.path, title: m[0], description: m[1], lang: 'es', enPath: r.path };
   })
@@ -79,7 +85,7 @@ export const hasSpanish = page => Boolean(BY_PAGE_ES[page]);
 /** '/es/autograding' → 'es'; anything else → 'en'. */
 export const langFromPath = (pathname = '/') => (/^\/es(\/|$)/.test(String(pathname)) ? 'es' : 'en');
 /** inphox sells two products on this site; the header, menu and page swipe follow the one being shown. */
-export const productOf = page => (page === 'autograding' ? 'ag' : 'inv');
+export const productOf = page => (page === 'autograding' || isIndustryPage(page) ? 'ag' : 'inv');
 
 /** '/about', '/about/', '/about?x' → 'about'; anything unknown → null. */
 export const pageFromPath = (pathname = '/') => {

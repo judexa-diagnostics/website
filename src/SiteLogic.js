@@ -8,7 +8,7 @@ import { shopFromInput, shopLoginUrl, createThrottle, savedShop } from './shop.j
 import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 import { PAGES, pathFor, pageFromPath, pageFromHash, routeFor, canonicalFor, langFromPath, hasSpanish, productOf } from './routes.js';
-import { CHROME, agStartUrl } from './chrome.js';
+import { CHROME, agStartUrl, visitorRef } from './chrome.js';
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
@@ -72,6 +72,7 @@ export default class SiteLogic extends DCLogic {
     ['Custom workflows','Intake, grading and routing steps that match how your floor actually runs.'],
     ['CRM for customers and vendors','Accounts, purchase history, terms and price lists for buyers and suppliers.'],
     ['Online listings','Graded stock is ready to list the moment it is graded. Marketplace connections are set up with you on request.'],
+    ['Market data and price recommendations','Live secondary-market prices across channels, and recommended buy and resale prices for each model and grade.'],
     ['Returns','RMA intake that brings returned devices back into the test-and-grade flow.'],
     ['Auction and vendor marketplace','Sell lots to vetted buyers, or buy from vendors, without leaving inphox.'],
     ['Data insights','Dwell time, margin by model and grade, and technician throughput.'],
@@ -277,8 +278,7 @@ export default class SiteLogic extends DCLogic {
     const langs = [['EN','English'],['ES','Español']];
     const lc = s.lang === 'ES' && hasSpanish(s.page) ? 'es' : 'en', cw = CHROME[lc];
     const product = productOf(s.page), isAg = product === 'ag';
-    let agRef = '';
-    if (isAg && typeof window !== 'undefined') { try { const r = sessionStorage.getItem('inphox_ag_ref') || ''; if (/^[A-Za-z0-9_-]{1,32}$/.test(r)) agRef = r; } catch (e) { /* private window */ } }
+    const agRef = isAg ? visitorRef() : '';
     const chrome = {
       c: cw, lc, product, isAg, showLang: hasSpanish(s.page), swipe: s.swipe,
       switcher: [
@@ -471,6 +471,8 @@ export default class SiteLogic extends DCLogic {
     ['Shipping','Outbound tracking','Shipment status shown on the order'],
     ['Sales','Quotes, sales orders & invoices','Quote, convert, invoice'],
     ['Sales','Offers queue','Customer and vendor offers in one place'],
+    ['Sales','Market data','Live secondary-market prices across major channels'],
+    ['Sales','Price recommendations','Recommended buy and resale prices by model, grade and specs'],
     ['Sales','Auto-counter rules','Counter below-floor offers automatically'],
     ['Sales','Auction & vendor marketplace','Sell lots or buy from vendors'],
     ['Listings','Marketplace listings','Graded stock ready to list; connections on request'],

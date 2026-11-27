@@ -10,7 +10,7 @@ const tags = q => Object.fromEntries(new URLSearchParams(q));
 
 test('no ref and no tags of their own: the link is the website\'s', () => {
   assert.deepEqual(tags(agQuery('hero', 'en', '', null)),
-    { utm_source: 'inphox.net', utm_medium: 'website', utm_campaign: 'autograding', utm_content: 'hero', lang: 'en' });
+    { utm_source: 'inphox.net', utm_medium: 'website', utm_campaign: 'autograding', utm_content: 'hero', via: 'hero', lang: 'en' });
 });
 
 test('a ?ref= is passed on without the website\'s utm_source, so the app makes the ref the source', () => {
@@ -23,7 +23,8 @@ test('a ?ref= is passed on without the website\'s utm_source, so the app makes t
 
 test('a visitor\'s own tags (an outreach email) go on as they came, with the ref', () => {
   const visitor = { utm_source: 'outreach', utm_medium: 'email', utm_campaign: 'partnerships', utm_content: 'w2-sellmac_v9' };
-  assert.deepEqual(tags(agQuery('hero', 'en', 'w2-sellmac', visitor)), { ref: 'w2-sellmac', ...visitor, lang: 'en' });
+  assert.deepEqual(tags(agQuery('buyback-hero', 'en', 'w2-sellmac', visitor)), { ref: 'w2-sellmac', ...visitor, via: 'buyback-hero', lang: 'en' },
+    'the campaign\'s own tags are untouched; the page that converted rides separately in via');
   assert.ok(agStartUrl('header').startsWith('https://autograding.inphox.net/?'));
 });
 
@@ -33,8 +34,9 @@ test('a visitor\'s tags are kept only with a source, and only in safe characters
   try {
     keepVisitorTags('?utm_medium=email');
     assert.deepEqual(store, {}, 'no source: nothing kept, the website tags the link');
-    keepVisitorTags('?utm_source=outreach&utm_content=w2-sellmac_v9&utm_campaign=<script>');
+    keepVisitorTags('?utm_source=outreach&utm_content=w2-sellmac_v9&utm_campaign=<script>&ref=w2-sellmac');
     assert.deepEqual(JSON.parse(store.inphox_ag_utm), { utm_source: 'outreach', utm_content: 'w2-sellmac_v9' });
+    assert.equal(store.inphox_ag_ref, 'w2-sellmac', 'the ref is kept site-wide too');
   } finally {
     delete globalThis.sessionStorage;
   }

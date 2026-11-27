@@ -19,6 +19,7 @@ import Footer from './components/Footer.jsx';
 import { Suspense, useLayoutEffect, useRef } from 'react';
 import { translateLive } from './i18n/translate.js';
 import * as agSlot from './pages/autogradingSlot.js';
+import { isIndustryPage } from './autograding/industryMeta.js';
 
 export default function Layout({ v }) {
   const { is, menuOpen } = v;
@@ -38,6 +39,7 @@ export default function Layout({ v }) {
         {/* Its own chunk: the browser fetches Autograding only on /autograding (agSlot is a live binding, so the build
             prerender can hand in the page itself). */}
         {is.autograding ? <Suspense fallback={<div style={{ minHeight: "100vh" }} />}><agSlot.AutogradingPage v={v} /></Suspense> : null}
+        {isIndustryPage(page) ? <Suspense fallback={<div style={{ minHeight: "100vh" }} />}><agSlot.IndustryPage v={v} page={page} /></Suspense> : null}
         {is.industries ? <Industries v={v} /> : null}
         {is.features ? <Features v={v} /> : null}
         {is.pricing ? <Pricing v={v} /> : null}

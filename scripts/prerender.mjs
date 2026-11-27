@@ -12,7 +12,7 @@ const dist = path.resolve('dist');
 const ssrEntry = ['entry-server.js', 'entry-server.mjs'].map(f => path.resolve('dist-ssr', f)).find(f => fs.existsSync(f));
 if (!ssrEntry) throw new Error('prerender: dist-ssr/entry-server.js missing; run vite build --ssr src/entry-server.jsx --outDir dist-ssr first');
 const ssr = await import(pathToFileURL(ssrEntry).href);
-const { ROUTES, SITE, SITE_NAME, canonicalFor, TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN, pricing } = ssr;
+const { ROUTES, SITE, SITE_NAME, canonicalFor, industryMeta, TEAM, personAlt, COMPANY_LEGAL_NAME, COMPANY_POSTAL_ADDRESS, COMPANY_PHONE, COMPANY_LINKEDIN, pricing } = ssr;
 
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 if (!template.includes('<div id="root"></div>')) throw new Error('prerender: index.html has no empty #root');
@@ -78,6 +78,17 @@ const graphFor = r => {
   if (page === 'home') g.push(organization, website, inventoryApp);
   else if (page === 'about') g.push({ '@type': 'AboutPage', '@id': SITE + '/about', url: SITE + '/about', name: 'About inphox', about: { '@id': ORG_ID } }, organization, ...people);
   else if (page === 'autograding') g.push(agApp(r.lang || 'en'));
+  else if (industryMeta(page)) {
+    // An industry page: the page itself, about the Autograding product, under inphox > Autograding > <industry>.
+    const lang = r.lang || 'en', m = industryMeta(page)[lang];
+    g.push({ '@type': 'WebPage', '@id': canonicalFor(page, lang), url: canonicalFor(page, lang), name: r.title, description: r.description, inLanguage: lang, about: { '@id': SITE + '/autograding#app' }, publisher: { '@id': ORG_ID } },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: SITE_NAME, item: SITE + '/' },
+        { '@type': 'ListItem', position: 2, name: 'Autograding', item: canonicalFor('autograding', lang) },
+        { '@type': 'ListItem', position: 3, name: m.nav, item: canonicalFor(page, lang) }
+      ] });
+    return { '@context': 'https://schema.org', '@graph': g };
+  }
   else if (page === 'pricing') g.push(inventoryApp, { '@type': 'FAQPage', mainEntity: pricing.faq.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
   if (page !== 'home' && r.index !== false) g.push(crumbs(r));
   return g.length ? { '@context': 'https://schema.org', '@graph': g } : null;

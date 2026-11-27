@@ -44,6 +44,14 @@
     {
       "source": "/es",
       "destination": "/es.html"
+    },
+    {
+      "source": "/autograding",
+      "destination": "/autograding.html"
+    },
+    {
+      "source": "/es/autograding",
+      "destination": "/es/autograding.html"
     }
   ]
 }

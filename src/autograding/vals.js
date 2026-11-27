@@ -14,7 +14,7 @@ export function mainVals(lang = 'en', ref = '') {
         lead: 'A camera finds scratches, chips and dents with high accuracy. Our rules turn them into a grade you can show a buyer, line by line.',
         separate: 'Its own product. Use it on its own, or inside your inphox Inventory workflow. Business or enterprise? Contact us.',
         pitch: [
-          { big: '7–8 s', small: 'per scan: front, back and every edge.' },
+          { big: '7–8 s', small: 'per device, every side graded: front, back and edges.' },
           { big: 'No training', small: 'New staff follow the screen. The rules do the judging.' },
           { big: '100,000s', small: 'of devices, graded the same way every time.' }
         ],
@@ -30,7 +30,7 @@ export function mainVals(lang = 'en', ref = '') {
         benchK: 'Inside the scan', benchH: 'Every side, every flaw, one score out of 100.',
         benchP: 'Front, back and four edges, each scored on its own. The worst side sets the grade, and every reason comes with it.',
         docsCta: 'Read the API docs',
-        benchStats: [{ big: '6 sides', small: 'front, back and every edge, one photo each' }, { big: '8 kinds', small: 'of flaw: scratches, scuffs, dents, cracks, chips and more' }, { big: '0 to 100', small: 'one score, banded into A, B, C and D by your standard' }, { big: '7–8 s', small: 'from photos to a grade with its reasons' }],
+        benchStats: [{ big: '6 sides', small: 'front, back and every edge, one photo each' }, { big: '8 kinds', small: 'of flaw: scratches, scuffs, dents, cracks, chips and more' }, { big: '0 to 100', small: 'one score, banded into A, B, C and D by your standard' }, { big: '7–8 s', small: 'per device, from photos to a grade with its reasons' }],
         l1k: 'DISPLAY', l1h: 'Glass and screen', l1p: 'Scratches traced and measured inside the area people look at.',
         l2k: 'FRAME', l2h: 'Edges, buttons, ports', l2p: 'Chips, dents and worn buttons outlined where drops land.',
         l3k: 'INSIDE', l3h: 'Battery and board', l3p: 'With inphox Inventory, battery health and part history come from the station tests, never the camera.',
@@ -60,7 +60,7 @@ export function mainVals(lang = 'en', ref = '') {
         guide1: 'Front face up', guide2: 'Turn to the back', guide3: 'Now each edge',
         fFlowK: 'CUSTOM WORKFLOWS', fFlowH: 'Grading inside your inventory workflow', fFlowP: 'In inphox Inventory every device moves through your own columns: intake, test, grade, price, sell. The grade lands on the record in 7–8 seconds and the device moves on by itself.',
         flow: ['Intake', 'Test', 'Grade', 'Price', 'Sell'],
-        fScaleK: 'BUILT FOR SCALE', fScaleH: 'One bench or a warehouse', fScaleP: '7–8 second scans, hundreds of thousands of devices.',
+        fScaleK: 'BUILT FOR SCALE', fScaleH: 'One bench or a warehouse', fScaleP: '7–8 seconds a device, hundreds of thousands of devices.',
         lifeK: 'Counter to counter', lifeH: 'One device, from the trade-in counter to its next owner.', lifeHint: 'Hover to pause.',
         tagInv: 'inphox Inventory', tagAg: 'Autograding',
         p1k: 'ON ITS OWN', p1h: 'Autograding', p1p: 'Sign up and grade today. Use the app, a station, or the open API.',
@@ -78,7 +78,7 @@ export function mainVals(lang = 'en', ref = '') {
         lead: 'Una cámara encuentra rayones, despostilladuras y abolladuras con gran precisión. Nuestras reglas los convierten en una calificación que puedes mostrarle al comprador, punto por punto.',
         separate: 'Un producto propio. Úsalo por separado o dentro de tu flujo de inphox Inventory. ¿Empresa o corporativo? Contáctanos.',
         pitch: [
-          { big: '7–8 s', small: 'por escaneo: frente, reverso y cada borde.' },
+          { big: '7–8 s', small: 'por dispositivo, todos los lados: frente, reverso y bordes.' },
           { big: 'Sin capacitación', small: 'El personal nuevo sigue la pantalla. Las reglas hacen el juicio.' },
           { big: 'Cientos de miles', small: 'de dispositivos, calificados igual cada vez.' }
         ],
@@ -94,7 +94,7 @@ export function mainVals(lang = 'en', ref = '') {
         benchK: 'Dentro del escaneo', benchH: 'Cada lado, cada defecto, una puntuación sobre 100.',
         benchP: 'Frente, reverso y los cuatro bordes, cada uno puntuado por separado. El peor lado define la calificación, y cada motivo viene con ella.',
         docsCta: 'Lee la documentación de la API',
-        benchStats: [{ big: '6 lados', small: 'frente, reverso y cada borde, una foto por lado' }, { big: '8 tipos', small: 'de defecto: rayones, roces, abolladuras, grietas, despostilladuras y más' }, { big: '0 a 100', small: 'una puntuación, agrupada en A, B, C y D según tu estándar' }, { big: '7–8 s', small: 'de las fotos a una calificación con sus motivos' }],
+        benchStats: [{ big: '6 lados', small: 'frente, reverso y cada borde, una foto por lado' }, { big: '8 tipos', small: 'de defecto: rayones, roces, abolladuras, grietas, despostilladuras y más' }, { big: '0 a 100', small: 'una puntuación, agrupada en A, B, C y D según tu estándar' }, { big: '7–8 s', small: 'por dispositivo, de las fotos a una calificación con sus motivos' }],
         l1k: 'PANTALLA', l1h: 'Cristal y pantalla', l1p: 'Rayones trazados y medidos dentro de la zona que la gente mira.',
         l2k: 'MARCO', l2h: 'Bordes, botones y puertos', l2p: 'Despostilladuras, abolladuras y botones gastados, marcados donde caen los golpes.',
         l3k: 'INTERIOR', l3h: 'Batería y placa', l3p: 'Con inphox Inventory, la salud de la batería y el historial de piezas vienen de las pruebas de la estación, nunca de la cámara.',
@@ -124,7 +124,7 @@ export function mainVals(lang = 'en', ref = '') {
         guide1: 'Frente hacia arriba', guide2: 'Voltéalo al reverso', guide3: 'Ahora cada borde',
         fFlowK: 'FLUJOS A TU MEDIDA', fFlowH: 'La calificación dentro de tu flujo de inventario', fFlowP: 'En inphox Inventory cada dispositivo avanza por tus propias columnas: recepción, prueba, calificación, precio y venta. La calificación llega al registro en 7–8 segundos y el dispositivo avanza solo.',
         flow: ['Recepción', 'Prueba', 'Calificación', 'Precio', 'Venta'],
-        fScaleK: 'HECHO PARA ESCALAR', fScaleH: 'Una mesa o un almacén', fScaleP: 'Escaneos de 7–8 segundos, cientos de miles de dispositivos.',
+        fScaleK: 'HECHO PARA ESCALAR', fScaleH: 'Una mesa o un almacén', fScaleP: '7–8 segundos por dispositivo, cientos de miles de dispositivos.',
         lifeK: 'De mostrador a mostrador', lifeH: 'Un dispositivo, desde el mostrador de recepción hasta su próximo dueño.', lifeHint: 'Pasa el cursor para pausar.',
         tagInv: 'inphox Inventory', tagAg: 'Autograding',
         p1k: 'POR SEPARADO', p1h: 'Autograding', p1p: 'Regístrate y califica hoy. Usa la app, una estación o la API abierta.',
@@ -145,7 +145,7 @@ export function mainVals(lang = 'en', ref = '') {
       en: [
         ['Intake', 'Scan the IMEI. Blacklist, carrier lock and Find My are checked before you pay.', 'inv'],
         ['Test', 'Plug in at the station: functions, battery and part history land on the device record.', 'inv'],
-        ['Autograde', '7–8 second scan. Flaws outlined and scored by your grading standard.', 'ag'],
+        ['Autograde', '7–8 seconds a device. Flaws outlined and scored by your grading standard.', 'ag'],
         ['Normalize', 'Bought from another shop? Their grade is converted to your scale.', 'ag'],
         ['Price', 'Price lists by model and grade, per customer: the grade becomes a price at once.', 'inv'],
         ['Share', 'Send the grade, photos and reasons to a buyer in one link.', 'ag'],
@@ -156,7 +156,7 @@ export function mainVals(lang = 'en', ref = '') {
       es: [
         ['Recepción', 'Escanea el IMEI. Lista negra, bloqueo de operador y Buscar se revisan antes de pagar.', 'inv'],
         ['Prueba', 'Conéctalo en la estación: funciones, batería e historial de piezas quedan en el registro.', 'inv'],
-        ['Autograding', 'Escaneo de 7–8 segundos. Defectos marcados y puntuados con tu estándar.', 'ag'],
+        ['Autograding', '7–8 segundos por dispositivo. Defectos marcados y puntuados con tu estándar.', 'ag'],
         ['Normaliza', '¿Lo compraste a otra tienda? Su calificación se convierte a tu escala.', 'ag'],
         ['Precio', 'Listas de precios por modelo y calificación, por cliente: la calificación se vuelve precio al instante.', 'inv'],
         ['Comparte', 'Envía la calificación, las fotos y los motivos al comprador en un solo enlace.', 'ag'],

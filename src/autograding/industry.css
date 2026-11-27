@@ -1,0 +1,119 @@
+/* inphox Autograding by industry (src/pages/AgIndustry.jsx). The Autograding page's palette and type, scoped to .agi:
+   paper #F6F2EA, ink #16130F, orange #C67139 for fills and lines, #a65420 for orange text (4.8:1 on paper; the board's #b05a26 is 4.3:1 there, under AA for 12 px text).
+   No glows, no gradient washes. */
+.agi{--p:#F6F2EA;--ink:#16130F;--o:#C67139;--ot:#a65420;--mut:#4a443c;--line:rgba(22,19,15,.14);
+  background:var(--p);color:var(--ink);font-family:Satoshi,-apple-system,Arial,sans-serif;line-height:1.55}
+.agi *{box-sizing:border-box}
+.agi a:focus-visible,.agi summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.agi-mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.agi-wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.agi-k{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ot);font-weight:700}
+.agi-k::before{content:"";width:10px;height:10px;background:var(--o)}
+.agi h1,.agi h2,.agi h3{margin:0;letter-spacing:-.04em;line-height:1.02}
+.agi h1{font-size:clamp(36px,5.4vw,72px);max-width:16ch}
+.agi h1 em,.agi h2 em{font-style:normal;color:var(--ot)}
+.agi h2{font-size:clamp(28px,3.6vw,48px);max-width:22ch}
+.agi h3{font-size:22px;letter-spacing:-.02em;line-height:1.2}
+.agi p{margin:0}
+
+/* hero */
+.agi-hero{padding:clamp(40px,7vw,96px) 0 clamp(36px,5vw,64px);border-bottom:1px solid var(--line)}
+.agi-crumb{font-size:12px;color:var(--mut);margin-bottom:28px}
+.agi-crumb a{color:var(--mut)}
+.agi-hero h1{margin-top:18px}
+.agi-intro{margin-top:30px;max-width:62ch;font-size:clamp(17px,1.5vw,19px);color:#2b2620}
+.agi-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.agi-btn{display:inline-flex;align-items:center;min-height:52px;padding:0 24px;border-radius:2px;text-decoration:none;font-weight:800;font-size:16px}
+.agi-btn.is-primary{background:var(--o);color:var(--ink)}
+.agi-btn.is-primary:hover{background:#d4824b}
+.agi-btn.is-ghost{border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.agi-btn.is-ghost:hover{background:rgba(22,19,15,.05)}
+.agi-meta{margin-top:22px;font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:6px 18px}
+
+/* flow (dark band) */
+.agi-flow{background:var(--ink);color:var(--p);padding:clamp(44px,6vw,80px) 0}
+.agi-flow .agi-k{color:#e0a273}
+.agi-flow h2{margin-top:12px;color:var(--p)}
+.agi-steps{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;border-top:1px solid rgba(246,242,234,.22)}
+.agi-steps li{position:relative;padding:22px 20px 4px 0}
+.agi-steps li::before{content:"";position:absolute;top:-5px;left:0;width:9px;height:9px;background:var(--o)}
+.agi-steps b{display:block;font-size:18px;margin:6px 0 6px}
+.agi-steps span{color:#cfc6b8;font-size:15px}
+.agi-n{font-size:12px;color:#e0a273}
+
+/* sections */
+.agi-sec{padding:clamp(40px,6vw,76px) 0;border-bottom:1px solid var(--line)}
+.agi-row{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,4vw,64px);padding:28px 0;border-top:1px solid var(--line)}
+.agi-row:first-of-type{border-top:0}
+.agi-row .agi-n{color:var(--ot);display:block;margin-bottom:10px}
+.agi-row p{font-size:17px;color:#2b2620;max-width:64ch}
+.agi-list{margin:16px 0 0;padding:0;list-style:none}
+.agi-list li{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;padding:8px 12px;border-left:3px solid var(--o);background:#fff;margin-top:6px}
+@media (max-width:760px){.agi-row{grid-template-columns:1fr}}
+
+/* example */
+.agi-ex{padding:clamp(40px,6vw,76px) 0;border-bottom:1px solid var(--line)}
+.agi-ex h2{margin-top:12px}
+.agi-card{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:clamp(16px,3vw,28px)}
+.agi-note{margin-top:14px;font-size:13px;color:var(--mut);max-width:80ch}
+.agi-tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;background:var(--ink);color:var(--p);border-radius:2px}
+.agi-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.agi-col{border-top:3px solid var(--ink);padding-top:14px}
+.agi-col.is-on{border-top-color:var(--o)}
+.agi-col small{display:block;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.agi-col strong{display:block;font-size:30px;letter-spacing:-.03em;margin:6px 0}
+.agi-col span{font-size:15px;color:#2b2620}
+.agi-table{width:100%;border-collapse:collapse;font-size:14px}
+.agi-table th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:8px 10px;border-bottom:1px solid var(--ink)}
+.agi-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+.agi-scroll{overflow-x:auto}
+.agi-grade{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 8px;border-radius:2px;background:var(--ink);color:var(--p);font-weight:800}
+.agi-result{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.agi-result .agi-grade{width:72px;height:72px;font-size:34px}
+.agi-side{display:grid;grid-template-columns:72px 44px 44px 1fr;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.agi-side .agi-grade{justify-self:start}
+@media (max-width:560px){.agi-side{grid-template-columns:auto auto 1fr}.agi-side>span:last-child{grid-column:1/-1}.agi-result{grid-template-columns:1fr}}
+.agi-code{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.agi-code pre{margin:0;padding:16px;background:var(--ink);color:#efe8dc;border-radius:4px;overflow-x:auto;font-size:12.5px;line-height:1.5}
+.agi-code small{display:block;margin-bottom:8px;font-size:12px;color:var(--mut)}
+.agi-steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:22px}
+.agi-steps3 div{border:1px solid var(--line);padding:14px;border-radius:2px}
+.agi-steps3 b{display:block;margin:4px 0}
+
+/* boundaries */
+.agi-fit{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:28px}
+.agi-fit h3{font-size:16px;letter-spacing:0;text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.agi-fit ul{list-style:none;margin:12px 0 0;padding:0}
+.agi-fit li{padding:10px 0 10px 28px;border-top:1px solid var(--line);position:relative;font-size:16px}
+.agi-fit li::before{position:absolute;left:0;top:10px;font-weight:800}
+.agi-yes li::before{content:"\2713";color:var(--ot)}
+.agi-no li::before{content:"\2014";color:var(--mut)}
+
+/* evaluate + faq */
+.agi-eval ol{margin:24px 0 0;padding:0;list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.agi-eval li{counter-increment:s;border-top:3px solid var(--o);padding-top:12px;font-size:16px}
+.agi-eval li::before{content:counter(s,decimal-leading-zero);display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ot);margin-bottom:6px}
+.agi-faq{margin-top:22px;border-top:1px solid var(--ink)}
+.agi-faq details{border-bottom:1px solid var(--line);padding:16px 0}
+.agi-faq summary{cursor:pointer;font-weight:700;font-size:18px;list-style:none}
+.agi-faq summary::-webkit-details-marker{display:none}
+.agi-faq summary::after{content:"+";float:right;color:var(--ot);font-weight:800}
+.agi-faq details[open] summary::after{content:"\2013"}
+.agi-faq p{margin-top:10px;color:#2b2620;max-width:70ch}
+
+/* close (dark band) */
+.agi-close{background:var(--ink);color:var(--p);padding:clamp(44px,6vw,80px) 0}
+.agi-close h2{color:var(--p)}
+.agi-close p{margin-top:14px;color:#cfc6b8;max-width:56ch}
+.agi-close .agi-btn.is-ghost{border-color:var(--p);color:var(--p)}
+
+/* industries index (on /autograding and under each industry) */
+.agi-index{padding:clamp(40px,6vw,76px) 0}
+.agi-index h2{margin-top:12px}
+.agi-grid{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.agi-grid a{display:block;height:100%;padding:18px;border:1px solid var(--line);border-radius:2px;background:#fff;text-decoration:none;color:var(--ink)}
+.agi-grid a:hover{border-color:var(--o)}
+.agi-grid b{display:block;font-size:18px;letter-spacing:-.01em}
+.agi-grid span{display:block;margin-top:6px;font-size:15px;color:var(--mut)}
+.agi-grid .is-here{border-color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.agi *{transition:none!important}}
