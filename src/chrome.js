@@ -5,9 +5,43 @@
 export const AG_APP = 'https://autograding.inphox.net';
 export const AG_DOCS = AG_APP + '/api/docs';
 export const AG_PRICING = AG_DOCS + '#pricing';
-const AG_UTM = (content, lang) => `utm_source=inphox.net&utm_medium=website&utm_campaign=autograding&utm_content=${content}&lang=${lang}`;
-/** The Autograding sign-up, with the visitor's ?ref= (kept by the page) passed on. */
-export const agStartUrl = (content, lang = 'en', ref = '') => `${AG_APP}/?${ref ? 'ref=' + encodeURIComponent(ref) + '&' : ''}${AG_UTM(content, lang)}`;
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+const TAGS_KEY = 'inphox_ag_utm';
+const cleanTag = v => (/^[A-Za-z0-9_.-]{1,120}$/.test(v || '') ? v : '');
+
+/** Keep a visitor's own utm_* tags for the visit (site-wide, from the first page they land on), when they bring a source. */
+export function keepVisitorTags(search = '') {
+  try {
+    const q = new URLSearchParams(search), tags = {};
+    for (const k of UTM_KEYS) { const v = cleanTag(q.get(k)); if (v) tags[k] = v; }
+    if (tags.utm_source) sessionStorage.setItem(TAGS_KEY, JSON.stringify(tags));
+  } catch (e) { /* private window, old browser */ }
+}
+const visitorTags = () => {
+  if (typeof window === 'undefined') return null;
+  try { return JSON.parse(sessionStorage.getItem(TAGS_KEY) || 'null'); } catch (e) { return null; }
+};
+
+/**
+ * The query on every link into the Autograding app (the app keeps the first visit's tags through sign-up and payment).
+ * - A visitor who came with their own utm_* tags (an email, an ad) passes them on as they came, so they count as that
+ *   source wherever they land.
+ * - Otherwise the link is tagged as the website's, except utm_source when it passes a ?ref= on: the app takes a ref as
+ *   the source only when no utm_source came with it ("Their code stays with your sign-up").
+ */
+export function agQuery(content, lang = 'en', ref = '', visitor = visitorTags()) {
+  const q = new URLSearchParams();
+  if (ref) q.set('ref', ref);
+  if (visitor && visitor.utm_source) { for (const k of UTM_KEYS) if (visitor[k]) q.set(k, visitor[k]); }
+  else {
+    if (!ref) q.set('utm_source', 'inphox.net');
+    q.set('utm_medium', 'website'); q.set('utm_campaign', 'autograding'); q.set('utm_content', content);
+  }
+  q.set('lang', lang);
+  return q.toString();
+}
+/** The Autograding sign-up, with the visitor's ?ref= (kept by the page) and tags passed on. */
+export const agStartUrl = (content, lang = 'en', ref = '') => `${AG_APP}/?${agQuery(content, lang, ref)}`;
 
 export const CHROME = {
   en: {

@@ -4,6 +4,7 @@ import SiteLogic from './SiteLogic.js';
 import Layout from './Layout.jsx';
 import { pageFromPath } from './routes.js';
 import { setEagerAutograding } from './pages/autogradingSlot.js';
+import { keepVisitorTags } from './chrome.js';
 import './styles/fonts.css';
 import './tokens.css';
 import './index.css';
@@ -13,6 +14,9 @@ import './interactions.css';
 const settings = {
   startMode: 'Scroll animation', // 'Scroll animation' | 'Slideshow'
 };
+
+// A visitor's own utm_* tags (an email, an ad), kept from whichever page they land on, go on with them to the app.
+keepVisitorTags(location.search);
 
 const mount = () => createRoot(document.getElementById('root')).render(
   <LogicHost logic={SiteLogic} view={Layout} {...settings} />
