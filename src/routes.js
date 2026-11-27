@@ -28,7 +28,7 @@ const EN_ROUTES = [
   { page: 'law-enforcement', path: '/law-enforcement', title: 'Law enforcement requests | inphox', description: 'How inphox handles requests from law enforcement.' },
   { page: 'subprocessors', path: '/subprocessors', title: 'Subprocessors | inphox', description: 'The service providers inphox uses to run the service.' },
   { page: 'erasure', path: '/erasure', title: 'Erasure certificates | inphox', description: 'What an inphox erasure certificate means, the NIST SP 800-88 method it follows and its limits.' },
-  { page: 'cookies', path: '/cookies', title: 'Cookie policy | inphox', description: 'The inphox website sets no cookies. What it keeps in local storage and why.' },
+  { page: 'cookies', path: '/cookies', title: 'Cookie policy | inphox', description: 'The inphox website sets no cookies. What it keeps in your browser, the anonymous visit counts it makes, and why.' },
   { page: 'accessibility', path: '/accessibility', title: 'Accessibility | inphox', description: 'inphox works toward WCAG 2.2 AA: readable text, full keyboard use, labels on every control and reduce-motion support.' }
 ];
 
@@ -54,7 +54,7 @@ const ES_META = {
   'law-enforcement': ['Solicitudes de las autoridades | inphox', 'Cómo atiende inphox las solicitudes de las autoridades.'],
   subprocessors: ['Subencargados | inphox', 'Los proveedores de servicios que inphox usa para operar el servicio.'],
   erasure: ['Certificados de borrado | inphox', 'Qué significa un certificado de borrado de inphox, el método NIST SP 800-88 que sigue y sus límites.'],
-  cookies: ['Política de cookies | inphox', 'El sitio web de inphox no usa cookies. Qué guarda en el almacenamiento local y por qué.'],
+  cookies: ['Política de cookies | inphox', 'El sitio web de inphox no usa cookies. Qué guarda en tu navegador, los conteos anónimos de visitas y por qué.'],
   accessibility: ['Accesibilidad | inphox', 'inphox trabaja hacia WCAG 2.2 AA: texto legible, uso completo con teclado, etiquetas en cada control y soporte para reducir el movimiento.']
 };
 // Autograding by industry (/autograding/buyback ...): their titles live with the industry list (industryMeta.js).

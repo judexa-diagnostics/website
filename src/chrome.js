@@ -5,9 +5,9 @@
 export const AG_APP = 'https://autograding.inphox.net';
 export const AG_DOCS = AG_APP + '/api/docs';
 export const AG_PRICING = AG_DOCS + '#pricing';
-// A real graded device, shared as a public report (founder, 2026-11-27). Share links expire (at most 30 days): when
-// this one is replaced, change it here and nowhere else.
-export const AG_SAMPLE = AG_APP + '/s/DVjBbzR1FhVhZvSOlz9FxnyR';
+// A real graded device: the app's permanent public demo report (/demo), one device an admin pins in Admin > Launch
+// settings (DEMO_INSPECTION_ID). Never a share link: those expire after 30 days at most (2026-11-27).
+export const AG_SAMPLE = AG_APP + '/demo';
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 const TAGS_KEY = 'inphox_ag_utm', REF_KEY = 'inphox_ag_ref';
 const cleanTag = v => (/^[A-Za-z0-9_.-]{1,120}$/.test(v || '') ? v : '');
@@ -24,6 +24,29 @@ export function keepVisitorTags(search = '') {
     if (ref) sessionStorage.setItem(REF_KEY, ref);
   } catch (e) { /* private window, old browser */ }
 }
+// A random id for this visit (sessionStorage, gone with the tab): src/analytics.js counts pages and clicks with it, and
+// links into the app carry it (sid=) so the app can join a page view to the sign-up it led to. Never with Do Not Track
+// or Global Privacy Control, never on the server render.
+const SID_KEY = 'inphox_sid';
+
+/** True when this browser asked not to be tracked (or there is no browser). Then nothing is ever sent. */
+export const optedOut = (nav = typeof navigator === 'undefined' ? null : navigator) =>
+  !nav || nav.doNotTrack === '1' || nav.globalPrivacyControl === true || (typeof window !== 'undefined' && window.doNotTrack === '1');
+
+/** This visit's random id, or '' when opted out or storage is unavailable. */
+export function visitId() {
+  if (optedOut()) return '';
+  try {
+    let id = sessionStorage.getItem(SID_KEY);
+    if (!id || !/^[a-f0-9-]{36}$/.test(id)) {
+      id = (crypto.randomUUID && crypto.randomUUID()) || '';
+      if (id) sessionStorage.setItem(SID_KEY, id);
+    }
+    return id || '';
+  } catch (e) { return ''; }
+}
+
+
 /** The visitor's ?ref= for this visit ("Their code stays with your sign-up"), or ''. */
 export const visitorRef = () => {
   if (typeof window === 'undefined') return '';
@@ -52,6 +75,8 @@ export function agQuery(content, lang = 'en', ref = '', visitor = visitorTags())
     q.set('utm_medium', 'website'); q.set('utm_campaign', 'autograding'); q.set('utm_content', content);
   }
   if (content) q.set('via', content);
+  const sid = visitId();
+  if (sid) q.set('sid', sid);
   q.set('lang', lang);
   return q.toString();
 }

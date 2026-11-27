@@ -1,11 +1,11 @@
-Version: 2026-11-14
+Version: 2026-11-27
 Title: Cookies
 
 This page covers the inphox website (inphox.net). The inphox apps and the sign-in service use only the cookies needed to sign you in and keep your account safe, as our Privacy Policy says.
 
-1. What this website stores. The website sets no cookies. It keeps a few small settings in your browser's local storage so it works the way you left it: the last shop address you signed in at, whether you turned animations off, whether you skipped the walkthrough, and your best score in the phone game. They stay on your device and are never sent to us.
+1. What this website stores. The website sets no cookies. It keeps a few small settings in your browser's local storage so it works the way you left it: the last shop address you signed in at, whether you turned animations off, whether you skipped the walkthrough, and your best score in the phone game. They stay on your device and are never sent to us. It also keeps a random visit id in session storage, which your browser deletes when you close the tab (see section 2).
 
-2. No tracking. We do not use advertising, analytics or cross-site tracking cookies, and no other company collects information about your activity on this website. Because we do not track you, a Do Not Track or Global Privacy Control signal changes nothing here. If that ever changes, we will update this page first and honour those signals.
+2. Visit statistics, and no tracking. To learn which pages help people, the website counts page views and clicks on links into inphox Autograding and our contact page. Each count carries the page, the button, the language and any campaign tags in the link you arrived from, with a random visit id that lasts only until you close the tab. It goes only to inphox's own servers and is stored without cookies, IP address or other personal details; no other company sees it, and visit counts are never added to a sales or marketing system. If you then open inphox Autograding from a link here, the visit id goes with you, so we can tell which page led to a sign-up; if you sign up, the page and link that led you there are kept with your account. If your browser sends Do Not Track or Global Privacy Control, the website sends nothing at all. We do not use advertising or cross-site tracking.
 
 3. Fonts and files. The website's fonts and files are served from our own servers, so loading a page does not tell any other company that you visited.
 

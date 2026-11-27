@@ -95,7 +95,7 @@ test('calls to action go somewhere real, keep the visitor\'s campaign and name t
       }
       if (c.to === 'contact') assert.ok(href.startsWith(lang === 'es' ? '/es/contact?' : '/contact?'), href);
       if (c.to === 'start') assert.ok(href.startsWith('https://autograding.inphox.net/?'), href);
-      if (c.to === 'sample') assert.ok(href.startsWith('https://autograding.inphox.net/s/'), href);
+      if (c.to === 'sample') assert.ok(href.startsWith('https://autograding.inphox.net/demo?'), href);   // never an expiring /s/ link
     }
   }
   assert.throws(() => ctaHref({ to: 'nowhere' }, 'en', '', 'x'), /unknown destination/);

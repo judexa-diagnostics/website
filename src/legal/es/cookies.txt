@@ -1,13 +1,13 @@
-Version: 2026-11-14
+Version: 2026-11-27
 Title: Cookies
 
 Esta es una traducción al español para tu comodidad. La versión en inglés es la que rige; si hay alguna diferencia entre ambas, prevalece la versión en inglés.
 
 Esta página cubre el sitio web de inphox (inphox.net). Las apps de inphox y el servicio de inicio de sesión usan solo las cookies necesarias para iniciar tu sesión y mantener segura tu cuenta, como dice nuestra Política de privacidad.
 
-1. Lo que guarda este sitio web. El sitio web no usa cookies. Guarda algunos ajustes pequeños en el almacenamiento local de tu navegador para funcionar como lo dejaste: la última dirección de tienda en la que iniciaste sesión, si desactivaste las animaciones, si saltaste el recorrido y tu mejor puntuación en el juego del teléfono. Se quedan en tu dispositivo y nunca se nos envían.
+1. Lo que guarda este sitio web. El sitio web no usa cookies. Guarda algunos ajustes pequeños en el almacenamiento local de tu navegador para funcionar como lo dejaste: la última dirección de tienda en la que iniciaste sesión, si desactivaste las animaciones, si saltaste el recorrido y tu mejor puntuación en el juego del teléfono. Se quedan en tu dispositivo y nunca se nos envían. También guarda un identificador de visita aleatorio en el almacenamiento de sesión, que tu navegador borra al cerrar la pestaña (consulta la sección 2).
 
-2. Sin rastreo. No usamos cookies de publicidad, de analítica ni de rastreo entre sitios, y ninguna otra empresa recopila información sobre tu actividad en este sitio web. Como no te rastreamos, una señal de No rastrear o de Control Global de Privacidad no cambia nada aquí. Si eso cambia, primero actualizaremos esta página y respetaremos esas señales.
+2. Estadísticas de visitas, y sin rastreo. Para saber qué páginas ayudan a la gente, el sitio web cuenta las visitas a cada página y los clics en enlaces hacia inphox Autograding y nuestra página de contacto. Cada conteo incluye la página, el botón, el idioma y las etiquetas de campaña del enlace por el que llegaste, con un identificador de visita aleatorio que dura solo hasta que cierras la pestaña. Se envía únicamente a los servidores de inphox y se guarda sin cookies, sin dirección IP ni otros datos personales; ninguna otra empresa lo ve, y los conteos de visitas nunca se agregan a un sistema de ventas o marketing. Si después abres inphox Autograding desde un enlace de aquí, el identificador de visita va contigo, para saber qué página llevó a un registro; si te registras, la página y el enlace que te llevaron se guardan con tu cuenta. Si tu navegador envía No rastrear o Control Global de Privacidad, el sitio web no envía nada. No usamos publicidad ni rastreo entre sitios.
 
 3. Fuentes y archivos. Las fuentes y archivos del sitio web se sirven desde nuestros propios servidores, así que cargar una página no le dice a ninguna otra empresa que la visitaste.
 

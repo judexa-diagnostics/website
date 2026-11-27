@@ -9,6 +9,8 @@ import { textProblem, isEmail, isWebsite } from './formCheck.js';
 
 import { PAGES, pathFor, pageFromPath, pageFromHash, routeFor, canonicalFor, langFromPath, hasSpanish, productOf } from './routes.js';
 import { CHROME, agStartUrl, visitorRef } from './chrome.js';
+import { pageViewed } from './analytics.js';
+import { industryMeta } from './autograding/industryMeta.js';
 // The last shop this browser signed in to, so Sign in is one click next time.
 const LAST_SHOP_KEY = 'inphox_last_shop';
 const readLastShop = () => { try { return savedShop(typeof localStorage !== 'undefined' && localStorage.getItem(LAST_SHOP_KEY), shopDomain); } catch (e) { return ''; } };
@@ -152,6 +154,7 @@ export default class SiteLogic extends DCLogic {
     if (p === 'notfound') { document.title = 'Page not found | inphox'; return; }
     const l = lang === 'es' && hasSpanish(p) ? 'es' : 'en';
     const r = routeFor(p, l);
+    pageViewed(p, l);   // first-party, anonymous; nothing with Do Not Track / GPC (analytics.js)
     document.title = r.title;
     document.documentElement.lang = l;
     const set = (sel, attr, val) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(attr, val); };
@@ -279,13 +282,15 @@ export default class SiteLogic extends DCLogic {
     const lc = s.lang === 'ES' && hasSpanish(s.page) ? 'es' : 'en', cw = CHROME[lc];
     const product = productOf(s.page), isAg = product === 'ag';
     const agRef = isAg ? visitorRef() : '';
+    const im = industryMeta(s.page), spot = x => (im ? `${im.slug}-${x}` : x);
     const chrome = {
       c: cw, lc, product, isAg, showLang: hasSpanish(s.page), swipe: s.swipe,
       switcher: [
         { key: 'inv', label: cw.inv, long: cw.invLong, desc: cw.invDesc, href: pathFor('home', lc), on: !isAg },
         { key: 'ag', label: cw.ag, long: cw.agLong, desc: cw.agDesc, href: pathFor('autograding', lc), on: isAg }
       ],
-      agStart: agStartUrl('header', lc, agRef), agStartMenu: agStartUrl('menu', lc, agRef), agStartFooter: agStartUrl('footer', lc, agRef)
+      // via names the page too on an industry page (buyback-header), so Admin's "By website page" credits the right page
+      agStart: agStartUrl(spot('header'), lc, agRef), agStartMenu: agStartUrl(spot('menu'), lc, agRef), agStartFooter: agStartUrl(spot('footer'), lc, agRef)
     };
 
     // hero product

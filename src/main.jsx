@@ -6,6 +6,7 @@ import { pageFromPath } from './routes.js';
 import { setEagerAutograding, setEagerIndustry } from './pages/autogradingSlot.js';
 import { isIndustryPage } from './autograding/industryMeta.js';
 import { keepVisitorTags } from './chrome.js';
+import { linkClicked } from './analytics.js';
 import './styles/fonts.css';
 import './tokens.css';
 import './index.css';
@@ -18,6 +19,12 @@ const settings = {
 
 // A visitor's own utm_* tags (an email, an ad), kept from whichever page they land on, go on with them to the app.
 keepVisitorTags(location.search);
+// Which button sent someone into the app or to Contact (first-party, anonymous: analytics.js). Capture phase, so it runs
+// before the in-site router turns the click into a page change.
+document.addEventListener('click', e => {
+  const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+  if (a) linkClicked(a, pageFromPath(location.pathname) || 'notfound');
+}, true);
 
 const mount = () => createRoot(document.getElementById('root')).render(
   <LogicHost logic={SiteLogic} view={Layout} {...settings} />
