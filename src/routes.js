@@ -33,7 +33,7 @@ const EN_ROUTES = [
 // Every page in Spanish too, at /es/<path> (home: /es), with its own title and description (Chris 2026-11-24).
 const ES_META = {
   home: ['Software para probar, borrar e inventariar teléfonos usados | inphox', 'Prueba, borra, califica y vende teléfonos, tabletas y laptops usados. Una plataforma para recepción, diagnóstico, borrado certificado, inventario y reparaciones.'],
-  autograding: ['Calificación de dispositivos con IA en 7 segundos | inphox Autograding', 'Calificación cosmética automática de teléfonos, tabletas, laptops y relojes usados. Fotos de entrada, una calificación A a D constante con cada defecto medido.'],
+  autograding: ['Calificación de dispositivos con IA en 7–8 s | inphox Autograding', 'Calificación cosmética automática de teléfonos, tabletas, laptops y relojes usados. Fotos de entrada, una calificación A a D constante con cada defecto medido.'],
   about: ['Sobre inphox: fundadores y empresa', 'inphox LLC crea software para negocios de electrónicos usados. Fundador y CEO Christopher Luk; cofundadores Sri Vatsa Vuddanti e Iniyan Kannappan.'],
   features: ['Funciones: pruebas, borrado, calificación e inventario | inphox', 'Todas las funciones de inphox: diagnóstico, borrado certificado, calificación, inventario por ubicación, reparaciones, pedidos, listas de precios y marketplace.'],
   pricing: ['Precios y planes | inphox', 'Planes de inphox desde Gratis hasta Enterprise. Revisiones de dispositivos, estaciones, usuarios y comisiones del marketplace, con los precios a la vista.'],

@@ -9,13 +9,13 @@ export function mainVals(lang = 'en', ref = '') {
         navFeatures: 'API docs', navPricing: 'Autograding pricing', navSignin: 'Sign in to Autograding',
         ctaStart: 'Start free', ctaStartLong: 'Start free today', ctaContact: 'Contact us',
         eyebrow: 'inphox Autograding',
-        h1a: 'Grade any device', h1b: 'in 7 seconds.',
-        lead: 'A camera finds every scratch, chip and dent. Our rules turn them into a grade you can show a buyer, line by line.',
+        h1a: 'Grade any device', h1b: 'in 7–8 seconds.',
+        lead: 'A camera finds scratches, chips and dents with high accuracy. Our rules turn them into a grade you can show a buyer, line by line.',
         separate: 'Its own product. Use it on its own, or inside your inphox Inventory workflow. Business or enterprise? Contact us.',
         pitch: [
-          { big: '7 s', small: 'per scan: front, back and every edge.' },
+          { big: '7–8 s', small: 'per scan: front, back and every edge.' },
           { big: 'No training', small: 'New staff follow the screen. The rules do the judging.' },
-          { big: 'Millions', small: 'of devices, graded the same way every time.' }
+          { big: '100,000s', small: 'of devices, graded the same way every time.' }
         ],
         probK: 'The problem with grading by eye', probHa: 'Grades', probHb: 'change', probHc: 'with the person holding the phone.', probLabel: 'THE PROBLEM', fixLabel: 'HOW AUTOGRADING FIXES IT',
         probs: [
@@ -29,7 +29,7 @@ export function mainVals(lang = 'en', ref = '') {
         benchK: 'Inside the scan', benchH: 'Every side, every flaw, one score out of 100.',
         benchP: 'Front, back and four edges, each scored on its own. The worst side sets the grade, and every reason comes with it.',
         docsCta: 'Read the API docs',
-        benchStats: [{ big: '6 sides', small: 'front, back and every edge, one photo each' }, { big: '8 kinds', small: 'of flaw: scratches, scuffs, dents, cracks, chips and more' }, { big: '0 to 100', small: 'one score, banded into A, B, C and D by your standard' }, { big: '7.0 s', small: 'from photos to a grade with its reasons' }],
+        benchStats: [{ big: '6 sides', small: 'front, back and every edge, one photo each' }, { big: '8 kinds', small: 'of flaw: scratches, scuffs, dents, cracks, chips and more' }, { big: '0 to 100', small: 'one score, banded into A, B, C and D by your standard' }, { big: '7–8 s', small: 'from photos to a grade with its reasons' }],
         l1k: 'DISPLAY', l1h: 'Glass and screen', l1p: 'Scratches traced and measured inside the area people look at.',
         l2k: 'FRAME', l2h: 'Edges, buttons, ports', l2p: 'Chips, dents and worn buttons outlined where drops land.',
         l3k: 'INSIDE', l3h: 'Battery and board', l3p: 'With inphox Inventory, battery health and part history come from the station tests, never the camera.',
@@ -57,9 +57,9 @@ export function mainVals(lang = 'en', ref = '') {
         fShareK: 'SHARE GRADES', fShareH: 'One link, full proof', fShareP: 'Send a grade with its photos and reasons. Buyers see what you saw.',
         fTrainK: 'NO TRAINING', fTrainH: 'Day-one ready', fTrainP: 'The screen guides every shot. A new hire grades like your best tech.',
         guide1: 'Front face up', guide2: 'Turn to the back', guide3: 'Now each edge',
-        fFlowK: 'CUSTOM WORKFLOWS', fFlowH: 'Grading inside your inventory workflow', fFlowP: 'In inphox Inventory every device moves through your own columns: intake, test, grade, price, sell. The grade lands on the record in 7 seconds and the device moves on by itself.',
+        fFlowK: 'CUSTOM WORKFLOWS', fFlowH: 'Grading inside your inventory workflow', fFlowP: 'In inphox Inventory every device moves through your own columns: intake, test, grade, price, sell. The grade lands on the record in 7–8 seconds and the device moves on by itself.',
         flow: ['Intake', 'Test', 'Grade', 'Price', 'Sell'],
-        fScaleK: 'BUILT FOR SCALE', fScaleH: 'One bench or a warehouse', fScaleP: '7-second scans, millions of devices.',
+        fScaleK: 'BUILT FOR SCALE', fScaleH: 'One bench or a warehouse', fScaleP: '7–8 second scans, hundreds of thousands of devices.',
         lifeK: 'Counter to counter', lifeH: 'One device, from the trade-in counter to its next owner.', lifeHint: 'Hover to pause.',
         tagInv: 'inphox Inventory', tagAg: 'Autograding',
         p1k: 'ON ITS OWN', p1h: 'Autograding', p1p: 'Sign up and grade today. Use the app, a station, or the open API.',
@@ -73,13 +73,13 @@ export function mainVals(lang = 'en', ref = '') {
         navFeatures: 'Documentación de la API', navPricing: 'Precios de Autograding', navSignin: 'Entrar a Autograding',
         ctaStart: 'Empieza gratis', ctaStartLong: 'Empieza gratis hoy', ctaContact: 'Contáctanos',
         eyebrow: 'inphox Autograding',
-        h1a: 'Califica cualquier dispositivo', h1b: 'en 7 segundos.',
-        lead: 'Una cámara encuentra cada rayón, despostilladura y abolladura. Nuestras reglas los convierten en una calificación que puedes mostrarle al comprador, punto por punto.',
+        h1a: 'Califica cualquier dispositivo', h1b: 'en 7–8 segundos.',
+        lead: 'Una cámara encuentra rayones, despostilladuras y abolladuras con gran precisión. Nuestras reglas los convierten en una calificación que puedes mostrarle al comprador, punto por punto.',
         separate: 'Un producto propio. Úsalo por separado o dentro de tu flujo de inphox Inventory. ¿Empresa o corporativo? Contáctanos.',
         pitch: [
-          { big: '7 s', small: 'por escaneo: frente, reverso y cada borde.' },
+          { big: '7–8 s', small: 'por escaneo: frente, reverso y cada borde.' },
           { big: 'Sin capacitación', small: 'El personal nuevo sigue la pantalla. Las reglas hacen el juicio.' },
-          { big: 'Millones', small: 'de dispositivos, calificados igual cada vez.' }
+          { big: 'Cientos de miles', small: 'de dispositivos, calificados igual cada vez.' }
         ],
         probK: 'El problema de calificar a ojo', probHa: 'Las calificaciones', probHb: 'cambian', probHc: 'según quién sostiene el teléfono.', probLabel: 'EL PROBLEMA', fixLabel: 'CÓMO LO RESUELVE AUTOGRADING',
         probs: [
@@ -93,7 +93,7 @@ export function mainVals(lang = 'en', ref = '') {
         benchK: 'Dentro del escaneo', benchH: 'Cada lado, cada defecto, una puntuación sobre 100.',
         benchP: 'Frente, reverso y los cuatro bordes, cada uno puntuado por separado. El peor lado define la calificación, y cada motivo viene con ella.',
         docsCta: 'Lee la documentación de la API',
-        benchStats: [{ big: '6 lados', small: 'frente, reverso y cada borde, una foto por lado' }, { big: '8 tipos', small: 'de defecto: rayones, roces, abolladuras, grietas, despostilladuras y más' }, { big: '0 a 100', small: 'una puntuación, agrupada en A, B, C y D según tu estándar' }, { big: '7.0 s', small: 'de las fotos a una calificación con sus motivos' }],
+        benchStats: [{ big: '6 lados', small: 'frente, reverso y cada borde, una foto por lado' }, { big: '8 tipos', small: 'de defecto: rayones, roces, abolladuras, grietas, despostilladuras y más' }, { big: '0 a 100', small: 'una puntuación, agrupada en A, B, C y D según tu estándar' }, { big: '7–8 s', small: 'de las fotos a una calificación con sus motivos' }],
         l1k: 'PANTALLA', l1h: 'Cristal y pantalla', l1p: 'Rayones trazados y medidos dentro de la zona que la gente mira.',
         l2k: 'MARCO', l2h: 'Bordes, botones y puertos', l2p: 'Despostilladuras, abolladuras y botones gastados, marcados donde caen los golpes.',
         l3k: 'INTERIOR', l3h: 'Batería y placa', l3p: 'Con inphox Inventory, la salud de la batería y el historial de piezas vienen de las pruebas de la estación, nunca de la cámara.',
@@ -121,9 +121,9 @@ export function mainVals(lang = 'en', ref = '') {
         fShareK: 'COMPARTE CALIFICACIONES', fShareH: 'Un enlace, prueba completa', fShareP: 'Envía una calificación con sus fotos y motivos. El comprador ve lo que tú viste.',
         fTrainK: 'SIN CAPACITACIÓN', fTrainH: 'Listo desde el primer día', fTrainP: 'La pantalla guía cada toma. Un empleado nuevo califica como tu mejor técnico.',
         guide1: 'Frente hacia arriba', guide2: 'Voltéalo al reverso', guide3: 'Ahora cada borde',
-        fFlowK: 'FLUJOS A TU MEDIDA', fFlowH: 'La calificación dentro de tu flujo de inventario', fFlowP: 'En inphox Inventory cada dispositivo avanza por tus propias columnas: recepción, prueba, calificación, precio y venta. La calificación llega al registro en 7 segundos y el dispositivo avanza solo.',
+        fFlowK: 'FLUJOS A TU MEDIDA', fFlowH: 'La calificación dentro de tu flujo de inventario', fFlowP: 'En inphox Inventory cada dispositivo avanza por tus propias columnas: recepción, prueba, calificación, precio y venta. La calificación llega al registro en 7–8 segundos y el dispositivo avanza solo.',
         flow: ['Recepción', 'Prueba', 'Calificación', 'Precio', 'Venta'],
-        fScaleK: 'HECHO PARA ESCALAR', fScaleH: 'Una mesa o un almacén', fScaleP: 'Escaneos de 7 segundos, millones de dispositivos.',
+        fScaleK: 'HECHO PARA ESCALAR', fScaleH: 'Una mesa o un almacén', fScaleP: 'Escaneos de 7–8 segundos, cientos de miles de dispositivos.',
         lifeK: 'De mostrador a mostrador', lifeH: 'Un dispositivo, desde el mostrador de recepción hasta su próximo dueño.', lifeHint: 'Pasa el cursor para pausar.',
         tagInv: 'inphox Inventory', tagAg: 'Autograding',
         p1k: 'POR SEPARADO', p1h: 'Autograding', p1p: 'Regístrate y califica hoy. Usa la app, una estación o la API abierta.',
@@ -144,7 +144,7 @@ export function mainVals(lang = 'en', ref = '') {
       en: [
         ['Intake', 'Scan the IMEI. Blacklist, carrier lock and Find My are checked before you pay.', 'inv'],
         ['Test', 'Plug in at the station: functions, battery and part history land on the device record.', 'inv'],
-        ['Autograde', '7-second scan. Flaws outlined and scored by your grading standard.', 'ag'],
+        ['Autograde', '7–8 second scan. Flaws outlined and scored by your grading standard.', 'ag'],
         ['Normalize', 'Bought from another shop? Their grade is converted to your scale.', 'ag'],
         ['Price', 'Price lists by model and grade, per customer: the grade becomes a price at once.', 'inv'],
         ['Share', 'Send the grade, photos and reasons to a buyer in one link.', 'ag'],
@@ -155,7 +155,7 @@ export function mainVals(lang = 'en', ref = '') {
       es: [
         ['Recepción', 'Escanea el IMEI. Lista negra, bloqueo de operador y Buscar se revisan antes de pagar.', 'inv'],
         ['Prueba', 'Conéctalo en la estación: funciones, batería e historial de piezas quedan en el registro.', 'inv'],
-        ['Autograding', 'Escaneo de 7 segundos. Defectos marcados y puntuados con tu estándar.', 'ag'],
+        ['Autograding', 'Escaneo de 7–8 segundos. Defectos marcados y puntuados con tu estándar.', 'ag'],
         ['Normaliza', '¿Lo compraste a otra tienda? Su calificación se convierte a tu escala.', 'ag'],
         ['Precio', 'Listas de precios por modelo y calificación, por cliente: la calificación se vuelve precio al instante.', 'inv'],
         ['Comparte', 'Envía la calificación, las fotos y los motivos al comprador en un solo enlace.', 'ag'],
@@ -176,8 +176,8 @@ export function mainVals(lang = 'en', ref = '') {
     const pill = (on) => 'min-width: 44px; height: 34px; padding: 0 10px; border: 0; cursor: pointer; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; ' + (on ? 'background: #16130F; color: #F6F2EA' : 'background: transparent; color: #16130F');
     const langs = [['en', 'EN'], ['es', 'ES']].map(([code, label]) => ({ code: label, on: code === lang ? 'true' : 'false', style: pill(code === lang), pick: () => noop({ lang: code }) }));
     const M = lang === 'es'
-      ? [['inphox Inventory', '/', 'Inventario, pruebas, reparaciones y ventas.', 'https://inphox.net/'], ['Autograding', '/autograding', 'Califica cualquier dispositivo en 7 segundos.', '#top'], [t.navPricing, 'api/docs#pricing', 'Créditos prepagados, el mismo precio en la app y en la API.', 'https://autograding.inphox.net/api/docs#pricing'], [t.navFeatures, 'api/docs', 'Cada endpoint, con ejemplos.', 'https://autograding.inphox.net/api/docs'], [t.navSignin, 'autograding.inphox.net', 'Tu cuenta de Autograding.', 'https://autograding.inphox.net/']]
-      : [['inphox Inventory', '/', 'Inventory, testing, repairs and sales.', 'https://inphox.net/'], ['Autograding', '/autograding', 'Grade any device in 7 seconds.', '#top'], [t.navPricing, 'api/docs#pricing', 'Prepaid credits, the same prices in the app and the API.', 'https://autograding.inphox.net/api/docs#pricing'], [t.navFeatures, 'api/docs', 'Every endpoint, with examples.', 'https://autograding.inphox.net/api/docs'], [t.navSignin, 'autograding.inphox.net', 'Your Autograding account.', 'https://autograding.inphox.net/']];
+      ? [['inphox Inventory', '/', 'Inventario, pruebas, reparaciones y ventas.', 'https://inphox.net/'], ['Autograding', '/autograding', 'Califica cualquier dispositivo en 7–8 segundos.', '#top'], [t.navPricing, 'api/docs#pricing', 'Créditos prepagados, el mismo precio en la app y en la API.', 'https://autograding.inphox.net/api/docs#pricing'], [t.navFeatures, 'api/docs', 'Cada endpoint, con ejemplos.', 'https://autograding.inphox.net/api/docs'], [t.navSignin, 'autograding.inphox.net', 'Tu cuenta de Autograding.', 'https://autograding.inphox.net/']]
+      : [['inphox Inventory', '/', 'Inventory, testing, repairs and sales.', 'https://inphox.net/'], ['Autograding', '/autograding', 'Grade any device in 7–8 seconds.', '#top'], [t.navPricing, 'api/docs#pricing', 'Prepaid credits, the same prices in the app and the API.', 'https://autograding.inphox.net/api/docs#pricing'], [t.navFeatures, 'api/docs', 'Every endpoint, with examples.', 'https://autograding.inphox.net/api/docs'], [t.navSignin, 'autograding.inphox.net', 'Your Autograding account.', 'https://autograding.inphox.net/']];
     const menuItems = M.map(([label, path, desc, href], i) => ({ label, path, desc, href,
       style: '--i: ' + i + '; display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 16px 20px; border-bottom: 1px solid rgba(22,19,15,.1); color: #16130F; text-decoration: none; ' + (label === 'Autograding' ? 'border-left: 3px solid #C67139' : 'border-left: 3px solid transparent') }));
     const zl = lang === 'es' ? ['FRENTE', 'REVERSO', 'IZQ.', 'DER.', 'ARRIBA', 'ABAJO'] : ['FRONT', 'BACK', 'LEFT', 'RIGHT', 'TOP', 'BOTTOM'];
@@ -207,12 +207,12 @@ export function mainVals(lang = 'en', ref = '') {
 
 export function heroVals(lang = 'en', ref = '') {
     const T = {
-      en: { film: 'The life of one device', meta: '7 chapters · graded in 7.0 s', grade: 'GRADE', std: 'inphox Standard', yrs: 'yrs', start: 'Start free today', contact: 'Contact us', eyebrow: 'inphox Autograding', h1a: 'Grade any device', h1b: 'in 7 seconds.', lead: 'A camera finds every scratch, chip and dent. Our rules turn them into a grade you can show a buyer, line by line.', separate: 'Its own product. Use it on its own, or inside your inphox Inventory workflow. Business or enterprise? Contact us.',
-        alt: 'A short film following one device: made on a line of millions, boxed and shipped, sold, used for two years, traded in at a counter, autograded in 7 seconds as grade B, and sold again.',
-        ch: [['MADE', 'Made', 'Day one. I was made, one of millions.'], ['SHIPPED', 'Shipped', 'Boxed, stacked, shipped across an ocean.'], ['SOLD', 'Sold', 'Somebody picked me out of the box.'], ['LIVED', 'Lived', 'Two years. Pockets, keys, one bad drop.'], ['TRADED IN', 'Traded in', 'Then I was handed over a counter.'], ['AUTOGRADED · 7.0 s', 'Autograded', 'Seven seconds. Every scratch I have, measured.'], ['SOLD AGAIN', 'Sold again', 'Graded B, priced fair, off to someone new.']] },
-      es: { film: 'La vida de un dispositivo', meta: '7 capítulos · calificado en 7.0 s', grade: 'CALIFICACIÓN', std: 'inphox Standard', yrs: 'años', start: 'Empieza gratis hoy', contact: 'Contáctanos', eyebrow: 'inphox Autograding', h1a: 'Califica cualquier dispositivo', h1b: 'en 7 segundos.', lead: 'Una cámara encuentra cada rayón, despostilladura y abolladura. Nuestras reglas los convierten en una calificación que puedes mostrarle al comprador, punto por punto.', separate: 'Un producto propio. Úsalo por separado o dentro de tu flujo de inphox Inventory. ¿Empresa o corporativo? Contáctanos.',
-        alt: 'Un video corto que sigue a un dispositivo: fabricado entre millones, empacado y enviado, vendido, usado dos años, entregado en un mostrador, calificado B en 7 segundos y vendido de nuevo.',
-        ch: [['FABRICADO', 'Fabricado', 'Día uno. Me fabricaron, uno entre millones.'], ['ENVIADO', 'Enviado', 'Empacado, apilado y enviado al otro lado del mar.'], ['VENDIDO', 'Vendido', 'Alguien me sacó de la caja.'], ['EN USO', 'En uso', 'Dos años. Bolsillos, llaves y una mala caída.'], ['ENTREGADO', 'Entregado', 'Luego me entregaron en un mostrador.'], ['AUTOGRADING · 7.0 s', 'Autograding', 'Siete segundos. Cada rayón que tengo, medido.'], ['VENDIDO DE NUEVO', 'Otra venta', 'Calificado B, a precio justo, rumbo a alguien nuevo.']] }
+      en: { film: 'The life of one device', meta: '7 chapters · graded in 7–8 s', grade: 'GRADE', std: 'inphox Standard', yrs: 'yrs', start: 'Start free today', contact: 'Contact us', eyebrow: 'inphox Autograding', h1a: 'Grade any device', h1b: 'in 7–8 seconds.', lead: 'A camera finds scratches, chips and dents with high accuracy. Our rules turn them into a grade you can show a buyer, line by line.', separate: 'Its own product. Use it on its own, or inside your inphox Inventory workflow. Business or enterprise? Contact us.',
+        alt: 'A short film following one device: made on a line of millions, boxed and shipped, sold, used for two years, traded in at a counter, autograded in 7–8 seconds as grade B, and sold again.',
+        ch: [['MADE', 'Made', 'Day one. I was made, one of millions.'], ['SHIPPED', 'Shipped', 'Boxed, stacked, shipped across an ocean.'], ['SOLD', 'Sold', 'Somebody picked me out of the box.'], ['LIVED', 'Lived', 'Two years. Pockets, keys, one bad drop.'], ['TRADED IN', 'Traded in', 'Then I was handed over a counter.'], ['AUTOGRADED · 7–8 s', 'Autograded', 'Seven or eight seconds. My scratches, found and measured.'], ['SOLD AGAIN', 'Sold again', 'Graded B, priced fair, off to someone new.']] },
+      es: { film: 'La vida de un dispositivo', meta: '7 capítulos · calificado en 7–8 s', grade: 'CALIFICACIÓN', std: 'inphox Standard', yrs: 'años', start: 'Empieza gratis hoy', contact: 'Contáctanos', eyebrow: 'inphox Autograding', h1a: 'Califica cualquier dispositivo', h1b: 'en 7–8 segundos.', lead: 'Una cámara encuentra rayones, despostilladuras y abolladuras con gran precisión. Nuestras reglas los convierten en una calificación que puedes mostrarle al comprador, punto por punto.', separate: 'Un producto propio. Úsalo por separado o dentro de tu flujo de inphox Inventory. ¿Empresa o corporativo? Contáctanos.',
+        alt: 'Un video corto que sigue a un dispositivo: fabricado entre millones, empacado y enviado, vendido, usado dos años, entregado en un mostrador, calificado B en 7–8 segundos y vendido de nuevo.',
+        ch: [['FABRICADO', 'Fabricado', 'Día uno. Me fabricaron, uno entre millones.'], ['ENVIADO', 'Enviado', 'Empacado, apilado y enviado al otro lado del mar.'], ['VENDIDO', 'Vendido', 'Alguien me sacó de la caja.'], ['EN USO', 'En uso', 'Dos años. Bolsillos, llaves y una mala caída.'], ['ENTREGADO', 'Entregado', 'Luego me entregaron en un mostrador.'], ['AUTOGRADING · 7–8 s', 'Autograding', 'Siete u ocho segundos. Mis rayones, encontrados y medidos.'], ['VENDIDO DE NUEVO', 'Otra venta', 'Calificado B, a precio justo, rumbo a alguien nuevo.']] }
     };
     const t = T[lang];
     const chapters = t.ch.map(([k, short, say], i) => ({ n: String(i + 1).padStart(2, '0'), k, short, say, sd: (i * 5 - 35.6).toFixed(1) + 's' }));

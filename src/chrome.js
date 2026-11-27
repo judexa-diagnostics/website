@@ -18,7 +18,7 @@ export const CHROME = {
     menu: 'Menu', close: 'Close', language: 'Language',
     switchTo: 'Switch product',
     invDesc: 'Testing, erasure, inventory, repairs and sales for your shop',
-    agDesc: 'Grade any device from photos in 7 seconds',
+    agDesc: 'Grade any device from photos in 7–8 seconds',
     agMenu: [
       ['Autograding overview', '/autograding', 'What it grades, how, and what it costs'],
       ['Autograding pricing', AG_PRICING, 'Prepaid credits: 6¢ a photo, at most 10¢ a device'],
@@ -44,7 +44,7 @@ export const CHROME = {
     menu: 'Menú', close: 'Cerrar', language: 'Idioma',
     switchTo: 'Cambiar de producto',
     invDesc: 'Pruebas, borrado, inventario, reparaciones y ventas para tu negocio',
-    agDesc: 'Califica cualquier dispositivo con fotos en 7 segundos',
+    agDesc: 'Califica cualquier dispositivo con fotos en 7–8 segundos',
     agMenu: [
       ['Autograding: resumen', '/es/autograding', 'Qué califica, cómo y cuánto cuesta'],
       ['Precios de Autograding', AG_PRICING, 'Créditos prepagados: 6¢ por foto, máximo 10¢ por dispositivo'],
